@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+title UC02 - Login Logout
+actor "Nguoi dung da dang ky" as User
+actor Admin
+rectangle "Football-Lover" {
+  User --> (UC02 Login)
+  User --> (Logout)
+  Admin --> (UC02 Login)
+  (UC02 Login) ..> (Validate credentials) : include
+  (UC02 Login) ..> (Create session/token) : include
+}
+@enduml

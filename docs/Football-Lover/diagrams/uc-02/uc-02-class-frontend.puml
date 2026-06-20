@@ -1,0 +1,11 @@
+@startuml
+title UC02 - Frontend Classes
+skinparam classAttributeIconSize 0
+class LoginPage { +handleLogin(): void +render(): JSX }
+class AuthStore { user token +setSession() +clearSession() }
+class AuthApiClient { +login(credentials): Promise<Token> +logout(): Promise<void> }
+class ProtectedRoute { +checkRole(): boolean }
+LoginPage --> AuthApiClient
+LoginPage --> AuthStore
+ProtectedRoute --> AuthStore
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+title UC10 - Backend Classes
+skinparam classAttributeIconSize 0
+class ProfileController { +getOwnProfile(): ProfileDto +getUserHistory(id): ProfileDto }
+class ProfileService { +getProfile(userId, viewer): ProfileDto }
+class UserRepository { +findById(id): User }
+class PredictionRepository { +findByUser(userId): List<Prediction> }
+class AuthorizationService { +canViewProfile(viewer,target): boolean }
+ProfileController --> ProfileService
+ProfileService --> UserRepository
+ProfileService --> PredictionRepository
+ProfileService --> AuthorizationService
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+left to right direction
+title UC01 - Register Account
+actor "Khach chua dang nhap" as Guest
+rectangle "Football-Lover" {
+  Guest --> (UC01 Register Account)
+  (UC01 Register Account) ..> (Validate unique email) : include
+  (UC01 Register Account) ..> (Validate password policy) : include
+}
+@enduml

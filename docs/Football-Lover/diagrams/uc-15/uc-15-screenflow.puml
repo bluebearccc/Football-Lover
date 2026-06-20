@@ -1,0 +1,25 @@
+@startuml
+title UC15 - Reset Password Screen Flow
+start
+:User opens "Forgot password";
+:Enter email;
+:Submit request;
+note right
+  Phản hồi trung lập dù email tồn tại hay không
+  (tránh dò email).
+end note
+:Show "check your email" message;
+:User opens email link with token;
+if (Token valid and not expired/used?) then (yes)
+  :Enter new password;
+  if (Password policy OK?) then (yes)
+    :Update password + consume token;
+    :Redirect to login;
+  else (no)
+    :Show password policy error;
+  endif
+else (no)
+  :Show expired/invalid token error;
+endif
+stop
+@enduml

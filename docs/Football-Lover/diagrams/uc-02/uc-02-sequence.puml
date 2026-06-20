@@ -1,0 +1,24 @@
+@startuml
+title UC02 - Login Logout Sequence
+actor User
+participant "Web UI" as UI
+participant "Auth API" as API
+participant "Auth Service" as Svc
+database "DB" as DB
+User -> UI : Submit login form
+UI -> API : POST /auth/login
+API -> Svc : authenticate(email,password)
+Svc -> DB : find user by email
+DB --> Svc : user / not found
+alt success
+  Svc --> API : session/token
+  API --> UI : 200 OK
+  UI --> User : Redirect
+else failure
+  API --> UI : 401/403
+  UI --> User : Show error
+end
+User -> UI : Logout
+UI -> API : POST /auth/logout
+API --> UI : session cleared
+@enduml

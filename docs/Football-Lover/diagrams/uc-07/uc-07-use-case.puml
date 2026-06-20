@@ -1,0 +1,11 @@
+@startuml
+left to right direction
+title UC07 - Manage Prediction Criteria
+actor Admin
+rectangle "Football-Lover" {
+  Admin --> (UC07 Manage Prediction Criteria)
+  (UC07 Manage Prediction Criteria) ..> (Create criterion) : include
+  (UC07 Manage Prediction Criteria) ..> (Edit criterion) : include
+  (UC07 Manage Prediction Criteria) ..> (Deactivate criterion) : include
+}
+@enduml

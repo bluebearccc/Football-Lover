@@ -1,0 +1,10 @@
+@startuml
+title UC09 - Statistics View State
+[*] --> Loading
+Loading --> Visible : statistics found
+Loading --> Empty : no data
+Loading --> Error : API error
+Visible --> Refreshing : prediction/score changes
+Refreshing --> Visible : updated
+Error --> Loading : retry
+@enduml

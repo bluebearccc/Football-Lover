@@ -1,0 +1,13 @@
+@startuml
+title UC01 - Register Account Screen Flow
+start
+:Open Register page;
+:Enter email, display name, password;
+if (Input valid and email unique?) then (yes)
+  :Create account;
+  :Show registration success / login prompt;
+else (no)
+  :Show validation error;
+endif
+stop
+@enduml

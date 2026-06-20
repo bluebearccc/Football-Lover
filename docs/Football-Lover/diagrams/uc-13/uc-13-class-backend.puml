@@ -1,0 +1,36 @@
+@startuml
+title UC13 - Backend Classes
+skinparam classAttributeIconSize 0
+class AdminTeamController {
+  +create(dto): TeamDto
+  +update(id,dto): TeamDto
+  +remove(id): Response
+  +sync(): SyncResult
+}
+class TeamService {
+  +validateAndSave(dto): Team
+  +remove(id): void
+}
+class FootballDataSyncService {
+  +refreshTeamsAndPlayers(): SyncResult
+}
+class TeamRepository {
+  +save(team): Team
+  +isReferencedByMatch(id): boolean
+  +deactivate(id): void
+  +upsertByExternalId(dto): Team
+}
+class PlayerRepository {
+  +upsertByExternalId(dto): Player
+  +findByTeam(teamId): List<Player>
+}
+AdminTeamController --> TeamService
+AdminTeamController --> FootballDataSyncService
+TeamService --> TeamRepository
+FootballDataSyncService --> TeamRepository
+FootballDataSyncService --> PlayerRepository
+note bottom of TeamService
+  remove: nếu isReferencedByMatch -> deactivate (is_active=false),
+  ngược lại có thể xóa. logo_url/image_url rỗng -> ảnh mặc định ở FE.
+end note
+@enduml

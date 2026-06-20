@@ -1,0 +1,10 @@
+@startuml
+title UC02 - Session State
+[*] --> Anonymous
+Anonymous --> Authenticating : submit credentials
+Authenticating --> Authenticated : success
+Authenticating --> Anonymous : fail
+Authenticated --> Expired : token/session timeout
+Authenticated --> Anonymous : logout
+Expired --> Anonymous : login required
+@enduml

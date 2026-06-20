@@ -1,0 +1,16 @@
+@startuml
+title UC09 - View Statistics Leaderboard Sequence
+actor Visitor
+participant "Web UI" as UI
+participant "Statistics API" as API
+participant "Statistics Service" as Svc
+database "DB" as DB
+Visitor -> UI : Open statistics/leaderboard
+UI -> API : GET /statistics or /leaderboard
+API -> Svc : getAggregates(scope)
+Svc -> DB : query Statistic, Prediction, User points
+DB --> Svc : aggregate data
+Svc --> API : statistic DTOs
+API --> UI : 200 OK
+UI --> Visitor : Display results
+@enduml

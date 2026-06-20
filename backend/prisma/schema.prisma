@@ -1,0 +1,301 @@
+// Football-Lover — Prisma schema
+// Source of truth: docs/Football-Lover/diagrams/entity-relationship.puml (v1.1.0)
+// and docs/Football-Lover/SRS_Football-Lover_v1.0.0.md (§5.2 Data Requirements).
+//
+// Conventions:
+// - snake_case columns via @map / @@map; camelCase fields in code.
+// - UUID primary keys.
+// - Gold is per-match only (no User wallet): stored on MatchParticipation.gold_won.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  LOCKED
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  CANCELLED
+  POSTPONED
+}
+
+/// Binary side used by Prediction.selectedTeam and PredictionCriterion.resultTeam.
+enum TeamSide {
+  HOME
+  AWAY
+}
+
+enum CriterionSource {
+  MANUAL
+  SCRAPED
+}
+
+enum CommentStatus {
+  VISIBLE
+  HIDDEN
+  DELETED
+}
+
+enum NotificationType {
+  MATCH_WON
+  MATCH_LOST
+  MATCH_CANCELLED
+}
+
+// ─────────────────────────────────────────────────────────────
+// Core: User
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  displayName  String     @map("display_name")
+  role         Role       @default(USER)
+  status       UserStatus @default(ACTIVE)
+  totalPoints  Int        @default(0) @map("total_points") // all-time correct predictions (stat/tiebreak)
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  predictions          Prediction[]
+  comments             Comment[]
+  participations       MatchParticipation[]
+  notifications        Notification[]
+  chatbotConversations ChatbotConversation[]
+  passwordResetTokens  PasswordResetToken[]
+
+  @@index([status])
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Teams & Players
+// ─────────────────────────────────────────────────────────────
+
+model Team {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  shortName  String?  @map("short_name")
+  logoUrl    String?  @map("logo_url") // null -> default image
+  externalId String?  @unique @map("external_id") // api-football id
+  isActive   Boolean  @default(true) @map("is_active") // deactivate instead of delete
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  players     Player[]
+  homeMatches Match[]  @relation("HomeTeam")
+  awayMatches Match[]  @relation("AwayTeam")
+
+  @@index([name])
+  @@map("teams")
+}
+
+model Player {
+  id         String   @id @default(uuid()) @db.Uuid
+  teamId     String   @map("team_id") @db.Uuid
+  name       String
+  position   String?
+  imageUrl   String?  @map("image_url") // null -> default image
+  externalId String?  @unique @map("external_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@index([teamId])
+  @@map("players")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Matches & Criteria
+// ─────────────────────────────────────────────────────────────
+
+model Match {
+  id         String      @id @default(uuid()) @db.Uuid
+  homeTeamId String      @map("home_team_id") @db.Uuid
+  awayTeamId String      @map("away_team_id") @db.Uuid
+  matchTime  DateTime    @map("match_time") // prediction lock / kickoff
+  startDate  DateTime?   @map("start_date") // scraped
+  endDate    DateTime?   @map("end_date") // scraped, used to finalize
+  status     MatchStatus @default(SCHEDULED)
+  homeScore  Int?        @map("home_score")
+  awayScore  Int?        @map("away_score")
+  entryGold  Decimal     @default(100) @map("entry_gold") @db.Decimal(12, 2)
+  externalId String?     @unique @map("external_id")
+  createdAt  DateTime    @default(now()) @map("created_at")
+
+  homeTeam       Team                 @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam       Team                 @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  criteria       PredictionCriterion[]
+  predictions    Prediction[]
+  participations MatchParticipation[]
+  comments       Comment[]
+  statistics     Statistic[]
+  notifications  Notification[]
+
+  @@index([matchTime])
+  @@index([status])
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+  @@map("matches")
+}
+
+model PredictionCriterion {
+  id          String          @id @default(uuid()) @db.Uuid
+  matchId     String          @map("match_id") @db.Uuid
+  name        String
+  description String?
+  resultTeam  TeamSide?       @map("result_team") // actual outcome, set when match FINISHED
+  resolvedAt  DateTime?       @map("resolved_at")
+  source      CriterionSource @default(MANUAL)
+
+  match       Match        @relation(fields: [matchId], references: [id])
+  predictions Prediction[]
+  statistics  Statistic[]
+
+  @@index([matchId])
+  @@map("prediction_criteria")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Predictions & per-match participation
+// ─────────────────────────────────────────────────────────────
+
+model Prediction {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  matchId      String   @map("match_id") @db.Uuid
+  criterionId  String   @map("criterion_id") @db.Uuid
+  selectedTeam TeamSide @map("selected_team")
+  isCorrect    Boolean? @map("is_correct") // scored when match FINISHED
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user      User                @relation(fields: [userId], references: [id])
+  match     Match               @relation(fields: [matchId], references: [id])
+  criterion PredictionCriterion @relation(fields: [criterionId], references: [id])
+
+  @@unique([userId, criterionId]) // BR05: one prediction per user per criterion
+  @@index([matchId])
+  @@index([userId])
+  @@index([criterionId])
+  @@map("predictions")
+}
+
+/// One row per (user, match) created at scoring time. Records score, win, and per-match gold.
+model MatchParticipation {
+  id        String   @id @default(uuid()) @db.Uuid
+  matchId   String   @map("match_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  score     Int      @default(0) // number of correct criteria (+1 each)
+  isWinner  Boolean  @default(false) @map("is_winner")
+  goldWon   Decimal  @default(0) @map("gold_won") @db.Decimal(12, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  match Match @relation(fields: [matchId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([matchId, userId])
+  @@index([userId])
+  @@index([matchId])
+  @@map("match_participations")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Comments, statistics, notifications
+// ─────────────────────────────────────────────────────────────
+
+model Comment {
+  id        String        @id @default(uuid()) @db.Uuid
+  matchId   String        @map("match_id") @db.Uuid
+  userId    String        @map("user_id") @db.Uuid
+  content   String // 1..1000 chars, validated at app layer
+  status    CommentStatus @default(VISIBLE)
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  match Match @relation(fields: [matchId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@index([matchId])
+  @@index([userId])
+  @@map("comments")
+}
+
+model Statistic {
+  id             String @id @default(uuid()) @db.Uuid
+  matchId        String @map("match_id") @db.Uuid
+  criterionId    String @map("criterion_id") @db.Uuid
+  totalHomeVotes Int    @default(0) @map("total_home_votes")
+  totalAwayVotes Int    @default(0) @map("total_away_votes")
+
+  match     Match               @relation(fields: [matchId], references: [id])
+  criterion PredictionCriterion @relation(fields: [criterionId], references: [id])
+
+  @@unique([matchId, criterionId])
+  @@index([matchId])
+  @@map("statistics")
+}
+
+model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  type      NotificationType
+  title     String
+  body      String?
+  matchId   String?          @map("match_id") @db.Uuid
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user  User   @relation(fields: [userId], references: [id])
+  match Match? @relation(fields: [matchId], references: [id])
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Chatbot & password reset
+// ─────────────────────────────────────────────────────────────
+
+model ChatbotConversation {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  message   String
+  response  String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("chatbot_conversations")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @unique @map("token_hash") // store hash only, never raw token
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}

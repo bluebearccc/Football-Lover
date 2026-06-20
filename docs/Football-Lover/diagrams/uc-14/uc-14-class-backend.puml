@@ -1,0 +1,31 @@
+@startuml
+title UC14 - Backend Classes
+skinparam classAttributeIconSize 0
+class NotificationController {
+  +list(request): List<NotificationDto>
+  +markRead(id, request): Response
+  +unreadCount(request): Integer
+}
+class NotificationService {
+  +list(userId): List<NotificationDto>
+  +markRead(id, userId): void
+  +unreadCount(userId): Integer
+  +notifyMatchResult(matchId): void
+  +notifyCancelled(matchId): void
+}
+class NotificationRepository {
+  +findByUser(userId): List<Notification>
+  +countUnread(userId): Integer
+  +markRead(id, userId): void
+  +saveAll(list): void
+}
+class ParticipationRepository { +findByMatch(matchId): List<MatchParticipation> }
+NotificationController --> NotificationService
+NotificationService --> NotificationRepository
+NotificationService --> ParticipationRepository
+note bottom of NotificationService
+  notifyMatchResult: 1 notification/participant
+  (MATCH_WON nếu is_winner, ngược lại MATCH_LOST), link tới match.
+  notifyCancelled: MATCH_CANCELLED cho mọi participant.
+end note
+@enduml

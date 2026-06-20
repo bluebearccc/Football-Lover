@@ -1,0 +1,13 @@
+@startuml
+title UC04 - Backend Classes
+skinparam classAttributeIconSize 0
+class MatchDetailController { +getDetails(matchId): MatchDetailDto }
+class MatchDetailService { +getDetails(matchId, viewer): MatchDetailDto }
+class MatchRepository { +findById(id): Match }
+class StatisticRepository { +findByMatch(id): List<Statistic> }
+class CommentRepository { +findPublicByMatch(id): List<Comment> }
+MatchDetailController --> MatchDetailService
+MatchDetailService --> MatchRepository
+MatchDetailService --> StatisticRepository
+MatchDetailService --> CommentRepository
+@enduml

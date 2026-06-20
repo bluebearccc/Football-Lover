@@ -1,0 +1,11 @@
+@startuml
+title UC07 - Frontend Classes
+skinparam classAttributeIconSize 0
+class CriteriaManagementPage { +loadCriteria(): void +openEditor(): void }
+class CriterionEditorForm { name description options +validate(): ValidationResult }
+class CriteriaTable { criteria +edit(): void +deactivate(): void }
+class CriteriaApiClient { +create(matchId,dto): Promise<Criterion> +update(id,dto): Promise<Criterion> }
+CriteriaManagementPage --> CriterionEditorForm
+CriteriaManagementPage --> CriteriaTable
+CriteriaManagementPage --> CriteriaApiClient
+@enduml

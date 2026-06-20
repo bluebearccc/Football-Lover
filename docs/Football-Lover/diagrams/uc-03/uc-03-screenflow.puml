@@ -1,0 +1,13 @@
+@startuml
+title UC03 - View Match List Screen Flow
+start
+:Open Home / Match List;
+:Load public matches;
+if (Data available?) then (yes)
+  :Display match cards/list;
+  :Filter or select a match;
+else (no)
+  :Show empty state;
+endif
+stop
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+title UC13 - Frontend Classes
+skinparam classAttributeIconSize 0
+class TeamAdminPage { +loadTeams(): void +openEditor(): void +sync(): void }
+class TeamEditorForm { team +validate(): ValidationResult +save(): void }
+class TeamLogo { logoUrl +render(): JSX }
+class PlayerList { players +render(): JSX }
+class PlayerAvatar { imageUrl +render(): JSX }
+class TeamApiClient {
+  +list(): Promise<Team[]>
+  +create(dto): Promise<Team>
+  +update(id,dto): Promise<Team>
+  +remove(id): Promise<void>
+  +sync(): Promise<SyncResult>
+}
+TeamAdminPage --> TeamEditorForm
+TeamAdminPage --> PlayerList
+TeamEditorForm --> TeamLogo
+PlayerList --> PlayerAvatar
+TeamAdminPage --> TeamApiClient
+note bottom of TeamLogo
+  Thiếu logoUrl/imageUrl -> hiển thị ảnh mặc định.
+end note
+@enduml

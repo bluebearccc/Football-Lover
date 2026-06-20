@@ -1,0 +1,14 @@
+@startuml
+title UC02 - Login Logout Screen Flow
+start
+:Open Login page;
+:Enter email and password;
+if (Credentials valid and account active?) then (yes)
+  :Create session;
+  :Redirect to home/profile/admin based on role;
+  :Logout clears session when requested;
+else (no)
+  :Show safe login error;
+endif
+stop
+@enduml

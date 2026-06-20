@@ -1,0 +1,28 @@
+@startuml
+title UC06 - Frontend Classes
+skinparam classAttributeIconSize 0
+class AdminMatchPage { +loadMatches(): void +openEditor(): void }
+class MatchEditorForm { match +validate(): ValidationResult +save(): void }
+class TeamPicker { homeTeamId awayTeamId +onSelect(): void }
+class EntryGoldInput { entryGold +validate(): ValidationResult }
+class ResultEditor { homeScore awayScore +submitResult(): void }
+class CriterionResultEditor { criterion resultTeam +setResult(): void }
+class WinnersPanel { winners pool +render(): JSX }
+class AdminMatchApiClient {
+  +create(dto): Promise<Match>
+  +update(id,dto): Promise<Match>
+  +updateResult(id,dto): Promise<void>
+  +setCriterionResult(criterionId,team): Promise<void>
+}
+AdminMatchPage --> MatchEditorForm
+MatchEditorForm --> TeamPicker
+MatchEditorForm --> EntryGoldInput
+AdminMatchPage --> ResultEditor
+AdminMatchPage --> CriterionResultEditor
+AdminMatchPage --> WinnersPanel
+AdminMatchPage --> AdminMatchApiClient
+note bottom of WinnersPanel
+  Sau FINISHED: hiển thị người thắng và gold_won
+  (2 chữ số thập phân) trên mỗi participant.
+end note
+@enduml

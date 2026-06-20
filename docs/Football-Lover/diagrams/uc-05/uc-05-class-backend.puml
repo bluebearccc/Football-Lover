@@ -1,0 +1,21 @@
+@startuml
+title UC05 - Backend Classes
+skinparam classAttributeIconSize 0
+class PredictionController { +submit(request): Response +update(id, request): Response }
+class PredictionService { +submitOrUpdate(userId, dto): PredictionDto +assertMatchOpen(match): void }
+class MatchRepository { +findById(id): Match }
+class CriterionRepository { +findByMatch(id): List<PredictionCriterion> }
+class PredictionRepository { +findByUserAndCriterion(userId, criterionId): Prediction +save(prediction): Prediction }
+class StatisticsService { +updateVotes(matchId, criterionId): void }
+PredictionController --> PredictionService
+PredictionService --> MatchRepository
+PredictionService --> CriterionRepository
+PredictionService --> PredictionRepository
+PredictionService --> StatisticsService
+note bottom of PredictionService
+  assertMatchOpen: chỉ cho dự đoán khi status = SCHEDULED
+  (khóa khi bóng lăn / match_time). selected_team ∈ {HOME, AWAY}.
+  unique(user_id, criterion_id) -> BR05.
+  Có >= 1 dự đoán => user là participant của pool gold (tính khi FINISHED, xem UC06).
+end note
+@enduml

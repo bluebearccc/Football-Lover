@@ -1,0 +1,16 @@
+@startuml
+title UC04 - View Match Details Screen Flow
+start
+:Select match from list;
+:Load match details;
+if (Match exists?) then (yes)
+  :Show teams, time, status, score;
+  :Show criteria, statistics and comments;
+  if (User logged in?) then (yes)
+    :Show prediction/comment actions if allowed;
+  endif
+else (no)
+  :Show not found message;
+endif
+stop
+@enduml

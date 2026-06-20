@@ -1,0 +1,17 @@
+@startuml
+title UC05 - Frontend Classes
+skinparam classAttributeIconSize 0
+class PredictionForm { choices +submit(): void +edit(): void }
+class CriterionSelector { criterion selectedTeam +onSelect(): void }
+class PredictionApiClient { +submit(payload): Promise<Prediction> +update(id,payload): Promise<Prediction> }
+class PredictionStatusBanner { status matchTime message }
+class GoldPoolInfo { entryGold participantCount +render(): JSX }
+PredictionForm --> CriterionSelector
+PredictionForm --> PredictionApiClient
+PredictionForm --> PredictionStatusBanner
+PredictionForm --> GoldPoolInfo
+note bottom of GoldPoolInfo
+  Hiển thị mức cược entry_gold của trận và số người đang tham gia.
+  Locked khi status != SCHEDULED.
+end note
+@enduml

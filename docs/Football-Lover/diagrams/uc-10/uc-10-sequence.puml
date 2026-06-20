@@ -1,0 +1,16 @@
+@startuml
+title UC10 - View Profile History Sequence
+actor User
+participant "Web UI" as UI
+participant "Profile API" as API
+participant "Profile Service" as Svc
+database "DB" as DB
+User -> UI : Open profile/history
+UI -> API : GET /me/profile
+API -> Svc : getOwnProfile(userId)
+Svc -> DB : load user and predictions
+DB --> Svc : profile and history
+Svc --> API : ProfileDto
+API --> UI : 200 OK / 404
+UI --> User : Display profile or message
+@enduml

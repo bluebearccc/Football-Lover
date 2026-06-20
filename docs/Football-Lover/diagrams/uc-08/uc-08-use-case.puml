@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+title UC08 - Comment on Match
+actor "Registered User" as User
+actor Admin
+rectangle "Football-Lover" {
+  User --> (UC08 Comment on Match)
+  Admin --> (Moderate Comments)
+  (UC08 Comment on Match) ..> (Check login) : include
+  (UC08 Comment on Match) ..> (Validate content and anti-spam) : include
+}
+@enduml

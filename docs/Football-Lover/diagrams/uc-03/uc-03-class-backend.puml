@@ -1,0 +1,11 @@
+@startuml
+title UC03 - Backend Classes
+skinparam classAttributeIconSize 0
+class MatchController { +list(filters): Page<MatchDto> }
+class MatchQueryService { +listPublicMatches(filters): Page<MatchDto> }
+class MatchRepository { +findByStatusAndTime(filters): List<Match> }
+class Match { id homeTeam awayTeam matchTime status }
+MatchController --> MatchQueryService
+MatchQueryService --> MatchRepository
+MatchRepository --> Match
+@enduml

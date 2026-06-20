@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+title UC03 - View Match List
+actor Guest
+actor "Registered User" as User
+actor Admin
+rectangle "Football-Lover" {
+  Guest --> (UC03 View Match List)
+  User --> (UC03 View Match List)
+  Admin --> (UC03 View Match List)
+  (UC03 View Match List) ..> (Filter by status/time) : include
+  (UC03 View Match List) ..> (Show public data) : include
+}
+@enduml

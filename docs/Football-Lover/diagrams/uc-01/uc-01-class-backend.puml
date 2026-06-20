@@ -1,0 +1,13 @@
+@startuml
+title UC01 - Backend Classes
+skinparam classAttributeIconSize 0
+class AuthController { +register(request): Response }
+class RegistrationService { +register(dto): UserDto +validatePassword(password): boolean }
+class UserRepository { +existsByEmail(email): boolean +save(user): User }
+class PasswordHasher { +hash(password): String }
+class User { id email passwordHash displayName role status createdAt }
+AuthController --> RegistrationService
+RegistrationService --> UserRepository
+RegistrationService --> PasswordHasher
+UserRepository --> User
+@enduml

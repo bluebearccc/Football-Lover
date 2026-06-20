@@ -1,0 +1,28 @@
+@startuml
+title UC13 - Manage Teams Screen Flow
+start
+:Admin opens Team management;
+if (Has Admin role?) then (yes)
+  switch (Action)
+  case (Create/Edit)
+    :Fill team name/short name/logo;
+    if (Valid?) then (yes)
+      :Save team (default logo if empty);
+    else (no)
+      :Show validation error;
+    endif
+  case (Deactivate)
+    if (Referenced by a match?) then (yes)
+      :Set is_active = false (no hard delete);
+    else (no)
+      :Delete or deactivate team;
+    endif
+  case (Sync from api-football)
+    :Pull teams/players by external_id;
+    :Upsert teams and players;
+  endswitch
+else (no)
+  :Show 403 Forbidden;
+endif
+stop
+@enduml

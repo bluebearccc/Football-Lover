@@ -1,0 +1,16 @@
+@startuml
+title UC04 - View Match Details Sequence
+actor Visitor
+participant "Web UI" as UI
+participant "Match API" as API
+participant "Match Detail Service" as Svc
+database "DB" as DB
+Visitor -> UI : Open match details
+UI -> API : GET /matches/{id}
+API -> Svc : getDetails(id, viewer)
+Svc -> DB : load match, criteria, stats, comments
+DB --> Svc : detail data
+Svc --> API : public/detail DTO
+API --> UI : 200 OK / 404
+UI --> Visitor : Display details or not found
+@enduml

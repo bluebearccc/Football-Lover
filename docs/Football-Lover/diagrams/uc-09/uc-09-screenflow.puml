@@ -1,0 +1,15 @@
+@startuml
+title UC09 - Statistics Leaderboard Screen Flow
+start
+:Open statistics or leaderboard;
+:Load aggregated data;
+if (Data exists?) then (yes)
+  :Display charts/tables;
+  if (Mobile screen?) then (yes)
+    :Use horizontal scroll or card layout;
+  endif
+else (no)
+  :Show no statistics message;
+endif
+stop
+@enduml

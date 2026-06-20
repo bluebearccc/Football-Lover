@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+title UC13 - Manage Teams
+actor Admin
+rectangle "Football-Lover" {
+  Admin --> (Create/Edit Team)
+  Admin --> (Deactivate Team)
+  Admin --> (Sync Teams/Players from api-football)
+  (Create/Edit Team) ..> (Validate team data) : include
+  (Sync Teams/Players from api-football) ..> (Map by external_id) : include
+  (Deactivate Team) ..> (Reject hard delete if referenced) : include
+}
+@enduml

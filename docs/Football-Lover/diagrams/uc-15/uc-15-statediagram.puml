@@ -1,0 +1,12 @@
+@startuml
+title UC15 - Password Reset Token State
+[*] --> Issued : user requests reset (email sent)
+Issued --> Used : valid token + new password set
+Issued --> Expired : expires_at passed
+Used --> [*]
+Expired --> [*]
+note right of Issued
+  Lưu token_hash (không lưu token thô).
+  Dùng-một-lần, có thời hạn (BR31).
+end note
+@enduml

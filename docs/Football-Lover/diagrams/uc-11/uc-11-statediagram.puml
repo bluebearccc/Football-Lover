@@ -1,0 +1,12 @@
+@startuml
+title UC11 - Chatbot Request State
+[*] --> Idle
+Idle --> Validating : user submits question
+Validating --> Rejected : not logged in / too long / write request
+Validating --> WaitingProvider : allowed
+WaitingProvider --> Answered : provider returns response
+WaitingProvider --> Failed : timeout/unavailable
+Answered --> Idle
+Failed --> Idle : user may retry later
+Rejected --> Idle
+@enduml

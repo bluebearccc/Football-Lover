@@ -1,0 +1,19 @@
+@startuml
+title UC07 - Manage Prediction Criteria Sequence
+actor Admin
+participant "Admin UI" as UI
+participant "Criteria API" as API
+participant "Criteria Service" as Svc
+database "DB" as DB
+Admin -> UI : Create/edit criterion
+UI -> API : POST/PUT /admin/matches/{id}/criteria
+API -> Svc : validateAndSave(matchId, dto)
+Svc -> DB : check match status and criterion data
+alt allowed
+  Svc -> DB : save criterion
+  API --> UI : 200 OK
+else denied
+  API --> UI : 400/403
+end
+UI --> Admin : Show result
+@enduml

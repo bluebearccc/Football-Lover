@@ -1,0 +1,36 @@
+@startuml
+title UC15 - Reset Password Sequence
+actor "User" as User
+participant "Web UI" as UI
+participant "Auth API" as API
+participant "Password Reset Service" as Svc
+participant "Email Provider" as Mail
+database "DB" as DB
+
+== Request reset ==
+User -> UI : Enter email, submit
+UI -> API : POST /auth/forgot-password
+API -> Svc : requestReset(email)
+Svc -> DB : find user by email
+alt user exists
+  Svc -> DB : insert PasswordResetToken (token_hash, expires_at)
+  Svc -> Mail : send reset link (raw token)
+end
+API --> UI : 200 neutral ("if email exists...")
+
+== Set new password ==
+User -> UI : Open link, enter new password
+UI -> API : POST /auth/reset-password (token, newPassword)
+API -> Svc : reset(token, newPassword)
+Svc -> DB : find token by hash, check not used/expired
+alt valid
+  Svc -> Svc : validate password policy
+  Svc -> DB : update user password_hash
+  Svc -> DB : set token.used_at
+  API --> UI : 200 OK
+  UI --> User : Redirect to login
+else invalid/expired/used
+  API --> UI : 400 error
+  UI --> User : Show error
+end
+@enduml

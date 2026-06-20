@@ -1,0 +1,23 @@
+@startuml
+title UC12 - Upload Team Player Images Sequence
+actor Admin
+participant "Admin UI" as UI
+participant "Media API" as API
+participant "Upload Service" as Svc
+storage "File/Object Storage" as Storage
+database "DB" as DB
+Admin -> UI : Select image file
+UI -> API : POST /admin/media/upload
+API -> Svc : validateAndUpload(file, target)
+Svc -> Svc : validate MIME and <=5MB
+alt valid
+  Svc -> Storage : store safe renamed file
+  Storage --> Svc : URL/path
+  Svc -> DB : save URL/path reference
+  API --> UI : 201 Created
+  UI --> Admin : Show uploaded image
+else invalid
+  API --> UI : 400 error
+  UI --> Admin : Show clear message
+end
+@enduml

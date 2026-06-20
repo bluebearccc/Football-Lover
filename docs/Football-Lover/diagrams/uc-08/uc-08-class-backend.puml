@@ -1,0 +1,13 @@
+@startuml
+title UC08 - Backend Classes
+skinparam classAttributeIconSize 0
+class CommentController { +create(matchId, request): CommentDto +hide(id): Response }
+class CommentService { +create(userId, matchId, content): Comment +hide(id): void }
+class ModerationService { +validateContent(content): void +checkRateLimit(userId): void }
+class CommentRepository { +save(comment): Comment +findByMatch(matchId): List<Comment> }
+class Comment { id matchId userId content status createdAt }
+CommentController --> CommentService
+CommentService --> ModerationService
+CommentService --> CommentRepository
+CommentRepository --> Comment
+@enduml

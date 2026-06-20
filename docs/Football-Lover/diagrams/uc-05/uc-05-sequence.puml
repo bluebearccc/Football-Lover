@@ -1,0 +1,28 @@
+@startuml
+title UC05 - Submit Edit Prediction Sequence
+actor User
+participant "Web UI" as UI
+participant "Prediction API" as API
+participant "Prediction Service" as Svc
+participant "Statistics Service" as Stats
+database "DB" as DB
+User -> UI : Select team for each criterion
+UI -> API : POST/PUT /predictions
+API -> Svc : submitOrUpdate(user, criterion, selectedTeam)
+Svc -> DB : load match + assert status = SCHEDULED
+Svc -> DB : check unique(user, criterion)
+alt match open (SCHEDULED)
+  Svc -> DB : upsert prediction (selected_team)
+  Svc -> Stats : update vote totals
+  Stats -> DB : update Statistic (home/away votes)
+  API --> UI : 200 OK
+  UI --> User : Show success (joined gold pool)
+else locked / duplicate / cancelled
+  API --> UI : 400/403
+  UI --> User : Show reason
+end
+note over Svc, DB
+  Gold/điểm KHÔNG tính ở đây. Khi match FINISHED,
+  scoring + chia gold chạy ở UC06 (Scoring/Gold Service).
+end note
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+title UC06 - Match Lifecycle State
+[*] --> Scheduled : create
+Scheduled --> Live : match time reached (lock predictions)
+Scheduled --> Cancelled : Admin cancels
+Live --> Finished : Admin enters official result + criterion results
+Finished --> Scored : system scores predictions (+1/correct)
+Scored --> PaidOut : gold pool split among winners (>=1 score)
+PaidOut --> Notified : MATCH_WON / MATCH_LOST sent
+Live --> Cancelled : match cancelled
+Cancelled --> VoidedNotified : void results + MATCH_CANCELLED sent
+Scheduled --> [*] : soft delete if no related data
+Notified --> [*]
+VoidedNotified --> [*]
+note right of PaidOut
+  pool = entry_gold * participants;
+  gold_won = pool / winners (2 decimals);
+  < 2 participants -> không tính leaderboard.
+end note
+@enduml

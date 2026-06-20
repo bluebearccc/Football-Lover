@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+title UC09 - View Statistics Leaderboard
+actor Guest
+actor "Registered User" as User
+actor Admin
+rectangle "Football-Lover" {
+  Guest --> (UC09 View Statistics)
+  User --> (UC09 View Leaderboard)
+  Admin --> (View Admin Dashboard Metrics)
+  (UC09 View Statistics) ..> (Aggregate prediction counts) : include
+  (UC09 View Leaderboard) ..> (Rank by total points) : include
+}
+@enduml

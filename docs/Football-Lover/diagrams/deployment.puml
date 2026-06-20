@@ -1,0 +1,34 @@
+@startuml
+title Football-Lover - Deployment Diagram v1.0.0
+
+actor "End Users" as Users
+node "Browser\nDesktop/Mobile" as Browser
+
+node "Cloud/VPS Region\nVietnam or Singapore" as Cloud {
+  node "Web/App Server" as App {
+    component "Frontend Static Assets" as Frontend
+    component "Backend REST API" as Backend
+  }
+  database "Relational Database" as DB
+  storage "Server/Object Storage" as Storage
+  component "Logs/Monitoring" as Logs
+}
+
+cloud "Chatbot/AI Provider" as AI
+cloud "Football Data API" as FDA
+
+Users --> Browser : HTTPS
+Browser --> Frontend : HTTPS
+Browser --> Backend : HTTPS REST JSON
+Backend --> DB : SQL
+Backend --> Storage : image upload/read
+Backend --> Logs : structured logs
+Backend --> AI : REST JSON
+Backend --> FDA : scheduled/manual REST pull
+
+note right of DB
+  No backup in v1.0.0 by stakeholder choice.
+  Data loss risk accepted.
+end note
+
+@enduml

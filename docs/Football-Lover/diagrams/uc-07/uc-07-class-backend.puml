@@ -1,0 +1,11 @@
+@startuml
+title UC07 - Backend Classes
+skinparam classAttributeIconSize 0
+class AdminCriteriaController { +create(matchId,dto): CriterionDto +update(id,dto): CriterionDto +deactivate(id): Response }
+class CriterionService { +validate(dto): void +save(matchId,dto): PredictionCriterion }
+class MatchRepository { +findById(id): Match }
+class CriterionRepository { +save(criterion): PredictionCriterion +findByMatch(matchId): List<PredictionCriterion> }
+AdminCriteriaController --> CriterionService
+CriterionService --> MatchRepository
+CriterionService --> CriterionRepository
+@enduml

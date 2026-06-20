@@ -1,0 +1,16 @@
+@startuml
+title UC07 - Manage Prediction Criteria Screen Flow
+start
+:Admin opens criteria management for a match;
+if (Has Admin role?) then (yes)
+  :Add/edit criterion name, description and options;
+  if (Valid and match editable?) then (yes)
+    :Save criterion;
+  else (no)
+    :Show validation/locked error;
+  endif
+else (no)
+  :Show 403 Forbidden;
+endif
+stop
+@enduml

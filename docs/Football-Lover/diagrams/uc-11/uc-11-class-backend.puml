@@ -1,0 +1,13 @@
+@startuml
+title UC11 - Backend Classes
+skinparam classAttributeIconSize 0
+class ChatbotController { +ask(request): ChatbotResponse }
+class ChatbotService { +answer(userId,message): ChatbotResponse +isReadOnly(message): boolean }
+class AIProviderClient { +send(prompt,context): String }
+class ChatbotConversationRepository { +save(conversation): ChatbotConversation }
+class UserContextService { +buildSafeContext(userId): Context }
+ChatbotController --> ChatbotService
+ChatbotService --> AIProviderClient
+ChatbotService --> ChatbotConversationRepository
+ChatbotService --> UserContextService
+@enduml

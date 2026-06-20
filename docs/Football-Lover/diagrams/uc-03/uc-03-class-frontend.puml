@@ -1,0 +1,11 @@
+@startuml
+title UC03 - Frontend Classes
+skinparam classAttributeIconSize 0
+class MatchListPage { +render(): JSX +loadMatches(): void }
+class MatchFilterBar { status date +onFilterChange(): void }
+class MatchCard { match +openDetails(): void }
+class MatchApiClient { +listMatches(filters): Promise<Match[]> }
+MatchListPage --> MatchFilterBar
+MatchListPage --> MatchCard
+MatchListPage --> MatchApiClient
+@enduml

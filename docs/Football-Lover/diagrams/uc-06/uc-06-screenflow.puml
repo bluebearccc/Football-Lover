@@ -1,0 +1,19 @@
+@startuml
+title UC06 - Manage Matches Screen Flow
+start
+:Admin opens Match Management;
+if (Has Admin role?) then (yes)
+  :Create/Edit/Cancel match;
+  if (Data valid and editable?) then (yes)
+    :Save match;
+    if (Result official?) then (yes)
+      :Update result and trigger scoring;
+    endif
+  else (no)
+    :Show validation/locked error;
+  endif
+else (no)
+  :Show 403 Forbidden;
+endif
+stop
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+title UC02 - Backend Classes
+skinparam classAttributeIconSize 0
+class AuthController { +login(request): AuthResponse +logout(): Response }
+class AuthService { +authenticate(email,password): Session }
+class TokenService { +create(user): Token +expire(token): void }
+class UserRepository { +findByEmail(email): User }
+class User { id email passwordHash role status }
+AuthController --> AuthService
+AuthService --> UserRepository
+AuthService --> TokenService
+UserRepository --> User
+@enduml

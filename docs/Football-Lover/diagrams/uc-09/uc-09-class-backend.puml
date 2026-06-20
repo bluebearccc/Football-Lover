@@ -1,0 +1,11 @@
+@startuml
+title UC09 - Backend Classes
+skinparam classAttributeIconSize 0
+class StatisticsController { +matchStats(matchId): StatsDto +leaderboard(): Page<UserRankDto> }
+class StatisticsService { +getMatchStats(matchId): StatsDto +getLeaderboard(): Page<UserRankDto> }
+class StatisticRepository { +findByMatch(matchId): List<Statistic> }
+class UserRepository { +findTopByTotalPoints(): List<User> }
+StatisticsController --> StatisticsService
+StatisticsService --> StatisticRepository
+StatisticsService --> UserRepository
+@enduml

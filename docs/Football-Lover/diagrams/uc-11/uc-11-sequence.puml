@@ -1,0 +1,22 @@
+@startuml
+title UC11 - Use Chatbot Sequence
+actor User
+participant "Web UI" as UI
+participant "Chatbot API" as API
+participant "Chatbot Service" as Svc
+participant "AI Provider Client" as AIClient
+cloud "Chatbot/AI Provider" as AI
+database "DB" as DB
+User -> UI : Ask question
+UI -> API : POST /chatbot/messages
+API -> Svc : answer(userId, message)
+Svc -> DB : load safe user/match context
+Svc -> AIClient : send prompt and context
+AIClient -> AI : REST JSON
+AI --> AIClient : response
+AIClient --> Svc : answer
+Svc -> DB : save conversation if configured
+Svc --> API : ChatbotResponse
+API --> UI : 200 OK
+UI --> User : Show answer
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+title Football-Lover - Integration Diagram
+
+component "Football-Lover Backend" as FL
+cloud "Chatbot/AI Provider" as AI
+cloud "Football Data API" as FDA
+database "Relational DB" as DB
+
+FL --> AI : REST JSON\nquestion + context
+AI --> FL : answer text
+
+FL --> FDA : REST JSON Pull\nschedule/scores every 15-30 min
+FDA --> FL : match/team/schedule/result data
+
+FL --> DB : persist users, matches, predictions, stats
+
+note right of AI
+  Auth: API key/bearer token server-side.
+  If timeout: show chatbot unavailable.
+end note
+
+note right of FDA
+  Auth: API key/bearer token server-side.
+  If timeout: use cached/latest stored data if available.
+end note
+
+@enduml

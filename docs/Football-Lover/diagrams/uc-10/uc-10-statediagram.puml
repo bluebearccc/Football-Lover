@@ -1,0 +1,11 @@
+@startuml
+title UC10 - Profile View State
+[*] --> RequireAuth
+RequireAuth --> Loading : authenticated
+RequireAuth --> LoginRequired : not authenticated
+Loading --> Visible : profile found
+Loading --> NotFound : profile missing
+Visible --> Refreshing : prediction score changes
+Refreshing --> Visible
+Visible --> [*]
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+title UC04 - Match Detail View State
+[*] --> Loading
+Loading --> Visible : match found
+Loading --> NotFound : match missing
+Visible --> Refreshing : reload stats/comments
+Refreshing --> Visible : updated
+Visible --> [*]
+NotFound --> [*]
+@enduml

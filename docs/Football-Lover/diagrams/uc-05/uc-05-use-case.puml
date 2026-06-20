@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+title UC05 - Submit Edit Prediction Evaluation
+actor "Registered User" as User
+rectangle "Football-Lover" {
+  User --> (UC05 Submit Prediction)
+  User --> (Edit Prediction Before Deadline)
+  (UC05 Submit Prediction) ..> (Check login) : include
+  (UC05 Submit Prediction) ..> (Check deadline and duplicate) : include
+  (UC05 Submit Prediction) ..> (Update statistics) : include
+}
+@enduml

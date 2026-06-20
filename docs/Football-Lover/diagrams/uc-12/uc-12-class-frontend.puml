@@ -1,0 +1,11 @@
+@startuml
+title UC12 - Frontend Classes
+skinparam classAttributeIconSize 0
+class MediaUploadPage { +selectTarget(): void +upload(): void }
+class ImageUploadInput { file +validateSizeAndType(): ValidationResult }
+class ImagePreview { url +render(): JSX }
+class MediaApiClient { +upload(file,target): Promise<MediaReference> }
+MediaUploadPage --> ImageUploadInput
+MediaUploadPage --> ImagePreview
+MediaUploadPage --> MediaApiClient
+@enduml

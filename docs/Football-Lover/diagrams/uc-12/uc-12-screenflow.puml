@@ -1,0 +1,17 @@
+@startuml
+title UC12 - Upload Team Player Images Screen Flow
+start
+:Admin opens media upload form;
+if (Has Admin role?) then (yes)
+  :Choose JPG/JPEG/PNG/WebP file <= 5MB;
+  if (MIME and size valid?) then (yes)
+    :Safe rename and upload to storage;
+    :Save URL/path and link to team/player;
+  else (no)
+    :Show invalid format/size error;
+  endif
+else (no)
+  :Show 403 Forbidden;
+endif
+stop
+@enduml

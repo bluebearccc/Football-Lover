@@ -1,0 +1,19 @@
+@startuml
+title UC14 - Frontend Classes
+skinparam classAttributeIconSize 0
+class NotificationBell { unreadCount +toggle(): void }
+class NotificationDropdown { +loadMore(): void }
+class NotificationItem { type title body isRead matchId +onClick(): void }
+class NotificationApiClient {
+  +list(): Promise<Notification[]>
+  +unreadCount(): Promise<number>
+  +markRead(id): Promise<void>
+}
+NotificationBell --> NotificationDropdown
+NotificationDropdown --> NotificationItem
+NotificationBell --> NotificationApiClient
+NotificationDropdown --> NotificationApiClient
+note bottom of NotificationItem
+  WON hiển thị gold nhận được; click -> điều hướng tới match.
+end note
+@enduml

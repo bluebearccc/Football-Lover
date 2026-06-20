@@ -1,0 +1,11 @@
+@startuml
+title UC08 - Comment State
+[*] --> Draft
+Draft --> Validating : submit
+Validating --> Published : valid
+Validating --> Rejected : empty/too long/spam/banned words
+Published --> Hidden : Admin hides/deletes
+Rejected --> Draft : correct content
+Published --> [*]
+Hidden --> [*]
+@enduml

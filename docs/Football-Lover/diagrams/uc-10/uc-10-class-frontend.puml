@@ -1,0 +1,11 @@
+@startuml
+title UC10 - Frontend Classes
+skinparam classAttributeIconSize 0
+class ProfilePage { +loadProfile(): void +render(): JSX }
+class ProfileSummary { displayName totalPoints status }
+class PredictionHistoryTable { predictions +render(): JSX }
+class ProfileApiClient { +getOwnProfile(): Promise<Profile> }
+ProfilePage --> ProfileSummary
+ProfilePage --> PredictionHistoryTable
+ProfilePage --> ProfileApiClient
+@enduml

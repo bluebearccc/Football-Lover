@@ -1,0 +1,11 @@
+@startuml
+title UC07 - Prediction Criterion State
+[*] --> Draft
+Draft --> Active : save valid criterion
+Active --> Updated : edit before match lock
+Updated --> Active : publish
+Active --> Inactive : deactivate
+Active --> Locked : match started or predictions exist
+Locked --> [*]
+Inactive --> [*]
+@enduml

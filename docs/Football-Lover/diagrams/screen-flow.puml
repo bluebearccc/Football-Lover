@@ -1,0 +1,30 @@
+@startuml
+title Football-Lover - System Screen Flow
+start
+:Home / Public Match List;
+if (User logged in?) then (yes)
+  :Match Details;
+  if (Wants to predict?) then (yes)
+    :Prediction Form;
+    :Submit or edit before deadline;
+  endif
+  if (Wants community?) then (yes)
+    :Comments;
+    :Statistics / Leaderboard;
+  endif
+  if (Wants profile/chatbot?) then (yes)
+    :Profile / Prediction History;
+    :Chatbot Widget;
+  endif
+else (no)
+  :Public Match Details / Statistics / Comments;
+  if (Register or login?) then (yes)
+    :Register / Login;
+  endif
+endif
+if (Admin?) then (yes)
+  :Admin Dashboard;
+  :Manage Matches / Criteria / Results / Uploads;
+endif
+stop
+@enduml

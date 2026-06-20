@@ -1,0 +1,60 @@
+@startuml
+title UC06 - Backend Classes
+skinparam classAttributeIconSize 0
+class AdminMatchController {
+  +create(dto): MatchDto
+  +update(id,dto): MatchDto
+  +setEntryGold(id, gold): MatchDto
+  +updateResult(id, dto): Response
+  +setCriterionResult(criterionId, team): Response
+  +cancel(id): Response
+}
+class MatchService { +validateMatch(dto): void +save(dto): Match +cancel(id): void }
+class ScoringService {
+  +scoreMatch(matchId): void
+  -resolveCriteria(matchId): void
+  -computeScores(matchId): List<Participation>
+}
+class GoldPayoutService {
+  +payout(matchId): void
+  -pool(entryGold, participants): Decimal
+  -winners(participations): List<Participation>
+  -splitTwoDecimals(pool, winnerCount): Decimal
+}
+class NotificationService { +notifyMatchResult(matchId): void +notifyCancelled(matchId): void }
+class FootballDataSyncService { +refreshMatches(): SyncResult +scrapeCriterionResults(matchId): void }
+class MatchRepository { +save(match): Match +hasRelatedData(id): boolean }
+class PredictionRepository { +findByMatch(matchId): List<Prediction> +markCorrectness(matchId): void }
+class ParticipationRepository { +upsert(p): MatchParticipation +findByMatch(matchId): List<MatchParticipation> }
+class NotificationRepository { +saveAll(list): void }
+
+AdminMatchController --> MatchService
+AdminMatchController --> ScoringService
+AdminMatchController --> FootballDataSyncService
+MatchService --> MatchRepository
+ScoringService --> PredictionRepository
+ScoringService --> ParticipationRepository
+ScoringService --> GoldPayoutService
+ScoringService --> NotificationService
+GoldPayoutService --> ParticipationRepository
+NotificationService --> NotificationRepository
+
+note bottom of ScoringService
+  Chạy khi match -> FINISHED (idempotent, 1 lần/trận):
+  1. resolveCriteria: set result_team (admin nhập / cào api-football, admin ưu tiên)
+  2. computeScores: score = số criterion đúng (+1 mỗi đúng) cho mỗi participant
+  3. GoldPayoutService.payout
+  4. NotificationService.notifyMatchResult
+end note
+note bottom of GoldPayoutService
+  pool = entry_gold * số participant.
+  winners = participant có score cao nhất và >= 1 (hòa -> nhiều người).
+  gold_won = pool / winnerCount, làm tròn 2 chữ số thập phân.
+  Điểm cao nhất = 0 -> không có winner, pool void.
+  Trận < 2 participant -> không tính vào leaderboard (BR29).
+end note
+note bottom of NotificationService
+  FINISHED -> MATCH_WON / MATCH_LOST cho từng participant.
+  CANCELLED -> MATCH_CANCELLED + void toàn bộ participation (BR30).
+end note
+@enduml

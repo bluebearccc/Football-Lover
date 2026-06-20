@@ -1,0 +1,17 @@
+@startuml
+title UC08 - Comment on Match Screen Flow
+start
+:Open match detail comments;
+if (Logged in?) then (yes)
+  :Enter comment;
+  if (Valid content and not spam?) then (yes)
+    :Save comment;
+    :Display in comment list;
+  else (no)
+    :Show validation/spam message;
+  endif
+else (no)
+  :Prompt login;
+endif
+stop
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+title UC10 - Profile History Screen Flow
+start
+:Open profile page;
+if (Logged in?) then (yes)
+  :Load profile and prediction history;
+  if (Profile found?) then (yes)
+    :Display user info, points and history;
+  else (no)
+    :Show profile not found;
+  endif
+else (no)
+  :Redirect to login;
+endif
+stop
+@enduml

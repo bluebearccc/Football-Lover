@@ -1,0 +1,11 @@
+@startuml
+title UC11 - Frontend Classes
+skinparam classAttributeIconSize 0
+class ChatbotWidget { +open(): void +sendMessage(): void }
+class ChatMessageList { messages +render(): JSX }
+class ChatInput { value +validate(): ValidationResult }
+class ChatbotApiClient { +ask(message): Promise<ChatbotResponse> }
+ChatbotWidget --> ChatMessageList
+ChatbotWidget --> ChatInput
+ChatbotWidget --> ChatbotApiClient
+@enduml

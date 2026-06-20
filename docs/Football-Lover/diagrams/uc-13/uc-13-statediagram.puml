@@ -1,0 +1,13 @@
+@startuml
+title UC13 - Team State
+[*] --> Draft : create
+Draft --> Active : saved (valid)
+Active --> Active : edit / sync update
+Active --> Inactive : deactivate (referenced by match)
+Inactive --> Active : reactivate
+Draft --> [*] : delete (no references)
+Inactive --> [*] : delete (no references)
+note right of Inactive
+  Không hard-delete team đang được Match tham chiếu.
+end note
+@enduml

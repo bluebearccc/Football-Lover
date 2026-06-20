@@ -1,0 +1,11 @@
+@startuml
+title UC03 - Match List State
+[*] --> Loading
+Loading --> Loaded : matches found
+Loading --> Empty : no data
+Loading --> Error : API error
+Loaded --> Filtering : apply filter
+Filtering --> Loaded : results updated
+Error --> Loading : retry
+Loaded --> [*]
+@enduml

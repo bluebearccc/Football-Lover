@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+title UC04 - View Match Details
+actor Guest
+actor "Registered User" as User
+rectangle "Football-Lover" {
+  Guest --> (UC04 View Match Details)
+  User --> (UC04 View Match Details)
+  (UC04 View Match Details) ..> (View public statistics) : include
+  (UC04 View Match Details) ..> (View comments) : include
+  (UC04 View Match Details) ..> (View prediction criteria) : include
+}
+@enduml

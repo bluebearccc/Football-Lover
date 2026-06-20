@@ -1,0 +1,17 @@
+@startuml
+title UC05 - Prediction Screen Flow
+start
+:Open match detail;
+if (Logged in?) then (yes)
+  :Select team for each criterion;
+  if (Before deadline and match not cancelled?) then (yes)
+    :Submit or edit prediction;
+    :Show success and updated statistics;
+  else (no)
+    :Show locked/unavailable message;
+  endif
+else (no)
+  :Prompt login;
+endif
+stop
+@enduml

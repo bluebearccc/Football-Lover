@@ -1,0 +1,13 @@
+@startuml
+title UC12 - Backend Classes
+skinparam classAttributeIconSize 0
+class MediaController { +upload(request,file): MediaDto }
+class UploadService { +validate(file): void +safeRename(file): String +upload(file,target): MediaDto }
+class FileStorageClient { +put(fileName, bytes): String }
+class MediaReferenceRepository { +save(ref): MediaReference }
+class MediaReference { id targetType targetId url path createdAt }
+MediaController --> UploadService
+UploadService --> FileStorageClient
+UploadService --> MediaReferenceRepository
+MediaReferenceRepository --> MediaReference
+@enduml

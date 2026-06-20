@@ -1,0 +1,11 @@
+@startuml
+title UC09 - Frontend Classes
+skinparam classAttributeIconSize 0
+class StatisticsPage { +loadStats(): void +render(): JSX }
+class LeaderboardTable { ranks +render(): JSX }
+class PredictionChart { totals +renderChart(): JSX }
+class StatisticsApiClient { +getMatchStats(id): Promise<Stats> +getLeaderboard(): Promise<Rank[]> }
+StatisticsPage --> LeaderboardTable
+StatisticsPage --> PredictionChart
+StatisticsPage --> StatisticsApiClient
+@enduml

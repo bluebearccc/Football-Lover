@@ -1,0 +1,58 @@
+@startuml
+title Football-Lover - Layered Architecture
+skinparam componentStyle uml2
+
+package "Presentation Layer" {
+  component "Responsive Web UI" as UI
+  component "Admin Console" as AdminUI
+  component "Chatbot Widget" as ChatUI
+}
+
+package "Application/API Layer" {
+  component "REST API Controllers" as API
+  component "Auth/RBAC Middleware" as RBAC
+  component "Validation & Error Handling" as Validation
+}
+
+package "Domain Services" {
+  component "User Service" as UserSvc
+  component "Match Service" as MatchSvc
+  component "Prediction Service" as PredictionSvc
+  component "Statistics Service" as StatsSvc
+  component "Comment Service" as CommentSvc
+  component "Chatbot Service" as ChatSvc
+  component "Media Service" as MediaSvc
+}
+
+package "Data/Infrastructure Layer" {
+  database "Relational DB" as DB
+  storage "File/Object Storage" as FS
+  cloud "Football Data API" as FDA
+  cloud "Chatbot/AI Provider" as AI
+}
+
+UI --> API
+AdminUI --> API
+ChatUI --> API
+API --> RBAC
+API --> Validation
+RBAC --> UserSvc
+Validation --> MatchSvc
+API --> UserSvc
+API --> MatchSvc
+API --> PredictionSvc
+API --> StatsSvc
+API --> CommentSvc
+API --> ChatSvc
+API --> MediaSvc
+UserSvc --> DB
+MatchSvc --> DB
+PredictionSvc --> DB
+StatsSvc --> DB
+CommentSvc --> DB
+ChatSvc --> DB
+ChatSvc --> AI
+MediaSvc --> FS
+MatchSvc --> FDA
+
+@enduml

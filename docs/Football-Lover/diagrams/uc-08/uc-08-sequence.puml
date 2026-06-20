@@ -1,0 +1,21 @@
+@startuml
+title UC08 - Comment on Match Sequence
+actor User
+participant "Web UI" as UI
+participant "Comment API" as API
+participant "Comment Service" as Svc
+participant "Moderation Service" as Mod
+database "DB" as DB
+User -> UI : Submit comment
+UI -> API : POST /matches/{id}/comments
+API -> Svc : create(user, match, content)
+Svc -> Mod : validate content and rate limit
+alt valid
+  Svc -> DB : save comment
+  API --> UI : 201 Created
+  UI --> User : Show comment
+else invalid
+  API --> UI : 400/429
+  UI --> User : Show error
+end
+@enduml

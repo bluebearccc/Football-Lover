@@ -1,0 +1,29 @@
+@startuml
+title UC14 - Notifications Sequence
+actor "Registered User" as User
+participant "Web UI" as UI
+participant "Notification API" as API
+participant "Notification Service" as Svc
+participant "Scoring Service" as Score
+database "DB" as DB
+
+== System creates (from UC06 scoring) ==
+Score -> Svc : notifyMatchResult(matchId)
+Svc -> DB : load participants + is_winner
+Svc -> DB : insert MATCH_WON / MATCH_LOST (is_read = false)
+
+== User views ==
+User -> UI : Open notification bell
+UI -> API : GET /notifications
+API -> Svc : list(userId)
+Svc -> DB : query notifications (newest first)
+API --> UI : notifications + unread count
+UI --> User : Show list + badge
+
+== Mark read ==
+User -> UI : Open a notification
+UI -> API : PATCH /notifications/{id}/read
+API -> Svc : markRead(id, userId)
+Svc -> DB : set is_read = true
+API --> UI : 200 OK
+@enduml

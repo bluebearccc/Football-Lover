@@ -1,0 +1,15 @@
+@startuml
+title UC04 - Frontend Classes
+skinparam classAttributeIconSize 0
+class MatchDetailPage { +loadDetail(): void +render(): JSX }
+class TeamInfoPanel { team score logoUrl }
+class CriteriaList { criteria }
+class CommentList { comments }
+class StatsPanel { statistics }
+class MatchApiClient { +getMatch(id): Promise<MatchDetail> }
+MatchDetailPage --> TeamInfoPanel
+MatchDetailPage --> CriteriaList
+MatchDetailPage --> CommentList
+MatchDetailPage --> StatsPanel
+MatchDetailPage --> MatchApiClient
+@enduml

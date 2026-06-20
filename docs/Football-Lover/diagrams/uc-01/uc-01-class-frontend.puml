@@ -1,0 +1,11 @@
+@startuml
+title UC01 - Frontend Classes
+skinparam classAttributeIconSize 0
+class RegisterPage { +render(): JSX +handleSubmit(): void }
+class RegisterForm { email displayName password +validate(): ValidationResult }
+class AuthApiClient { +register(payload): Promise<User> }
+class ValidationMessage { message type }
+RegisterPage --> RegisterForm
+RegisterPage --> AuthApiClient
+RegisterForm --> ValidationMessage
+@enduml

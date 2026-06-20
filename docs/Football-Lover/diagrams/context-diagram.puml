@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+title Football-Lover - Context Diagram
+
+actor "Khach chua dang nhap" as Guest
+actor "Nguoi dung da dang ky" as User
+actor Admin
+actor "Chatbot/AI Provider" as AI
+actor "Football Data API" as FDA
+
+rectangle "Football-Lover" {
+  (Xem tran dau cong khai) as UC_Public
+  (Dang ky / Dang nhap) as UC_Auth
+  (Du doan va danh gia tieu chi) as UC_Predict
+  (Binh luan va xem thong ke) as UC_Community
+  (Quan ly tran dau / tieu chi / ket qua) as UC_Admin
+  (Su dung chatbot) as UC_Chatbot
+  (Dong bo du lieu bong da) as UC_Sync
+}
+
+Guest --> UC_Public
+Guest --> UC_Auth
+User --> UC_Public
+User --> UC_Predict
+User --> UC_Community
+User --> UC_Chatbot
+Admin --> UC_Admin
+Admin --> UC_Sync
+AI --> UC_Chatbot : REST JSON
+FDA --> UC_Sync : REST JSON Pull
+
+@enduml

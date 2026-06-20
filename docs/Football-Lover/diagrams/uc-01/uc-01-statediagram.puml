@@ -1,0 +1,9 @@
+@startuml
+title UC01 - Account Registration State
+[*] --> Draft
+Draft --> Validating : submit
+Validating --> Rejected : duplicate email / invalid password
+Rejected --> Draft : correct input
+Validating --> Created : valid data
+Created --> [*]
+@enduml

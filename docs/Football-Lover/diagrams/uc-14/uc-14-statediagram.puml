@@ -1,0 +1,10 @@
+@startuml
+title UC14 - Notification State
+[*] --> Unread : created by system (FINISHED/CANCELLED)
+Unread --> Read : user opens / marks read
+Read --> [*]
+note right of Unread
+  type ∈ {MATCH_WON, MATCH_LOST, MATCH_CANCELLED}
+  Unread tính vào badge đếm.
+end note
+@enduml

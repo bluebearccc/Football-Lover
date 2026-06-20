@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+title UC15 - Reset Password via Email
+actor "Registered User" as User
+rectangle "Football-Lover" {
+  User --> (Request Password Reset)
+  User --> (Set New Password)
+  (Request Password Reset) ..> (Email single-use token) : include
+  (Set New Password) ..> (Validate token) : include
+  (Set New Password) ..> (Enforce password policy) : include
+}
+actor "Email Provider" as Mail
+(Request Password Reset) --> Mail
+@enduml

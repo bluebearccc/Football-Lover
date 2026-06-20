@@ -1,0 +1,20 @@
+@startuml
+title UC14 - Notifications Screen Flow
+start
+:User clicks notification bell;
+if (Logged in?) then (yes)
+  :Load notifications (newest first);
+  if (Has notifications?) then (yes)
+    :Show list with unread badge;
+    if (User opens one?) then (yes)
+      :Mark as read;
+      :Navigate to related match (if any);
+    endif
+  else (no)
+    :Show empty state;
+  endif
+else (no)
+  :Redirect to login;
+endif
+stop
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+title UC03 - View Match List Sequence
+actor Visitor
+participant "Web UI" as UI
+participant "Match API" as API
+participant "Match Service" as Svc
+database "DB" as DB
+Visitor -> UI : Open match list
+UI -> API : GET /matches?filters
+API -> Svc : listPublicMatches(filters)
+Svc -> DB : query matches by status/time
+DB --> Svc : matches
+Svc --> API : public match DTOs
+API --> UI : 200 OK
+UI --> Visitor : Display list
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+title UC11 - Chatbot Screen Flow
+start
+:User opens chatbot widget;
+if (Logged in?) then (yes)
+  :Enter question;
+  if (Question allowed and within limits?) then (yes)
+    :Send question with safe context;
+    :Show AI response;
+  else (no)
+    :Show validation/rate-limit/read-only error;
+  endif
+else (no)
+  :Prompt login;
+endif
+stop
+@enduml

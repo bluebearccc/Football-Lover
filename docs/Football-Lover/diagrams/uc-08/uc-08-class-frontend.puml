@@ -1,0 +1,11 @@
+@startuml
+title UC08 - Frontend Classes
+skinparam classAttributeIconSize 0
+class CommentSection { +loadComments(): void +submit(): void }
+class CommentForm { content +validate(): ValidationResult }
+class CommentItem { comment +render(): JSX }
+class CommentApiClient { +list(matchId): Promise<Comment[]> +create(matchId,content): Promise<Comment> }
+CommentSection --> CommentForm
+CommentSection --> CommentItem
+CommentSection --> CommentApiClient
+@enduml

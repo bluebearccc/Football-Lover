@@ -1,0 +1,42 @@
+@startuml
+title UC06 - Manage Matches + Scoring/Gold Sequence
+actor Admin
+participant "Admin UI" as UI
+participant "Match Admin API" as API
+participant "Match Service" as Svc
+participant "Scoring Service" as Score
+participant "Gold Payout Service" as Gold
+participant "Notification Service" as Notif
+participant "Football Data Sync" as Sync
+database "DB" as DB
+
+Admin -> UI : Create/edit match, set entry_gold
+UI -> API : POST/PUT /admin/matches
+API -> Svc : validateAndSave(dto)
+Svc -> DB : validate (teams differ, time, entry_gold >= 0) and save
+
+== Update result -> FINISHED ==
+Admin -> UI : Enter scores + criterion results
+UI -> API : PUT /admin/matches/{id}/result
+API -> Svc : updateResult(id, dto)
+Svc -> Sync : scrapeCriterionResults(id) (optional, admin overrides)
+Svc -> Score : scoreMatch(id)
+Score -> DB : set result_team per criterion
+Score -> DB : mark prediction.is_correct + compute score per participant
+Score -> Gold : payout(id)
+Gold -> DB : pool = entry_gold * participants
+Gold -> DB : winners = max score (>=1); gold_won = pool / winners (2 decimals)
+Gold -> DB : upsert MatchParticipation (score, is_winner, gold_won)
+Score -> Notif : notifyMatchResult(id)
+Notif -> DB : insert MATCH_WON / MATCH_LOST notifications
+API --> UI : success
+UI --> Admin : Show winners + payout
+
+== Cancel ==
+Admin -> UI : Cancel match
+UI -> API : POST /admin/matches/{id}/cancel
+API -> Svc : cancel(id)
+Svc -> DB : status = CANCELLED, void participation results
+Svc -> Notif : notifyCancelled(id)
+Notif -> DB : insert MATCH_CANCELLED notifications
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+title UC13 - Manage Teams Sequence
+actor Admin
+participant "Admin UI" as UI
+participant "Team Admin API" as API
+participant "Team Service" as Svc
+participant "Football Data Sync" as Sync
+database "DB" as DB
+
+== Create/Edit team ==
+Admin -> UI : Fill team form
+UI -> API : POST/PUT /admin/teams
+API -> Svc : validateAndSave(dto)
+Svc -> DB : upsert Team (default logo if empty)
+API --> UI : success / validation error
+
+== Deactivate ==
+Admin -> UI : Deactivate team
+UI -> API : DELETE /admin/teams/{id}
+API -> Svc : remove(id)
+Svc -> DB : check referenced by Match?
+alt referenced
+  Svc -> DB : set is_active = false
+  API --> UI : deactivated (no hard delete)
+else not referenced
+  Svc -> DB : delete team
+  API --> UI : deleted
+end
+
+== Sync from api-football ==
+Admin -> UI : Sync teams/players
+UI -> API : POST /admin/teams/sync
+API -> Sync : refreshTeamsAndPlayers()
+Sync -> DB : upsert Team/Player by external_id
+Sync --> API : SyncResult
+API --> UI : Show sync summary
+@enduml

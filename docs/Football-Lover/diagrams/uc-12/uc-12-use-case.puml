@@ -1,0 +1,11 @@
+@startuml
+left to right direction
+title UC12 - Upload Team Player Images
+actor Admin
+rectangle "Football-Lover" {
+  Admin --> (UC12 Upload Team Logo/Image)
+  Admin --> (Upload Player Image)
+  (UC12 Upload Team Logo/Image) ..> (Validate MIME and size) : include
+  (Upload Player Image) ..> (Store URL/path) : include
+}
+@enduml

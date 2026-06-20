@@ -1,0 +1,185 @@
+@startuml
+title Football-Lover - Entity Relationship Diagram (v1.1.0)
+
+entity "User" as user {
+  * id : UUID
+  --
+  * email : String
+  * password_hash : String
+  * display_name : String
+  * role : Enum (USER, ADMIN)
+  * status : Enum (ACTIVE, LOCKED)
+  * total_points : Integer
+  * created_at : DateTime
+  --
+  note: Không có ví gold tích lũy.
+  Gold chỉ tính theo từng trận (per-match).
+}
+
+entity "Team" as team {
+  * id : UUID
+  --
+  * name : String
+  short_name : String
+  logo_url : String
+  external_id : String
+  * created_at : DateTime
+  --
+  note: logo_url nullable -> dùng ảnh mặc định.
+}
+
+entity "Player" as player {
+  * id : UUID
+  --
+  * team_id : UUID
+  * name : String
+  position : String
+  image_url : String
+  external_id : String
+  * created_at : DateTime
+  --
+  note: image_url nullable -> dùng ảnh mặc định.
+  Dữ liệu chủ yếu cào từ api-football.
+}
+
+entity "Match" as match {
+  * id : UUID
+  --
+  * home_team_id : UUID
+  * away_team_id : UUID
+  * match_time : DateTime
+  start_date : DateTime
+  end_date : DateTime
+  * status : Enum (SCHEDULED, LIVE, FINISHED, CANCELLED, POSTPONED)
+  home_score : Integer
+  away_score : Integer
+  * entry_gold : Decimal(12,2)
+  external_id : String
+  * created_at : DateTime
+  --
+  note: match_time = thời điểm khóa dự đoán (bóng lăn).
+  entry_gold mặc định 100. Lock dự đoán khi status != SCHEDULED.
+}
+
+entity "PredictionCriterion" as criterion {
+  * id : UUID
+  --
+  * match_id : UUID
+  * name : String
+  description : Text
+  result_team : Enum (HOME, AWAY)
+  resolved_at : DateTime
+  source : Enum (MANUAL, SCRAPED)
+  --
+  note: Mỗi tiêu chí = chọn 1 trong 2 đội (HOME/AWAY).
+  result_team = kết quả thực tế, set khi match FINISHED.
+}
+
+entity "Prediction" as prediction {
+  * id : UUID
+  --
+  * user_id : UUID
+  * match_id : UUID
+  * criterion_id : UUID
+  * selected_team : Enum (HOME, AWAY)
+  is_correct : Boolean
+  * created_at : DateTime
+  updated_at : DateTime
+  --
+  note: unique(user_id, criterion_id).
+  is_correct chấm khi match FINISHED.
+}
+
+entity "MatchParticipation" as participation {
+  * id : UUID
+  --
+  * match_id : UUID
+  * user_id : UUID
+  * score : Integer
+  * is_winner : Boolean
+  * gold_won : Decimal(12,2)
+  * created_at : DateTime
+  --
+  note: 1 bản ghi/(user, match). unique(match_id, user_id).
+  score = số criterion đúng (+1 mỗi đúng).
+  Người thắng = score cao nhất và >= 1.
+  Pool = entry_gold x số người tham gia; chia đều cho người thắng,
+  hiển thị 2 chữ số thập phân. Trận < 2 người: không tính vào leaderboard.
+}
+
+entity "Comment" as comment {
+  * id : UUID
+  --
+  * match_id : UUID
+  * user_id : UUID
+  * content : Text (1..1000)
+  * created_at : DateTime
+  * status : Enum (VISIBLE, HIDDEN, DELETED)
+}
+
+entity "Statistic" as statistic {
+  * id : UUID
+  --
+  * match_id : UUID
+  * criterion_id : UUID
+  * total_home_votes : Integer
+  * total_away_votes : Integer
+}
+
+entity "Notification" as notification {
+  * id : UUID
+  --
+  * user_id : UUID
+  * type : Enum (MATCH_WON, MATCH_LOST, MATCH_CANCELLED)
+  * title : String
+  body : Text
+  match_id : UUID
+  * is_read : Boolean
+  * created_at : DateTime
+}
+
+entity "ChatbotConversation" as chat {
+  * id : UUID
+  --
+  * user_id : UUID
+  * message : Text
+  * response : Text
+  * created_at : DateTime
+}
+
+entity "PasswordResetToken" as reset {
+  * id : UUID
+  --
+  * user_id : UUID
+  * token_hash : String
+  * expires_at : DateTime
+  used_at : DateTime
+  * created_at : DateTime
+  --
+  note: Gửi qua email provider (UC reset mật khẩu).
+}
+
+team ||--o{ player : has
+team ||--o{ match : home
+team ||--o{ match : away
+user ||--o{ prediction : creates
+user ||--o{ comment : writes
+user ||--o{ chat : has
+user ||--o{ participation : joins
+user ||--o{ notification : receives
+user ||--o{ reset : requests
+match ||--o{ criterion : defines
+match ||--o{ prediction : receives
+match ||--o{ participation : has
+match ||--o{ comment : has
+match ||--o{ statistic : aggregates
+match ||--o{ notification : about
+criterion ||--o{ prediction : selected_for
+criterion ||--o{ statistic : summarized_by
+
+note bottom
+  Ảnh logo đội (Team) và ảnh cầu thủ (Player) lưu ở file/object storage;
+  chỉ lưu URL/path trong DB. Thiếu ảnh -> hiển thị ảnh mặc định.
+end note
+
+@enduml

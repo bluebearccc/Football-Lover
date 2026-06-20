@@ -1,0 +1,37 @@
+@startuml
+title UC15 - Backend Classes
+skinparam classAttributeIconSize 0
+class PasswordResetController {
+  +requestReset(request): Response
+  +reset(request): Response
+}
+class PasswordResetService {
+  +requestReset(email): void
+  +reset(token, newPassword): void
+  -validatePolicy(password): void
+}
+class UserRepository {
+  +findByEmail(email): User
+  +updatePassword(userId, hash): void
+}
+class PasswordResetTokenRepository {
+  +create(userId, tokenHash, expiresAt): PasswordResetToken
+  +findValidByHash(tokenHash): PasswordResetToken
+  +markUsed(id): void
+}
+class EmailService { +sendResetLink(email, rawToken): void }
+class PasswordHasher { +hash(password): String }
+PasswordResetController --> PasswordResetService
+PasswordResetService --> UserRepository
+PasswordResetService --> PasswordResetTokenRepository
+PasswordResetService --> EmailService
+PasswordResetService --> PasswordHasher
+note bottom of PasswordResetService
+  requestReset: phản hồi trung lập (không lộ email tồn tại).
+  Lưu token_hash, expires_at; token dùng-một-lần (BR31).
+  reset: kiểm tra hash + not used/expired + password policy (>=8, chữ+số).
+end note
+note bottom of EmailService
+  Email provider (server-side credentials). Gửi raw token trong link.
+end note
+@enduml

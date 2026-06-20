@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+title UC06 - Manage Matches
+actor Admin
+actor "Football Data API" as FDA
+rectangle "Football-Lover" {
+  Admin --> (UC06 Manage Matches)
+  Admin --> (Update Official Result)
+  Admin --> (Manual Refresh Football Data)
+  FDA --> (Sync Match Data)
+  (UC06 Manage Matches) ..> (Validate match) : include
+  (Update Official Result) ..> (Score predictions) : include
+}
+@enduml

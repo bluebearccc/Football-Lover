@@ -1,0 +1,50 @@
+@startuml
+skinparam componentStyle uml2
+title Football-Lover - System Overview
+
+package "Frontend Web" as FE {
+  component "Responsive Web UI" as Web
+  component "Auth Pages" as AuthUI
+  component "Match Pages" as MatchUI
+  component "Admin Console" as AdminUI
+  component "Chatbot Widget" as ChatUI
+}
+
+package "Backend API" as BE {
+  component "Auth Module" as Auth
+  component "Match Module" as Match
+  component "Prediction Module" as Prediction
+  component "Comment Module" as Comment
+  component "Statistics Module" as Stats
+  component "Admin Module" as Admin
+  component "Chatbot Module" as Chatbot
+  component "Media Upload Module" as Media
+}
+
+database "Relational Database" as DB
+storage "File/Object Storage" as Storage
+cloud "Chatbot/AI Provider" as AI
+cloud "Football Data API" as FDA
+
+Web --> BE : HTTPS REST JSON
+AuthUI --> Auth
+MatchUI --> Match
+MatchUI --> Prediction
+MatchUI --> Comment
+MatchUI --> Stats
+AdminUI --> Admin
+AdminUI --> Media
+ChatUI --> Chatbot
+
+Auth --> DB
+Match --> DB
+Prediction --> DB
+Comment --> DB
+Stats --> DB
+Admin --> DB
+Chatbot --> DB : user context/history
+Media --> Storage : images/logos
+Chatbot --> AI : REST JSON
+Match --> FDA : scheduled/manual pull
+
+@enduml

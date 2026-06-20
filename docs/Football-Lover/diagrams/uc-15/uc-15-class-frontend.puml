@@ -1,0 +1,18 @@
+@startuml
+title UC15 - Frontend Classes
+skinparam classAttributeIconSize 0
+class ForgotPasswordPage { email +submit(): void }
+class ResetPasswordForm { token newPassword confirm +validate(): ValidationResult +submit(): void }
+class ValidationMessage { message +render(): JSX }
+class AuthApiClient {
+  +forgotPassword(email): Promise<void>
+  +resetPassword(token, newPassword): Promise<void>
+}
+ForgotPasswordPage --> AuthApiClient
+ResetPasswordForm --> ValidationMessage
+ResetPasswordForm --> AuthApiClient
+note bottom of ResetPasswordForm
+  Validate password policy (>=8, chữ + số) trước khi submit.
+  token lấy từ query string của link email.
+end note
+@enduml

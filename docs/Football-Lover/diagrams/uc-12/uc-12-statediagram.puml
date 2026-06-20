@@ -1,0 +1,13 @@
+@startuml
+title UC12 - Upload Lifecycle State
+[*] --> Selected
+Selected --> Validating : upload requested
+Validating --> Rejected : invalid type/size
+Validating --> Uploading : valid
+Uploading --> Stored : storage success
+Uploading --> Failed : storage error
+Stored --> Linked : URL/path saved
+Linked --> [*]
+Rejected --> Selected : choose another file
+Failed --> Selected : retry
+@enduml

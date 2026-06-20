@@ -1,0 +1,21 @@
+@startuml
+title UC01 - Register Account Sequence
+actor Guest
+participant "Web UI" as UI
+participant "Auth API" as API
+participant "User Service" as Svc
+database "DB" as DB
+Guest -> UI : Fill register form
+UI -> API : POST /auth/register
+API -> Svc : validateAndRegister(dto)
+Svc -> DB : check email uniqueness
+DB --> Svc : unique / exists
+alt valid
+  Svc -> DB : insert user with password_hash
+  API --> UI : 201 Created
+  UI --> Guest : Show success
+else invalid
+  API --> UI : 400 validation error
+  UI --> Guest : Show error
+end
+@enduml

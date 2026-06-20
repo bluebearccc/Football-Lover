@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+title UC11 - Use Chatbot
+actor "Registered User" as User
+actor "Chatbot/AI Provider" as AI
+rectangle "Football-Lover" {
+  User --> (UC11 Use Chatbot)
+  (UC11 Use Chatbot) ..> (Check login and rate limit) : include
+  (UC11 Use Chatbot) ..> (Read-only answer) : include
+  AI --> (Generate chatbot response)
+}
+@enduml

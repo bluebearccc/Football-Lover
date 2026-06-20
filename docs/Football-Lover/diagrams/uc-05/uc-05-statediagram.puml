@@ -1,0 +1,13 @@
+@startuml
+title UC05 - Prediction State
+[*] --> NotPredicted
+NotPredicted --> Draft : select criteria
+Draft --> Submitted : submit before deadline
+Submitted --> Edited : edit before deadline
+Edited --> Submitted : save
+Submitted --> Locked : deadline or match starts
+Locked --> Scored : official result finished
+Locked --> Cancelled : match cancelled
+Scored --> [*]
+Cancelled --> [*]
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+title UC14 - Win/Lose Notifications
+actor "Registered User" as User
+actor "System" as System
+rectangle "Football-Lover" {
+  User --> (View Notifications)
+  User --> (Mark Notification Read)
+  System --> (Create Result Notification)
+  (Create Result Notification) ..> (On match FINISHED: WON/LOST) : include
+  (Create Result Notification) ..> (On match CANCELLED) : include
+}
+@enduml
