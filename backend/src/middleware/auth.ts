@@ -1,14 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
 import type { Role } from '@prisma/client';
-import { env } from '../config/env';
+import { verifyAccessToken } from '../utils/jwt';
 import { ApiError } from '../utils/ApiError';
-
-interface JwtClaims {
-  sub: string;
-  email: string;
-  role: Role;
-}
 
 /** Require a valid Bearer token; attaches `req.user`. */
 export function authenticate(req: Request, _res: Response, next: NextFunction): void {
@@ -18,7 +11,7 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
   }
   const token = header.slice('Bearer '.length);
   try {
-    const claims = jwt.verify(token, env.jwt.secret) as JwtClaims;
+    const claims = verifyAccessToken(token);
     req.user = { id: claims.sub, email: claims.email, role: claims.role };
     next();
   } catch {
