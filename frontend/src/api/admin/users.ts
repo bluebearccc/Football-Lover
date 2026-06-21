@@ -1,0 +1,24 @@
+import { adminFetch } from './client';
+import type { AdminUser, Paginated, Role, UserStatus } from './types';
+
+export const adminUsersApi = {
+  list(params: { search?: string; role?: Role; status?: UserStatus; page?: number; pageSize?: number } = {}) {
+    const q = new URLSearchParams();
+    if (params.search) q.set('search', params.search);
+    if (params.role) q.set('role', params.role);
+    if (params.status) q.set('status', params.status);
+    if (params.page) q.set('page', String(params.page));
+    if (params.pageSize) q.set('pageSize', String(params.pageSize));
+    const qs = q.toString();
+    return adminFetch<Paginated<AdminUser>>(`/users${qs ? `?${qs}` : ''}`);
+  },
+  get(id: string) {
+    return adminFetch<AdminUser>(`/users/${id}`);
+  },
+  setStatus(id: string, status: UserStatus) {
+    return adminFetch<AdminUser>(`/users/${id}/status`, { method: 'PATCH', body: { status } });
+  },
+  setRole(id: string, role: Role) {
+    return adminFetch<AdminUser>(`/users/${id}/role`, { method: 'PATCH', body: { role } });
+  },
+};

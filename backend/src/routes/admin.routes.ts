@@ -1,0 +1,27 @@
+import { Router } from 'express';
+import { authenticate, requireRole } from '../middleware/auth';
+import { commentsRoutes } from '../modules/comments/comments.routes';
+import { criteriaRoutes } from '../modules/criteria/criteria.routes';
+import { dashboardRoutes } from '../modules/dashboard/dashboard.routes';
+import { matchesRoutes } from '../modules/matches/matches.routes';
+import { syncRoutes } from '../modules/sync/sync.routes';
+import { teamsRoutes } from '../modules/teams/teams.routes';
+import { uploadsRoutes } from '../modules/uploads/uploads.routes';
+import { usersRoutes } from '../modules/users/users.routes';
+
+/**
+ * Admin surface (UC06, UC07, UC12, UC13 + manage users + comment moderation + dashboard).
+ * Every route below requires a valid JWT and the ADMIN role (BR10/BR11/AC-12-02).
+ */
+export const adminRoutes = Router();
+
+adminRoutes.use(authenticate, requireRole('ADMIN'));
+
+adminRoutes.use('/dashboard', dashboardRoutes);
+adminRoutes.use('/teams', teamsRoutes);
+adminRoutes.use('/matches', matchesRoutes);
+adminRoutes.use('/criteria', criteriaRoutes);
+adminRoutes.use('/users', usersRoutes);
+adminRoutes.use('/comments', commentsRoutes);
+adminRoutes.use('/uploads', uploadsRoutes);
+adminRoutes.use('/sync', syncRoutes);

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Default team logo">
+  <rect width="64" height="64" rx="32" fill="#cdf2db"/>
+  <path d="M32 14l16 7v11c0 10-7 16-16 18-9-2-16-8-16-18V21l16-7z" fill="#16a34a"/>
+  <circle cx="32" cy="30" r="7" fill="#eafaf1"/>
+</svg>
