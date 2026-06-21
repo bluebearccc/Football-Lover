@@ -31,6 +31,16 @@ export const teamsRepository = {
     return prisma.team.findUnique({ where: { externalId } });
   },
 
+  findActiveByName(name: string, excludeId?: string): Promise<Team | null> {
+    return prisma.team.findFirst({
+      where: {
+        name: { equals: name, mode: 'insensitive' },
+        isActive: true,
+        ...(excludeId ? { id: { not: excludeId } } : {}),
+      },
+    });
+  },
+
   create(data: Prisma.TeamCreateInput): Promise<Team> {
     return prisma.team.create({ data });
   },
@@ -49,6 +59,79 @@ export const teamsRepository = {
 
   async delete(id: string): Promise<void> {
     await prisma.team.delete({ where: { id } });
+  },
+
+  async upsertByExternalId(data: {
+    externalId: string;
+    name: string;
+    shortName: string | null;
+    logoUrl: string | null;
+  }): Promise<{ team: Team; created: boolean; changed: boolean }> {
+    const existing = await prisma.team.findUnique({
+      where: { externalId: data.externalId },
+    });
+    if (existing) {
+      const changed = existing.logoUrl !== data.logoUrl;
+      if (changed) {
+        const team = await prisma.team.update({
+          where: { id: existing.id },
+          data: { logoUrl: data.logoUrl },
+        });
+        return { team, created: false, changed: true };
+      }
+      return { team: existing, created: false, changed: false };
+    }
+    const team = await prisma.team.create({
+      data: {
+        name: data.name,
+        shortName: data.shortName,
+        logoUrl: data.logoUrl,
+        externalId: data.externalId,
+      },
+    });
+    return { team, created: true, changed: true };
+  },
+
+  async upsertPlayerByExternalId(data: {
+    externalId: string;
+    teamId: string;
+    name: string;
+    position: string | null;
+    imageUrl: string | null;
+  }): Promise<{ created: boolean; changed: boolean }> {
+    const existing = await prisma.player.findUnique({
+      where: { externalId: data.externalId },
+    });
+    if (existing) {
+      const changed =
+        existing.name !== data.name ||
+        existing.position !== data.position ||
+        existing.imageUrl !== data.imageUrl ||
+        existing.teamId !== data.teamId;
+      if (changed) {
+        await prisma.player.update({
+          where: { id: existing.id },
+          data: {
+            name: data.name,
+            position: data.position,
+            imageUrl: data.imageUrl,
+            teamId: data.teamId,
+          },
+        });
+        return { created: false, changed: true };
+      }
+      return { created: false, changed: false };
+    }
+    await prisma.player.create({
+      data: {
+        name: data.name,
+        position: data.position,
+        imageUrl: data.imageUrl,
+        externalId: data.externalId,
+        team: { connect: { id: data.teamId } },
+      },
+    });
+    return { created: true, changed: true };
   },
 
   // Players

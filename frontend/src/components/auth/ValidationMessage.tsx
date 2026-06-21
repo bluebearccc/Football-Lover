@@ -8,10 +8,10 @@ export function ValidationMessage({
   if (!message) return null;
   const cls =
     tone === 'success'
-      ? 'border-pitch-200 bg-pitch-50 text-pitch-700'
-      : 'border-red-200 bg-red-50 text-red-700';
+      ? 'border-primary/30 bg-primary/10 text-primary'
+      : 'border-error/30 bg-error/10 text-error';
   return (
-    <p role="alert" className={`rounded-md border px-3 py-2 text-sm ${cls}`}>
+    <p role="alert" className={`rounded-lg border px-3 py-2 text-sm ${cls}`}>
       {message}
     </p>
   );

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GoalPredict Live - Master the Game. Predict the Glory.</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-dim": "#0b1326",
+                "surface-container-low": "#131b2e",
+                "on-secondary-container": "#00374d",
+                "tertiary-container": "#ff8b7c",
+                "on-secondary-fixed-variant": "#004c69",
+                "surface-tint": "#4ae176",
+                "on-tertiary": "#60130d",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#2d3449",
+                "primary-fixed": "#6bff8f",
+                "surface-container-high": "#222a3d",
+                "on-primary-container": "#004b1e",
+                "inverse-surface": "#dae2fd",
+                "on-error": "#690005",
+                "on-surface-variant": "#bccbb9",
+                "on-primary": "#003915",
+                "on-tertiary-fixed": "#410001",
+                "surface": "#0b1326",
+                "tertiary": "#ffb5ab",
+                "error-container": "#93000a",
+                "surface-container-highest": "#2d3449",
+                "secondary-fixed-dim": "#7bd0ff",
+                "secondary": "#7bd0ff",
+                "secondary-container": "#00a6e0",
+                "error": "#ffb4ab",
+                "surface-container-lowest": "#060e20",
+                "on-secondary": "#00354a",
+                "tertiary-fixed-dim": "#ffb4a9",
+                "inverse-primary": "#006e2f",
+                "on-surface": "#dae2fd",
+                "on-primary-fixed-variant": "#005321",
+                "surface-bright": "#31394d",
+                "primary-fixed-dim": "#4ae176",
+                "primary-container": "#22c55e",
+                "tertiary-fixed": "#ffdad5",
+                "on-background": "#dae2fd",
+                "outline-variant": "#3d4a3d",
+                "background": "#0b1326",
+                "on-tertiary-fixed-variant": "#7f2a21",
+                "primary": "#4be277",
+                "on-secondary-fixed": "#001e2c",
+                "on-primary-fixed": "#002109",
+                "surface-container": "#171f33",
+                "secondary-fixed": "#c4e7ff",
+                "inverse-on-surface": "#283044",
+                "outline": "#869585",
+                "on-tertiary-container": "#76231b"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "card-padding": "20px",
+                "widget-gap": "24px",
+                "margin-mobile": "16px",
+                "gutter": "16px",
+                "margin-desktop": "32px",
+                "base": "8px"
+        },
+        "fontFamily": {
+                "headline-lg": [
+                        "Inter"
+                ],
+                "data-mono": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-lg-mobile": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Inter"
+                ],
+                "body-sm": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "data-mono": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-sm": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "800"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+  .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .live-glow {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+  }
+  .gradient-text {
+    background: linear-gradient(90deg, #4be277, #7bd0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-bg {
+    background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at bottom left, rgba(123, 208, 255, 0.1) 0%, transparent 40%);
+  }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body-lg antialiased overflow-x-hidden selection:bg-primary/30 selection:text-primary min-h-screen flex flex-col">
+<!-- TopAppBar Shell Suppressed for Landing Page (Transactional/Linear Intent Flow) -->
+<main class="flex-grow flex flex-col">
+<!-- Section 1: Hero -->
+<section class="relative w-full min-h-[921px] flex items-center justify-center pt-24 pb-16 px-margin-mobile md:px-margin-desktop overflow-hidden hero-bg">
+<!-- Abstract BG Image -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none" data-alt="A highly abstract, blurred background image representing a modern, high-tech football stadium at night. The lighting is dark and moody, primarily deep slate blues and blacks, intersected by sharp, vibrant neon green laser lights suggesting a pitch outline. The aesthetic is corporate modern and glassmorphic, avoiding any distinct human figures, focusing entirely on atmospheric, glowing energy suitable for a premium sports analytics platform." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXnJDn8mQJ8YJm_vgqQBzeh0y_Ees2zuiHpU1Ys6RZT72Wv0eaiVBZr1AdEvPagzKzXmtB8efCpr1LJ883lJIbMERsuRPDHsHMYehrvFk7OIjSNJ4S2AB1REBgOOQjpkaUxp442eQYR4BGENhjgmlKHcPdCj6h5Da9_N8kqkpOmt_0TD8dROWseQv939DQwLzxuRitiXOe-ICdQtw9M4LtOw4wOwa2-0Q3_FBP12q85VnTkcbAa0_zpsPKX6Brpxz5kg4zakEupUdV')"></div>
+<div class="relative z-10 max-w-5xl w-full flex flex-col items-center text-center space-y-8 mt-12">
+<div class="inline-flex items-center space-x-2 bg-surface-container-highest/50 border border-outline-variant/30 rounded-full px-4 py-1.5 backdrop-blur-sm mb-4">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(75,226,119,0.8)]"></span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Live Platform Version 2.0 Released</span>
+</div>
+<h1 class="font-display-lg text-display-lg md:text-[64px] md:leading-[72px] text-on-surface max-w-4xl tracking-tight">
+        Master the Game. <br/><span class="gradient-text">Predict the Glory.</span>
+</h1>
+<p class="font-body-lg text-body-lg md:text-[20px] md:leading-[32px] text-on-surface-variant max-w-2xl">
+        Dominate the leaderboard with real-time football predictions fueled by AI-powered insights. Track every possession, analyze the stats, and turn your sports knowledge into prestige.
+      </p>
+<div class="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
+<a class="w-full sm:w-auto bg-primary hover:bg-primary/90 text-on-primary font-headline-md text-headline-md py-4 px-8 rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.3)] transition-all transform hover:scale-105 text-center" href="#">
+          Start Predicting Now
+        </a>
+<a class="w-full sm:w-auto bg-transparent border border-primary text-primary hover:bg-primary/10 font-headline-md text-headline-md py-4 px-8 rounded-lg transition-colors text-center" href="#live-preview">
+          Explore Matches
+        </a>
+</div>
+<!-- Social Proof Snippet in Hero -->
+<div class="mt-12 flex items-center gap-4 text-on-surface-variant">
+<div class="flex -space-x-3">
+<img class="w-10 h-10 rounded-full border-2 border-surface object-cover" data-alt="A small, stylized avatar profile picture of a serious, modern male sports analyst in dark lighting with subtle green rim light. The image should be cropped tightly to the face, suitable for a tiny circle UI element." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlQXHAD7U54Ifvczga5GbpyHBfUxkoZ1xOm9Ka2FpItwxvp7wQ45vlC1Y3Wbt9E6ineNesF4nVQCT_DHg1WRlZbHuJFMSea8DiRdck7_B3hbMD6pf4QSnxISJU1rJIStAcW4LSuE_REqIBi6ZYlDV4OgLQag3-xwBMjqrKIlMKEdrDP7XuA0DbNEsWOOKHJRoDTe_IV4jCDQfKDBQnuROZTvBDUOmaJOt2vvA3av_JfYGNQTpeA0W2EVyl5znkdBNgtZxYpuhOFeNT"/>
+<img class="w-10 h-10 rounded-full border-2 border-surface object-cover" data-alt="A small, stylized avatar profile picture of a confident female user wearing a sleek headset, illuminated by screen glow. The setting is dark and high-tech, suitable for a premium esports or analytics dashboard UI element." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaHC6qwjCuWltG_aRte-4M_qdd_AokaPu1zzirKTu3f-KQ-nt6gL_2uaHrtSOn7MfYOPajA7TpMYV59GyM5j4KgblGF_9HM4-zvGAG0qy2a1pHK-x61SrX047RNLfGJmXIWrUif67ifcuVoJSlvU9O9LVD_cgGHC3r_vPMZgaK1il-scXq5xqAOcjq_uRMVquQT-gvhr9b0puvKh0895HftDcDy8ExkTDDnxLuGjm5eOpdi9-KFHclPfDGC_gqP8FovfycfixveINY"/>
+<img class="w-10 h-10 rounded-full border-2 border-surface object-cover" data-alt="A small, abstract geometric avatar image featuring sharp angles and a dark color palette with a vibrant pitch green accent. This represents an anonymous high-level player in a premium sports prediction app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZMC2O-TQUKqmtl2PBP2EfFMbEEzASUyQHkIs80iV4ebwX6a3CuIh4cPTa0ey5MtNoMs7mi777W8Wm34wNjTAQ3EkQq1cmJaenUk8pMpB8yDrpCH0MJj4gZq2OCjIll6gFKhbC2n-4_9Q2_g01C-tiMFGGsVJ4iFuYhZPVoBg99evvYovMeQGCPdtoBc8XHEpkc8cLdxzzzoDxQ3IuM8PjObmgq-B7L_-d9Y9UwZ8MSpY588i-U1HwAhvfvl1lXjDrb-QAV6qmn1ts"/>
+<div class="w-10 h-10 rounded-full border-2 border-surface bg-surface-container-highest flex items-center justify-center font-label-caps text-label-caps text-primary z-10">+50k</div>
+</div>
+<div class="font-body-sm text-body-sm flex flex-col items-start">
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="text-on-surface-variant">Top Rated Sports App</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Live Preview -->
+<section class="w-full py-16 px-margin-mobile md:px-margin-desktop bg-surface-container-lowest relative" id="live-preview">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Live Now</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Real-time match data flowing from top leagues.</p>
+</div>
+<a class="text-primary font-data-mono text-data-mono hover:underline flex items-center gap-1" href="#">View All Live <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+<!-- Horizontal Scroll Container for Match Cards -->
+<div class="flex overflow-x-auto gap-widget-gap pb-6 snap-x snap-mandatory scrollbar-hide">
+<!-- Live Match Card 1 -->
+<div class="min-w-[320px] md:min-w-[400px] glass-card rounded-xl p-card-padding flex flex-col snap-start live-glow relative">
+<div class="absolute top-4 left-4 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-primary">LIVE 67'</span>
+</div>
+<div class="absolute top-4 right-4 font-label-caps text-label-caps text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">PREMIER LEAGUE</div>
+<div class="flex justify-between items-center mt-8 mb-6">
+<div class="flex flex-col items-center gap-2 w-1/3">
+<div class="w-16 h-16 rounded-full border-2 border-outline-variant/30 flex items-center justify-center p-2 bg-surface-container">
+<img class="w-full h-full object-contain" data-alt="A clean, minimalist vector logo of a football team crest featuring a lion in a dark blue shield, presented against a dark transparent background, suitable for a sleek dark mode UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_N-gjClKarP7cQo9x_44xPqxmJ5hfwcJAQZLv-24ezJlcGoyHLTzSFfCSNRqFi7O6ODj-IJumylzmsur1yGkv43ZRxGvDvf8iMy1QvZ5I9uCtHSxjrzsJ8SzrHo_kiXxAOwLUEjWEeLjzKGOn0E3fxOeI0UQGe3c57AMSsa02Drvs_V8hN8_2IZXqjm8HW119kThKtFDZ6Za5KXu0cfp64xgQ7-YapaQDBH2HOw3G0_h7K908yCz_2aX2VaSqWvbtTZgG-zt66Izl"/>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">CHE</span>
+</div>
+<div class="w-1/3 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-on-surface leading-none tracking-tighter">2 - 1</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/3">
+<div class="w-16 h-16 rounded-full border-2 border-outline-variant/30 flex items-center justify-center p-2 bg-surface-container">
+<img class="w-full h-full object-contain" data-alt="A sharp, modern football team crest logo featuring a red cannon on a white background, designed for a dark mode sports analytics interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZWtwbWi-udOiOkwWvMGFJWGVBDXllikvCx_DE_QjDD5a1VXfOqIWrAlGTa_m8TXORAPGCeXxfOvRN3pJG1x6YwdptNKOERw9_fyklT2YsaYgXMx0eKx8b_GrV5v4xWX_apcv9l5Cn8XVZcLVpZoXoSe7F2OOTzS6qdUGuNBFP6fOZN__9SI6oXciE_wvbjjAnl-EsrYRcOfrcyGNSHF9NTBVkPj-KLbqxt-7YSH3FaQZwl7Dk2u1YbTZY_nikoGBSfFDt1Xf9jrxf"/>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">ARS</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 w-full">
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant mb-2">
+<span>Home Win Probability</span>
+<span class="text-primary">64%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 64%"></div>
+</div>
+</div>
+</div>
+<!-- Live Match Card 2 -->
+<div class="min-w-[320px] md:min-w-[400px] glass-card rounded-xl p-card-padding flex flex-col snap-start opacity-90 hover:opacity-100 transition-opacity">
+<div class="absolute top-4 left-4 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-primary">LIVE 12'</span>
+</div>
+<div class="absolute top-4 right-4 font-label-caps text-label-caps text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">LA LIGA</div>
+<div class="flex justify-between items-center mt-8 mb-6">
+<div class="flex flex-col items-center gap-2 w-1/3">
+<div class="w-16 h-16 rounded-full border-2 border-outline-variant/30 flex items-center justify-center p-2 bg-surface-container">
+<img class="w-full h-full object-contain" data-alt="A stylized, simplified vector logo of a famous Spanish football team crest with a crown on top, rendered in white and subtle yellow lines for a dark mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-Fu44wz8Op9jGPXLgLs5JrlMdzt_8EywvTzo9dNa3PUAZ4fHs_bRRsmAgwLuuAwroaVthI83ur6LUBATYaH100ogakPJZGOhL2eF2cY1DwgN-JyY69hBBZuQcGtXnvbJ0kP8FitsyXQz161a-vicOPL_aQOcSe1KD1LX1Tk4ho5FfCqV_Tx73osVL52YvFTvJJVAZrKgedfheZZ1b4m-z6AZkKvd843uOvv9C37yLTJOrDvsgRE3NpQmvog6GrfzBcsvkxh5pmzjI"/>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">RMA</span>
+</div>
+<div class="w-1/3 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-on-surface leading-none tracking-tighter">0 - 0</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/3">
+<div class="w-16 h-16 rounded-full border-2 border-outline-variant/30 flex items-center justify-center p-2 bg-surface-container">
+<img class="w-full h-full object-contain" data-alt="A minimalist, modern vector logo of a Spanish football team crest featuring vertical red and white stripes and a small bear, optimized for a dark dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9vHFAMX9jLZtUBtqDhuihPL8yI9aXedZ-b4H6fyQ8ek0CfmVPlYogAfFgZWRWDxjKEB7WhX0QvLGQ1OAxMeKf06XWvoNi50kgg-1DFwcS3EkcANQpNJ5MMY7zZ6OXJ3M6ukeQ1n1xULu6tl8eo2PpEWAvmMlduFa4wA8pr88J0eXVUAcB3bomRrmG2j5wc5yT5wVnYhyBLgzHVQDzt2mXH98mD2cGsVbR-I7UOlZNtPomsdAa-9ZxlFJj-V6uxnkCxKI5kLSqAB2W"/>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">ATM</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 w-full">
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant mb-2">
+<span>Draw Probability</span>
+<span class="text-secondary">45%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Bento Grid Features -->
+<section class="w-full py-20 px-margin-mobile md:px-margin-desktop bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16 max-w-2xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">Precision Engineered for Analysts</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">We don't just show scores. We deliver granular data, turning every match into a predictive battlefield where insight conquers luck.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-widget-gap">
+<!-- Large Feature 1 -->
+<div class="md:col-span-2 glass-card rounded-xl p-8 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute inset-0 z-0 bg-gradient-to-br from-surface-container to-surface opacity-50 group-hover:opacity-80 transition-opacity"></div>
+<div class="relative z-10 w-full md:w-2/3 mb-8">
+<div class="w-12 h-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">query_stats</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-3">Real-time Analytics Engine</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Track possession zones, expected goals (xG), and momentum shifts instantly. Our data stream updates at 50ms intervals, ensuring you never miss a predictive edge.</p>
+</div>
+<!-- Abstract Visual representation of data -->
+<div class="relative z-10 w-full h-32 flex items-end gap-2 px-4 opacity-70">
+<div class="w-full bg-surface-container-highest rounded-t-sm h-[20%]"></div>
+<div class="w-full bg-surface-container-highest rounded-t-sm h-[40%]"></div>
+<div class="w-full bg-primary/40 border border-primary/50 rounded-t-sm h-[75%] relative live-glow">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 font-data-mono text-data-mono text-primary text-[10px]">xG Spike</div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-t-sm h-[30%]"></div>
+<div class="w-full bg-surface-container-highest rounded-t-sm h-[50%]"></div>
+</div>
+</div>
+<!-- Small Feature 1 -->
+<div class="glass-card rounded-xl p-8 flex flex-col relative group overflow-hidden">
+<div class="absolute inset-0 bg-surface-container-highest/20 group-hover:bg-surface-container-highest/40 transition-colors z-0"></div>
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 border border-secondary/30 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary text-[28px]" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-3">Global Leaderboards</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Rise through the ranks. Earn exclusive badges by predicting high-risk underdog victories.</p>
+<div class="bg-surface-container border border-outline-variant/20 rounded-lg p-3 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-data-mono text-[12px] text-tertiary">#1</span>
+<span class="font-data-mono text-[12px] text-on-surface">AlexD</span>
+</div>
+<span class="font-data-mono text-[12px] text-primary">14.2k</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-data-mono text-[12px] text-on-surface-variant">#2</span>
+<span class="font-data-mono text-[12px] text-on-surface">You</span>
+</div>
+<span class="font-data-mono text-[12px] text-on-surface">12.8k</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Small Feature 2 -->
+<div class="glass-card rounded-xl p-8 flex flex-col justify-between">
+<div class="w-12 h-12 rounded-lg bg-tertiary/10 border border-tertiary/30 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-tertiary text-[28px]" style="font-variation-settings: 'FILL' 1;">target</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-3">Deep Prop Markets</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Don't just predict the winner. Call the first goalscorer, exact corner counts, and yellow cards for maximum points.</p>
+</div>
+<!-- Wide Feature 2 -->
+<div class="md:col-span-2 glass-card rounded-xl p-0 overflow-hidden relative min-h-[250px] flex items-center">
+<div class="absolute inset-0 z-0 bg-black" data-alt="A close-up, highly detailed photograph of a professional football resting on perfectly manicured, vivid green stadium grass under bright, dramatic stadium floodlights at night. The lighting emphasizes the texture of the ball and casts strong, atmospheric shadows, fitting a high-end sports application aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-BwuqHXo3Uiot6Mi85LBoqct6Kyj09eA_kaUzm2MGWypnBogCMosso7VFiUp9F5DExyZnzIxLq5XapjKsCUWG5b-UStF0xBUOymIHHyJiPvroESqm3-Y4ROQbQJP3ja_dnnAMKX6XVfgWuew97LyiKGkeZDVWmOJNCK2lGJ4L7OQrgYG41I9LBZQTJJLksYlkppRiLVtpSMJSCrS_1kMW0on3Ssk8FYQZPY4Vdm3PsCp_aWemgPNm0ryR9q4R0UmRr6-39ZgMWl6k')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/90 to-transparent z-10"></div>
+<div class="relative z-20 p-8 w-full md:w-1/2">
+<span class="inline-block px-3 py-1 bg-surface-container border border-outline-variant/30 text-on-surface font-label-caps text-[10px] rounded mb-4">PRO FEATURE</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-3">AI Predictor Bot</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Need a second opinion? Unlock our proprietary machine learning model trained on a decade of match data to guide your toughest calls.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: How it Works (3 Steps) -->
+<section class="w-full py-20 px-margin-mobile md:px-margin-desktop bg-surface-container-lowest border-y border-outline-variant/10">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">The Path to Pro</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+<!-- Connecting Line for Desktop -->
+<div class="hidden md:block absolute top-12 left-1/6 right-1/6 h-[2px] bg-gradient-to-r from-surface-container to-surface-container z-0">
+<!-- Active progress line indication -->
+<div class="h-full w-1/3 bg-primary opacity-30 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+</div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest border-4 border-surface flex items-center justify-center mb-6 shadow-lg">
+<span class="material-symbols-outlined text-[40px] text-on-surface-variant">search</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">1. Choose a Match</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">Scan the live schedule. Identify mismatches, analyze form, and select your target battleground.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest border-4 border-surface flex items-center justify-center mb-6 shadow-lg relative">
+<div class="absolute inset-0 rounded-full border-2 border-primary animate-ping opacity-20"></div>
+<span class="material-symbols-outlined text-[40px] text-primary" style="font-variation-settings: 'FILL' 1;">insights</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">2. Make the Call</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">Submit your predictions before kickoff, or trade live props as the action unfolds on the pitch.</p>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest border-4 border-surface flex items-center justify-center mb-6 shadow-lg">
+<span class="material-symbols-outlined text-[40px] text-tertiary" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">3. Earn &amp; Climb</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">Accurate calls generate points. Watch your global rank soar and unlock elite analyst tiers.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: CTA Footer -->
+<section class="w-full py-24 px-margin-mobile md:px-margin-desktop bg-surface relative overflow-hidden flex flex-col items-center justify-center text-center">
+<div class="absolute inset-0 z-0 opacity-10" style="background-image: radial-gradient(circle at center, #4be277 0%, transparent 60%)"></div>
+<div class="relative z-10 max-w-2xl flex flex-col items-center">
+<h2 class="font-display-lg text-[40px] leading-[48px] text-on-surface mb-6">Ready to Join the Elite?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10">Stop watching from the sidelines. Step into the arena and prove your football intellect against thousands worldwide.</p>
+<a class="bg-primary hover:bg-primary/90 text-on-primary font-headline-md text-headline-md py-4 px-12 rounded-xl shadow-[0_0_25px_rgba(34,197,94,0.4)] transition-all transform hover:scale-105 flex items-center gap-3" href="#">
+        Create Free Account
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_forward</span>
+</a>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-6">No credit card required. Web &amp; Mobile app access.</p>
+</div>
+</section>
+</main>
+<footer class="w-full py-8 border-t border-outline-variant/10 bg-surface-container-lowest text-center">
+<div class="max-w-7xl mx-auto px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="font-headline-md text-headline-md font-bold text-primary opacity-80">GoalPredict Live</div>
+<div class="flex gap-6 font-body-sm text-body-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant/50">© 2026 GP Analytics Inc. All rights reserved.</div>
+</div>
+</footer>
+</body></html>

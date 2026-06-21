@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
 
-export const metadata: Metadata = { title: 'Đăng nhập — Football-Lover' };
+export const metadata: Metadata = { title: 'Đăng nhập — GoalPredict Live' };
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-bold text-ink-900">Đăng nhập</h1>
+    <Suspense>
       <LoginForm />
-    </div>
+    </Suspense>
   );
 }

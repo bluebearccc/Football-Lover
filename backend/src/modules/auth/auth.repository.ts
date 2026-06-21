@@ -32,6 +32,15 @@ export const authRepository = {
     });
   },
 
+  invalidateUserResetTokens(userId: string): Promise<void> {
+    return prisma.passwordResetToken
+      .updateMany({
+        where: { userId, usedAt: null },
+        data: { usedAt: new Date() },
+      })
+      .then(() => undefined);
+  },
+
   findValidResetToken(tokenHash: string): Promise<PasswordResetToken | null> {
     return prisma.passwordResetToken.findFirst({
       where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },

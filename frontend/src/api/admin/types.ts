@@ -110,3 +110,19 @@ export interface DashboardOverview {
   stats: DashboardStats;
   recentMatches: Match[];
 }
+
+export interface SyncCounts {
+  created: number;
+  updated: number;
+  unchanged: number;
+}
+
+export interface SyncResult {
+  triggeredAt: string;
+  provider: 'api-football';
+  leagueId: number;
+  season: number;
+  teams: SyncCounts;
+  players: SyncCounts;
+  note: string;
+}

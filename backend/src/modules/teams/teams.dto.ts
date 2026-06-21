@@ -27,8 +27,14 @@ export const createPlayerSchema = z.object({
 
 export const updatePlayerSchema = createPlayerSchema.partial();
 
+export const syncTeamsSchema = z.object({
+  leagueId: z.number().int().positive('League ID phải là số dương'),
+  season: z.coerce.number().int().min(2000).max(2100).optional(),
+});
+
 export type CreateTeamInput = z.infer<typeof createTeamSchema>;
 export type UpdateTeamInput = z.infer<typeof updateTeamSchema>;
 export type ListTeamsQuery = z.infer<typeof listTeamsQuerySchema>;
 export type CreatePlayerInput = z.infer<typeof createPlayerSchema>;
 export type UpdatePlayerInput = z.infer<typeof updatePlayerSchema>;
+export type SyncTeamsInput = z.infer<typeof syncTeamsSchema>;

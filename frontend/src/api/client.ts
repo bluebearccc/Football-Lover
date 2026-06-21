@@ -1,4 +1,8 @@
+import { session } from '@/lib/session';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
+
+const AUTH_PATHS = ['/login', '/register', '/forgot-password', '/reset-password'];
 
 export class ApiError extends Error {
   status: number;
@@ -33,6 +37,13 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   const payload = isJson ? await res.json() : undefined;
 
   if (!res.ok) {
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const onAuthPage = AUTH_PATHS.some((p) => window.location.pathname.startsWith(p));
+      if (!onAuthPage) {
+        session.clear();
+        window.location.href = '/login';
+      }
+    }
     throw new ApiError(res.status, payload?.message ?? 'Có lỗi xảy ra', payload?.details);
   }
 

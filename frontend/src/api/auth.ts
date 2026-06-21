@@ -19,7 +19,7 @@ export interface AuthResponse {
  */
 export const authApi = {
   register(input: { email: string; displayName: string; password: string }) {
-    return apiFetch<AuthResponse>('/auth/register', { method: 'POST', body: input });
+    return apiFetch<{ message: string }>('/auth/register', { method: 'POST', body: input });
   },
   login(input: { email: string; password: string }) {
     return apiFetch<AuthResponse>('/auth/login', { method: 'POST', body: input });
