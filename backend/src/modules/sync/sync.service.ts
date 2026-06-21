@@ -36,7 +36,7 @@ export const syncService = {
     const playerCounts: SyncCounts = { created: 0, updated: 0, unchanged: 0 };
 
     for (const extTeam of externalTeams) {
-      const { team, created } = await teamsRepository.upsertByExternalId({
+      const { team, created, changed } = await teamsRepository.upsertByExternalId({
         externalId: String(extTeam.id),
         name: extTeam.name,
         shortName: extTeam.code,
@@ -45,8 +45,10 @@ export const syncService = {
 
       if (created) {
         teamCounts.created++;
-      } else {
+      } else if (changed) {
         teamCounts.updated++;
+      } else {
+        teamCounts.unchanged++;
       }
 
       const players = await apiFootballClient.getSquad(extTeam.id);
@@ -62,8 +64,10 @@ export const syncService = {
 
         if (playerResult.created) {
           playerCounts.created++;
-        } else {
+        } else if (playerResult.changed) {
           playerCounts.updated++;
+        } else {
+          playerCounts.unchanged++;
         }
       }
     }

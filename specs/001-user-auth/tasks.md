@@ -205,6 +205,14 @@ Within each phase, maximize parallel task execution where marked [P].
 
 ---
 
+## Phase 9: Convergence
+
+**Purpose**: Close remaining gaps found by `/speckit-converge` between spec/plan/contract artifacts and the current implementation.
+
+- [x] T032 Add 401 interception in `frontend/src/api/client.ts` `apiFetch()` — when a response has status 401, clear the client session (`session.clear()`) and redirect to `/login` (using `window.location.href` to force a full navigation); guard against redirect loops when the current path is already an auth route (`/login`, `/register`, `/forgot-password`, `/reset-password`); this establishes the frontend redirect mechanism required by FR-019, US2/AC4, and US3/AC2 per FR-019 (partial)
+
+---
+
 ## Notes
 
 - [P] tasks = different files, no dependencies

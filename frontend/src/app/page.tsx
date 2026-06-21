@@ -457,7 +457,7 @@ export default function LandingPage() {
             </Link>
           </div>
           <div className="font-body-sm text-body-sm text-on-surface-variant/50">
-            &copy; 2024 GP Analytics Inc. All rights reserved.
+            &copy; 2026 GP Analytics Inc. All rights reserved.
           </div>
         </div>
       </footer>

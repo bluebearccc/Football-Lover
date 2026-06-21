@@ -227,3 +227,10 @@ Since ~90% of CRUD is already built, the realistic fast path is:
 - US5 (Phase 7) is a new frontend page but uses existing backend endpoint
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
+
+---
+
+## Phase 9: Convergence
+
+- [x] T026 [US4] Track "unchanged" count in `backend/src/modules/sync/sync.service.ts` — for teams, compare `logoUrl` before/after upsert; if unchanged, increment `teamCounts.unchanged` instead of `teamCounts.updated`. For players, compare `name`/`position`/`imageUrl` before/after upsert; if all unchanged, increment `playerCounts.unchanged` instead of `playerCounts.updated`. Update `backend/src/modules/teams/teams.repository.ts` `upsertByExternalId` and `upsertPlayerByExternalId` to return whether values actually changed. per FR-013, US4/AC1 (partial)
+- [x] T027 [P] [US4] Display "unchanged" counts in `frontend/src/components/admin/teams/TeamSyncPanel.tsx` — add two additional summary items "Đội không đổi" and "Cầu thủ không đổi" showing `result.teams.unchanged` and `result.players.unchanged` in the sync result display grid. per FR-013 (partial)

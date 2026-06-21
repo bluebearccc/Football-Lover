@@ -72,7 +72,7 @@ export function TeamSyncPanel({ onSyncComplete }: TeamSyncPanelProps) {
       {result && (
         <div className="mt-3 rounded-lg border border-pitch-200 bg-pitch-50 p-3 text-sm text-pitch-800">
           <p className="mb-2 font-semibold">{result.note}</p>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             <div>
               <span className="text-ink-600">Đội tạo mới:</span>{' '}
               <strong>{result.teams.created}</strong>
@@ -82,12 +82,20 @@ export function TeamSyncPanel({ onSyncComplete }: TeamSyncPanelProps) {
               <strong>{result.teams.updated}</strong>
             </div>
             <div>
+              <span className="text-ink-600">Đội không đổi:</span>{' '}
+              <strong>{result.teams.unchanged}</strong>
+            </div>
+            <div>
               <span className="text-ink-600">Cầu thủ tạo mới:</span>{' '}
               <strong>{result.players.created}</strong>
             </div>
             <div>
               <span className="text-ink-600">Cầu thủ cập nhật:</span>{' '}
               <strong>{result.players.updated}</strong>
+            </div>
+            <div>
+              <span className="text-ink-600">Cầu thủ không đổi:</span>{' '}
+              <strong>{result.players.unchanged}</strong>
             </div>
           </div>
         </div>
