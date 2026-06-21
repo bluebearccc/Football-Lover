@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GoalPredict Live | Reset Password</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Level 0 Background */
+        }
+        .glass-card {
+            background: rgba(11, 19, 38, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .accent-glow {
+            box-shadow: 0 0 20px rgba(75, 226, 119, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#ffb5ab",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-container": "#00374d",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-fixed-variant": "#005321",
+                        "primary-fixed-dim": "#4ae176",
+                        "outline": "#869585",
+                        "on-tertiary-fixed": "#410001",
+                        "on-primary": "#003915",
+                        "on-background": "#dae2fd",
+                        "on-tertiary": "#60130d",
+                        "surface-bright": "#31394d",
+                        "secondary-fixed": "#c4e7ff",
+                        "outline-variant": "#3d4a3d",
+                        "inverse-primary": "#006e2f",
+                        "background": "#0b1326",
+                        "surface-dim": "#0b1326",
+                        "inverse-surface": "#dae2fd",
+                        "inverse-on-surface": "#283044",
+                        "tertiary-container": "#ff8b7c",
+                        "on-primary-container": "#004b1e",
+                        "tertiary-fixed": "#ffdad5",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-container": "#22c55e",
+                        "primary": "#4be277",
+                        "surface-container-low": "#131b2e",
+                        "on-error": "#690005",
+                        "surface-tint": "#4ae176",
+                        "primary-fixed": "#6bff8f",
+                        "surface": "#0b1326",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#060e20",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "error": "#ffb4ab",
+                        "secondary": "#7bd0ff",
+                        "on-tertiary-container": "#76231b",
+                        "on-secondary-fixed": "#001e2c",
+                        "secondary-container": "#00a6e0",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-surface": "#dae2fd",
+                        "on-secondary": "#00354a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "widget-gap": "24px",
+                        "card-padding": "32px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col items-center justify-center p-gutter relative overflow-hidden">
+<!-- Immersive Stadium Background -->
+<div class="absolute inset-0 z-0">
+<img alt="Stadium Background" class="w-full h-full object-cover opacity-30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1JbN0bOmyxyGFFgAkOCAcUf537AaDMNTxCLmS8Do2iPB3N-WUzmpC5cpXVKkoNE99Be-15FdlnFipAbNbnXI7Er4iZYfQdP37PyQs7ZYlm95ZQ9_pmG5b_0AnVrJsGd31yDBdAUsySbUrfS-ppj3NVvfKoFifvGfZHrWI1uFC7lGfyo9QFGY_AfNPN345y-N664qATfKm1rzjE52atIZ0mw7j7tI2vrbkSLe8Mt8FbzIqxFibgjyLHVBmJ4tKdM1YaFYTWtNe0A08"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/90 to-surface/60"></div>
+</div>
+<main class="w-full max-w-[480px] z-10">
+<!-- Brand Identity -->
+<div class="text-center mb-8">
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2 tracking-tight drop-shadow-md">GoalPredict Live</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Recover your competitive edge</p>
+</div>
+<!-- Auth Card -->
+<div class="glass-card rounded-2xl p-card-padding relative" id="auth-container">
+<!-- Forgot Password State -->
+<div class="block" id="forgot-password-state">
+<div class="mb-8 text-center">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-3">Forgot Password?</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Enter the email address associated with your account and we'll send you a secure link to reset your password.</p>
+</div>
+<form class="space-y-6" id="reset-form" onsubmit="handleReset(event)">
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">mail</span>
+<input class="w-full bg-surface-container-highest/50 border border-outline-variant/50 rounded-xl py-3.5 pl-12 pr-4 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-on-surface placeholder:text-on-surface-variant/50 font-body-lg" id="email" placeholder="name@example.com" required="" type="email"/>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition-all active:scale-[0.98] accent-glow shadow-lg shadow-primary/20" type="submit">
+<span class="font-label-caps text-label-caps tracking-widest text-sm">SEND RESET LINK</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</form>
+<div class="mt-8 pt-6 border-t border-outline-variant/20">
+<a class="w-full bg-surface-container/50 hover:bg-surface-container border border-outline-variant/30 text-on-surface font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-all active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+<span class="font-label-caps text-label-caps">Back to Login</span>
+</a>
+</div>
+</div>
+<!-- Success State (Hidden by default) -->
+<div class="hidden text-center py-4" id="success-state">
+<div class="mb-6 flex justify-center">
+<div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary accent-glow border border-primary/20">
+<span class="material-symbols-outlined text-[48px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-3">Check your email</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-8 px-2">
+                    We've sent a password reset link to <br/><span class="text-on-surface font-semibold text-base mt-1 inline-block" id="display-email">your email</span><br/><span class="text-xs opacity-70 mt-2 inline-block">Please check your inbox and spam folder.</span>
+</p>
+<button class="w-full bg-surface-container hover:bg-surface-container-highest border border-outline-variant/50 text-on-surface font-bold py-3.5 rounded-xl transition-all active:scale-[0.98] mb-4" onclick="toggleStates()">
+<span class="font-label-caps text-label-caps">Resend Email</span>
+</button>
+<div class="mt-6 pt-6 border-t border-outline-variant/20">
+<a class="w-full bg-primary/10 hover:bg-primary/20 text-primary font-bold py-3.5 rounded-xl flex justify-center items-center gap-2 transition-all active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+<span class="font-label-caps text-label-caps">Back to Login</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Support Info -->
+<div class="mt-10 text-center opacity-80">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Need more help? <a class="text-primary hover:text-primary-fixed transition-colors font-medium underline decoration-primary/30 underline-offset-4" href="#">Contact GoalPredict Support</a>
+</p>
+</div>
+</main>
+<script>
+        function handleReset(event) {
+            event.preventDefault();
+            const emailInput = document.getElementById('email');
+            const displayEmail = document.getElementById('display-email');
+            
+            if (emailInput.value) {
+                displayEmail.textContent = emailInput.value;
+                toggleStates();
+            }
+        }
+
+        function toggleStates() {
+            const forgotState = document.getElementById('forgot-password-state');
+            const successState = document.getElementById('success-state');
+            const container = document.getElementById('auth-container');
+
+            // Simple transition effect
+            container.style.opacity = '0';
+            container.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                if (forgotState.classList.contains('hidden')) {
+                    forgotState.classList.remove('hidden');
+                    forgotState.classList.add('block');
+                    successState.classList.add('hidden');
+                    successState.classList.remove('block');
+                } else {
+                    forgotState.classList.add('hidden');
+                    forgotState.classList.remove('block');
+                    successState.classList.remove('hidden');
+                    successState.classList.add('block');
+                }
+                container.style.opacity = '1';
+                container.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        // Initialize transition styles
+        document.getElementById('auth-container').style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+    </script>
+</body></html>
