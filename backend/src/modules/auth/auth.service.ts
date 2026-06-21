@@ -45,26 +45,27 @@ function issueToken(user: User): AuthResult {
 
 export const authService = {
   // UC01 — Register
-  async register(input: RegisterInput): Promise<AuthResult> {
-    const existing = await authRepository.findUserByEmail(input.email);
+  async register(input: RegisterInput): Promise<{ message: string }> {
+    const email = input.email.toLowerCase();
+    const existing = await authRepository.findUserByEmail(email);
     if (existing) {
       throw ApiError.conflict('Email đã tồn tại');
     }
     const passwordHash = await hashPassword(input.password);
-    const user = await authRepository.createUser({
-      email: input.email,
+    await authRepository.createUser({
+      email,
       displayName: input.displayName,
       passwordHash,
       role: Role.USER,
       status: UserStatus.ACTIVE,
     });
-    return issueToken(user);
+    return { message: 'Đăng ký thành công' };
   },
 
   // UC02 — Login (neutral error; does not reveal which field is wrong)
   async login(input: LoginInput): Promise<AuthResult> {
     const invalid = ApiError.unauthorized('Email hoặc mật khẩu không đúng');
-    const user = await authRepository.findUserByEmail(input.email);
+    const user = await authRepository.findUserByEmail(input.email.toLowerCase());
     if (!user) {
       throw invalid;
     }
@@ -89,10 +90,13 @@ export const authService = {
 
   // UC15 — Request reset (always neutral response to avoid email enumeration)
   async forgotPassword(input: ForgotPasswordInput): Promise<void> {
-    const user = await authRepository.findUserByEmail(input.email);
+    const user = await authRepository.findUserByEmail(input.email.toLowerCase());
     if (!user || user.status === UserStatus.LOCKED) {
+      // Equalize timing to prevent email-existence side-channel
+      await hashPassword('timing-equalization');
       return;
     }
+    await authRepository.invalidateUserResetTokens(user.id);
     const { raw, hash } = generateResetToken();
     const expiresAt = new Date(Date.now() + env.auth.resetTokenTtlMinutes * 60_000);
     await authRepository.createResetToken({ userId: user.id, tokenHash: hash, expiresAt });

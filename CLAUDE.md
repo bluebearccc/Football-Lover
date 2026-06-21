@@ -2,6 +2,9 @@
 Dự án theo quy trình spec-driven. Nguồn sự thật là tài liệu trong
 `docs/Football-Lover/` (SRS, ER diagram, class diagram theo UC). Đọc spec liên quan
 TRƯỚC khi code; không tự bịa thông tin ngoài spec.
+
+**Active feature**: `002-team-management` — UC13 Manage Teams (and scraped players).
+Plan: `specs/002-team-management/plan.md` | Spec: `specs/002-team-management/spec.md`
 <!-- SPECKIT END -->
 
 # Football-Lover (GoalPredict Live) — Coding Guide

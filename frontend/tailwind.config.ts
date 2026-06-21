@@ -139,6 +139,7 @@ const config: Config = {
       },
       boxShadow: {
         'accent-glow': '0 0 15px rgba(74, 225, 118, 0.3)',
+        'input-glow': '0 0 0 2px rgba(75, 226, 119, 0.2)',
       },
     },
   },
