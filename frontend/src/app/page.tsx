@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center gap-6 px-6 text-center">
@@ -13,12 +15,18 @@ export default function HomePage() {
         hạng số trận thắng trong tháng.
       </p>
       <div className="flex gap-3">
-        <button className="rounded-lg bg-pitch-500 px-5 py-2.5 font-medium text-white transition hover:bg-pitch-600">
-          Xem trận đấu
-        </button>
-        <button className="rounded-lg border border-ink-100 bg-white px-5 py-2.5 font-medium text-ink-800 transition hover:bg-ink-50">
+        <Link
+          href="/register"
+          className="rounded-lg bg-pitch-500 px-5 py-2.5 font-medium text-white transition hover:bg-pitch-600"
+        >
+          Đăng ký
+        </Link>
+        <Link
+          href="/login"
+          className="rounded-lg border border-ink-100 bg-white px-5 py-2.5 font-medium text-ink-800 transition hover:bg-ink-50"
+        >
           Đăng nhập
-        </button>
+        </Link>
       </div>
     </main>
   );
