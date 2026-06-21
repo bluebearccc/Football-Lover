@@ -35,6 +35,8 @@ export const teamsService = {
   },
 
   async create(input: CreateTeamInput): Promise<Team> {
+    const nameDup = await teamsRepository.findActiveByName(input.name);
+    if (nameDup) throw ApiError.conflict('Tên đội đã tồn tại');
     if (input.externalId) {
       const dup = await teamsRepository.findByExternalId(input.externalId);
       if (dup) throw ApiError.conflict('external_id đã tồn tại');
@@ -49,6 +51,10 @@ export const teamsService = {
 
   async update(id: string, input: UpdateTeamInput): Promise<Team> {
     await ensureTeam(id);
+    if (input.name) {
+      const nameDup = await teamsRepository.findActiveByName(input.name, id);
+      if (nameDup) throw ApiError.conflict('Tên đội đã tồn tại');
+    }
     return teamsRepository.update(id, {
       name: input.name,
       shortName: input.shortName,

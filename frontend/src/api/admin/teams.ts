@@ -1,5 +1,5 @@
 import { adminFetch } from './client';
-import type { Paginated, Player, Team, TeamWithPlayers } from './types';
+import type { Paginated, Player, SyncResult, Team, TeamWithPlayers } from './types';
 
 export interface TeamInput {
   name: string;
@@ -49,5 +49,8 @@ export const adminTeamsApi = {
   },
   removePlayer(teamId: string, playerId: string) {
     return adminFetch<void>(`/teams/${teamId}/players/${playerId}`, { method: 'DELETE' });
+  },
+  sync(input: { leagueId: number; season?: number }) {
+    return adminFetch<SyncResult>('/sync/teams', { method: 'POST', body: input });
   },
 };

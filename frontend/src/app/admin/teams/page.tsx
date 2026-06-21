@@ -1,10 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { adminTeamsApi, type TeamInput } from '@/api/admin/teams';
 import type { Team } from '@/api/admin/types';
 import { ApiError } from '@/api/client';
 import { Badge, Banner, Button, Card, TextInput } from '@/components/admin/ui';
+import { TeamSyncPanel } from '@/components/admin/teams/TeamSyncPanel';
 import { DEFAULT_TEAM_LOGO } from '@/lib/format';
 
 const EMPTY: TeamInput = { name: '', shortName: '', logoUrl: '' };
@@ -100,6 +102,8 @@ export default function AdminTeamsPage() {
       <Banner message={error} />
       <Banner message={notice} tone="success" />
 
+      <TeamSyncPanel onSyncComplete={load} />
+
       <Card title={editingId ? 'Sửa đội bóng' : 'Thêm đội bóng'}>
         <form onSubmit={submit} className="grid gap-3 md:grid-cols-4">
           <TextInput label="Tên đội" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
@@ -138,10 +142,12 @@ export default function AdminTeamsPage() {
             <tbody>
               {teams.map((team) => (
                 <tr key={team.id} className="border-b border-ink-50">
-                  <td className="flex items-center gap-2 py-2 font-medium">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={team.logoUrl ?? DEFAULT_TEAM_LOGO} alt={team.name} className="h-6 w-6 rounded-full object-cover" />
-                    {team.name}
+                  <td className="py-2 font-medium">
+                    <Link href={`/admin/teams/${team.id}`} className="flex items-center gap-2 hover:text-pitch-500">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={team.logoUrl ?? DEFAULT_TEAM_LOGO} alt={team.name} className="h-6 w-6 rounded-full object-cover" />
+                      {team.name}
+                    </Link>
                   </td>
                   <td>{team.shortName ?? '—'}</td>
                   <td>{team._count?.players ?? 0}</td>

@@ -22,13 +22,32 @@ body {
   .glass-card {
     background: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
   .accent-glow {
     box-shadow: 0 0 15px rgba(74, 225, 118, 0.3);
   }
-  .hide-scrollbar::-webkit-scrollbar {
+  .live-glow {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+  }
+  .gradient-text {
+    background: linear-gradient(90deg, #4be277, #7bd0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-bg {
+    background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at bottom left, rgba(123, 208, 255, 0.1) 0%, transparent 40%);
+  }
+  .hide-scrollbar::-webkit-scrollbar,
+  .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 

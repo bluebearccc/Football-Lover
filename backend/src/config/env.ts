@@ -23,6 +23,8 @@ export const env = {
   },
   integrations: {
     apiFootballKey: process.env.API_FOOTBALL_KEY ?? '',
+    apiFootballBaseUrl:
+      process.env.API_FOOTBALL_BASE_URL ?? 'https://v3.football.api-sports.io',
     chatbotCliProxyUrl: process.env.CHATBOT_CLI_PROXY_URL ?? '',
   },
 } as const;
