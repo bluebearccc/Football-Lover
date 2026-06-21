@@ -96,7 +96,7 @@ npm run build              # |  npm run lint
 Dự án đã tích hợp [Spec Kit](https://github.com/github/spec-kit). Dùng các slash command trong
 Claude Code:
 
-1. `/speckit-constitution` — nguyên tắc dự án (đã thiết lập, v1.0.0)
+1. `/speckit-constitution` — nguyên tắc dự án (đã thiết lập, v1.1.0)
 2. `/speckit-specify` — tạo spec cho feature
 3. `/speckit-plan` — kế hoạch triển khai
 4. `/speckit-tasks` — sinh danh sách task
@@ -108,7 +108,9 @@ giao cho `backend-dev` / `frontend-dev`).
 
 **Nguyên tắc bắt buộc** (xem constitution): không sửa file trong `docs/`; backend theo kiến trúc
 phân tầng `controller → service → repository`; validate bằng Zod + ném `ApiError`; frontend gọi
-API qua `src/api/*`; chạy `npm run build` + `npm run lint` trước khi báo xong.
+API qua `src/api/*`; **UI bám mockup baseline trong `stitch_goalpredict_live_dashboard/`**
+(layout/visual lấy từ `screen.png` + `code.html` + `elite_pitch/DESIGN.md`); chạy
+`npm run build` + `npm run lint` trước khi báo xong.
 
 ## Tài liệu tham khảo
 

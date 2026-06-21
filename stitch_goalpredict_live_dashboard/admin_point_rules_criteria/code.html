@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScoreMaster AI - Admin Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b1326;
+            color: #dae2fd;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .pitch-glow {
+            box-shadow: 0 0 20px rgba(75, 226, 119, 0.15);
+        }
+        .live-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#ffb5ab",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-container": "#00374d",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-fixed-variant": "#005321",
+                        "primary-fixed-dim": "#4ae176",
+                        "outline": "#869585",
+                        "on-tertiary-fixed": "#410001",
+                        "on-primary": "#003915",
+                        "on-background": "#dae2fd",
+                        "on-tertiary": "#60130d",
+                        "surface-bright": "#31394d",
+                        "secondary-fixed": "#c4e7ff",
+                        "outline-variant": "#3d4a3d",
+                        "inverse-primary": "#006e2f",
+                        "background": "#0b1326",
+                        "surface-dim": "#0b1326",
+                        "inverse-surface": "#dae2fd",
+                        "inverse-on-surface": "#283044",
+                        "tertiary-container": "#ff8b7c",
+                        "on-primary-container": "#004b1e",
+                        "tertiary-fixed": "#ffdad5",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-container": "#22c55e",
+                        "primary": "#4be277",
+                        "surface-container-low": "#131b2e",
+                        "on-error": "#690005",
+                        "surface-tint": "#4ae176",
+                        "primary-fixed": "#6bff8f",
+                        "surface": "#0b1326",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#060e20",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "error": "#ffb4ab",
+                        "secondary": "#7bd0ff",
+                        "on-tertiary-container": "#76231b",
+                        "on-secondary-fixed": "#001e2c",
+                        "secondary-container": "#00a6e0",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-surface": "#dae2fd",
+                        "on-secondary": "#00354a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "widget-gap": "24px",
+                        "card-padding": "20px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen p-4 gap-4 bg-surface-container-low border-r border-outline-variant w-64 fixed left-0 top-0 z-50">
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div>
+<h2 class="text-headline-md font-headline-md text-primary">Admin Portal</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">System Controller</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+                </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">group</span> User Manager
+                </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">sports_soccer</span> Match Center
+                </a>
+<a class="bg-primary-container text-on-primary-container rounded-lg font-bold flex items-center gap-3 p-3 translate-x-1 transition-transform font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rule</span> Point Rules
+                </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">military_tech</span> Achievements
+                </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">analytics</span> Analytics
+                </a>
+</nav>
+<button class="bg-primary text-on-primary font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all mb-4">
+<span class="material-symbols-outlined">add_circle</span> New Match
+            </button>
+<div class="mt-auto border-t border-outline-variant pt-4 space-y-1">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+                </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">logout</span> Logout
+                </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-4 md:p-margin-desktop bg-background min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 md:left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 px-gutter flex justify-between items-center border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="md:hidden material-symbols-outlined text-primary">menu</span>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary">ScoreMaster AI</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex bg-surface-container rounded-full px-4 py-1.5 items-center gap-2 border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-48" placeholder="Global search..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary/20">
+<img alt="User profile" data-alt="A high-resolution close-up portrait of a professional male administrator in his late 30s. He is wearing a modern charcoal grey suit and looks confidently into the camera. The background is a softly blurred office environment with cool blue and green ambient lighting, maintaining a sleek corporate dark-mode aesthetic with high-performance sports analytics vibes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnfN-Bxn2O9XREj4U4SmbQHZXqjprnuKgIXLQT4DoX7X3mnpiovXoxFfw67BA2KPSZL4SSFcV3IGn8GmgFOCZJFWDBaOR-62iPX_FVP8vI4eZ-AhJ6hXfW6ArL-i9f-lXLguUnnO0xy23_lTL5n5d2XpxgpvYG2rfmMtvgW3l9ri0dTmcmwQ5NsEAEDZ6RG9iiAJqJd7LGHqaJnPTPmNAfg07lPvXBV-riqpwEqIChc7vOoWNqCAUThmL-pdbDAFCUB5-i1gW2JyaW"/>
+</div>
+</div>
+</header>
+<div class="mt-20">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface">Point Rules Management</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Configure scoring weights and prediction multipliers for the current season.</p>
+</div>
+<div class="flex items-center gap-2 bg-primary/10 border border-primary/20 px-4 py-2 rounded-lg">
+<span class="w-2 h-2 rounded-full bg-primary live-pulse"></span>
+<span class="font-label-caps text-label-caps text-primary uppercase">Changes live in 04:22:10</span>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-widget-gap">
+<!-- Main Scoring Card -->
+<div class="lg:col-span-8 glass-card p-card-padding rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">scoreboard</span>
+                                Primary Match Scoring
+                            </h3>
+<button class="text-primary font-label-caps text-label-caps hover:underline">RESET TO DEFAULT</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Rule Item -->
+<div class="bg-surface-container-high p-4 rounded-lg border border-outline-variant/30 flex justify-between items-center group hover:border-primary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">CORRECT RESULT (W/D/L)</p>
+<span class="text-headline-md font-headline-md text-on-surface">+25 <span class="text-sm font-normal opacity-50">PTS</span></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">-</button>
+<input class="w-12 bg-transparent text-center border-b border-primary focus:ring-0 text-headline-md" type="text" value="25"/>
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">+</button>
+</div>
+</div>
+<!-- Rule Item -->
+<div class="bg-surface-container-high p-4 rounded-lg border border-outline-variant/30 flex justify-between items-center group hover:border-primary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">EXACT SCORELINE</p>
+<span class="text-headline-md font-headline-md text-on-surface">+50 <span class="text-sm font-normal opacity-50">PTS</span></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">-</button>
+<input class="w-12 bg-transparent text-center border-b border-primary focus:ring-0 text-headline-md" type="text" value="50"/>
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">+</button>
+</div>
+</div>
+<!-- Rule Item -->
+<div class="bg-surface-container-high p-4 rounded-lg border border-outline-variant/30 flex justify-between items-center group hover:border-primary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">TOTAL GOALS (O/U 2.5)</p>
+<span class="text-headline-md font-headline-md text-on-surface">+15 <span class="text-sm font-normal opacity-50">PTS</span></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">-</button>
+<input class="w-12 bg-transparent text-center border-b border-primary focus:ring-0 text-headline-md" type="text" value="15"/>
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">+</button>
+</div>
+</div>
+<!-- Rule Item -->
+<div class="bg-surface-container-high p-4 rounded-lg border border-outline-variant/30 flex justify-between items-center group hover:border-primary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">FIRST GOAL SCORER</p>
+<span class="text-headline-md font-headline-md text-on-surface">+40 <span class="text-sm font-normal opacity-50">PTS</span></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">-</button>
+<input class="w-12 bg-transparent text-center border-b border-primary focus:ring-0 text-headline-md" type="text" value="40"/>
+<button class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary">+</button>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/30">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase">Dynamic Multipliers</h4>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-sm text-body-sm">Underdog Bonus (Odds &gt; 3.00)</span>
+<span class="font-data-mono text-data-mono text-primary">1.5x Multiplier</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 75%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-sm text-body-sm">Early Bird (24h before kick-off)</span>
+<span class="font-data-mono text-data-mono text-primary">1.2x Multiplier</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Badge/Achievements Card -->
+<div class="lg:col-span-4 glass-card p-card-padding rounded-xl border border-primary/20 bg-primary/5">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">military_tech</span>
+                                Achievement Tier
+                            </h3>
+</div>
+<div class="space-y-6">
+<!-- Gold Tier -->
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-[#FFD700] bg-[#FFD700]/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#FFD700]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-bold text-on-surface">Grandmaster</span>
+<span class="text-sm opacity-60">5,000 pts</span>
+</div>
+<div class="flex items-center gap-2">
+<input class="flex-1 accent-primary h-1" max="10000" min="0" type="range" value="5000"/>
+<span class="text-xs font-data-mono">5k</span>
+</div>
+</div>
+</div>
+<!-- Silver Tier -->
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-[#C0C0C0] bg-[#C0C0C0]/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#C0C0C0]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-bold text-on-surface">Veteran</span>
+<span class="text-sm opacity-60">2,500 pts</span>
+</div>
+<div class="flex items-center gap-2">
+<input class="flex-1 accent-primary h-1" max="10000" min="0" type="range" value="2500"/>
+<span class="text-xs font-data-mono">2.5k</span>
+</div>
+</div>
+</div>
+<!-- Bronze Tier -->
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-[#CD7F32] bg-[#CD7F32]/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#CD7F32]" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-bold text-on-surface">Rising Star</span>
+<span class="text-sm opacity-60">1,000 pts</span>
+</div>
+<div class="flex items-center gap-2">
+<input class="flex-1 accent-primary h-1" max="10000" min="0" type="range" value="1000"/>
+<span class="text-xs font-data-mono">1k</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 p-4 bg-surface-container-highest rounded-lg border border-outline-variant/30">
+<h4 class="text-sm font-bold mb-2">Rule Impact Simulation</h4>
+<p class="text-xs text-on-surface-variant mb-4">Current settings will increase average user points by 12.4% vs last season.</p>
+<button class="w-full py-2 bg-on-surface text-surface text-sm font-bold rounded-lg hover:bg-white transition-colors">RUN RECALCULATION</button>
+</div>
+</div>
+<!-- Seasonal Modifiers -->
+<div class="lg:col-span-12 glass-card p-card-padding rounded-xl">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Live Match Modifiers</h3>
+<button class="bg-primary/20 text-primary px-4 py-2 rounded-lg font-bold text-sm">+ Add New Rule</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant/30">
+<th class="pb-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Condition</th>
+<th class="pb-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Type</th>
+<th class="pb-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Status</th>
+<th class="pb-4 font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Modifier</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="py-4 font-body-sm text-body-sm">Last Minute Goal (&gt;85')</td>
+<td class="py-4"><span class="px-2 py-1 bg-secondary/10 text-secondary rounded text-xs font-bold">MATCH EVENT</span></td>
+<td class="py-4"><span class="flex items-center gap-1.5 text-xs text-primary"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> ACTIVE</span></td>
+<td class="py-4 text-right font-data-mono text-primary">+10 PTS</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="py-4 font-body-sm text-body-sm">Clean Sheet Prediction</td>
+<td class="py-4"><span class="px-2 py-1 bg-tertiary/10 text-tertiary rounded text-xs font-bold">BONUS</span></td>
+<td class="py-4"><span class="flex items-center gap-1.5 text-xs text-primary"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> ACTIVE</span></td>
+<td class="py-4 text-right font-data-mono text-primary">+20 PTS</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="py-4 font-body-sm text-body-sm">Red Card In Match</td>
+<td class="py-4"><span class="px-2 py-1 bg-surface-variant text-on-surface-variant rounded text-xs font-bold">PENALTY</span></td>
+<td class="py-4"><span class="flex items-center gap-1.5 text-xs text-on-surface-variant"><span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span> PAUSED</span></td>
+<td class="py-4 text-right font-data-mono text-on-surface-variant">-5 PTS</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-end gap-4 pb-20">
+<button class="px-8 py-3 bg-surface-container-high text-on-surface font-bold rounded-xl border border-outline-variant hover:bg-surface-variant transition-all">Discard Changes</button>
+<button class="px-8 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-[0_0_20px_rgba(75,226,119,0.3)] hover:brightness-110 active:scale-95 transition-all">Publish New Ruleset</button>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe bg-surface-container-highest/90 backdrop-blur-lg border-t border-outline-variant shadow-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary-fixed cursor-pointer transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps-mobile">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary-fixed cursor-pointer transition-colors">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-caps text-label-caps-mobile">Predict</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary scale-110 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rule</span>
+<span class="font-label-caps text-label-caps-mobile">Rules</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary-fixed cursor-pointer transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps-mobile">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for point inputs
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', function() {
+                this.classList.add('scale-95');
+            });
+            btn.addEventListener('mouseup', function() {
+                this.classList.remove('scale-95');
+            });
+        });
+
+        // Toggle mobile menu simulation
+        const menuBtn = document.querySelector('header span.material-symbols-outlined');
+        if(menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                alert('In a real implementation, this would open the mobile sidebar drawer.');
+            });
+        }
+    </script>
+</body></html>

@@ -32,6 +32,7 @@ theo spec.
 | Data model | `docs/Football-Lover/diagrams/entity-relationship.puml` → `backend/prisma/schema.prisma` |
 | Class diagram BE/FE theo UC | `docs/Football-Lover/diagrams/uc-XX/uc-XX-class-{backend,frontend}.puml` |
 | Sequence/State/Screenflow theo UC | `docs/Football-Lover/diagrams/uc-XX/uc-XX-{sequence,statediagram,screenflow}.puml` |
+| **UI baseline (nguồn sự thật giao diện)** | `stitch_goalpredict_live_dashboard/<screen>/` — mockup `screen.png` + `code.html` từng màn; design system `stitch_goalpredict_live_dashboard/elite_pitch/DESIGN.md` |
 | Kiến trúc tầng | `docs/Football-Lover/diagrams/layered-architecture.puml`, `system-overview.puml` |
 | API contract | `docs/Football-Lover/api/openapi.yaml` *(thư mục đã có, file sẽ bổ sung sau)* |
 | Test case | `docs/Football-Lover/test-plan/` *(sẽ bổ sung sau)* |
@@ -55,7 +56,40 @@ implement — thêm qua `/implement-uc`.
 AuthApiClient`, `ValidationMessage`). Gọi API qua `src/api/*` (không fetch trực tiếp trong
 component; đã có `src/api/client.ts` + `src/api/auth.ts`). App Router ở `src/app/`.
 Theme màu = palette **Elite Pitch** trong `tailwind.config.ts` (pitch=xanh sân, gold=phần
-thưởng, ink=nền tối).
+thưởng, ink=nền tối). **Giao diện phải bám mockup trong `stitch_goalpredict_live_dashboard/`**
+(xem mục "UI baseline" bên dưới).
+
+## UI baseline — Stitch mockups (nguồn sự thật giao diện)
+
+Mọi màn hình mới/sửa **phải** lấy baseline từ thư mục `stitch_goalpredict_live_dashboard/`.
+Trước khi code UI của 1 UC, đọc `screen.png` (bố cục, hierarchy) **và** `code.html`
+(spacing, component, class Tailwind, state) của màn tương ứng, cộng với
+`elite_pitch/DESIGN.md` (design tokens: màu, typography, radius, spacing, elevation). Class
+diagram FE quyết định **cấu trúc component & data flow**; mockup Stitch quyết định **layout &
+visual** — hai cái phải khớp nhau, không tự bịa layout ngoài mockup.
+
+| Màn (UC liên quan) | Folder mockup |
+|--------------------|---------------|
+| Đăng nhập (UC02) | `stitch_goalpredict_live_dashboard/login/` |
+| Đăng ký (UC01) | `stitch_goalpredict_live_dashboard/register/` |
+| Quên/Reset mật khẩu (UC15) | `stitch_goalpredict_live_dashboard/forgot_password/` |
+| Dashboard | `stitch_goalpredict_live_dashboard/dashboard/` |
+| Danh sách trận live | `stitch_goalpredict_live_dashboard/live_matches/` |
+| Chi tiết trận + dự đoán | `stitch_goalpredict_live_dashboard/match_details/` |
+| Bảng xếp hạng | `stitch_goalpredict_live_dashboard/leaderboard/` |
+| Hồ sơ người dùng | `stitch_goalpredict_live_dashboard/user_profile/` |
+| Admin — quản lý trận (UC13) | `stitch_goalpredict_live_dashboard/admin_match_management/` |
+| Admin — tiêu chí & điểm | `stitch_goalpredict_live_dashboard/admin_point_rules_criteria/` |
+| Admin — quản lý user | `stitch_goalpredict_live_dashboard/admin_user_management/` |
+
+- Mockup Stitch là **HTML/Tailwind tĩnh** → port sang Next.js + component theo class diagram;
+  giữ nguyên bố cục/spacing/visual, thay data tĩnh bằng data từ `src/api/*`.
+- Token màu/typography của `tailwind.config.ts` phải đồng bộ với `elite_pitch/DESIGN.md`. Nếu
+  mockup dùng giá trị chưa có trong config → **thêm token vào `tailwind.config.ts`**, không
+  hardcode hex/px rời rạc trong component.
+- Khác biệt giữa mockup và spec (SRS/class diagram) → ưu tiên spec cho **hành vi/field**, giữ
+  mockup cho **visual**; nếu mâu thuẫn thật sự thì nêu ra, không tự quyết.
+- **Không sửa** file trong `stitch_goalpredict_live_dashboard/` — đó là baseline tham chiếu.
 
 ## Rule bắt buộc khi code (theo stack)
 
@@ -81,7 +115,8 @@ thưởng, ink=nền tối).
 - Mặc định **Server Component**; chỉ thêm `'use client'` khi cần state/effect/event handler.
 - Lấy dữ liệu qua `src/api/*` (client đã có) — **không** `fetch()` trực tiếp trong component. Component bám class diagram FE.
 - Chỉ `NEXT_PUBLIC_*` mới được lộ ra client; **không** đặt secret/API key ở frontend.
-- Dùng token màu **Elite Pitch** (`pitch`/`gold`/`ink`) trong `tailwind.config.ts`, tránh hex tùy tiện. Gold hiển thị **2 số thập phân**.
+- **Baseline UI bắt buộc:** layout/visual mỗi màn bám mockup tương ứng trong `stitch_goalpredict_live_dashboard/` (đọc `screen.png` + `code.html` trước khi code). Không tự sáng tác bố cục ngoài mockup.
+- Dùng token màu **Elite Pitch** (`pitch`/`gold`/`ink`) trong `tailwind.config.ts` (đồng bộ `elite_pitch/DESIGN.md`), tránh hex tùy tiện. Gold hiển thị **2 số thập phân**.
 - UI tiếng Việt; ngày giờ format Việt Nam, timezone Asia/Ho_Chi_Minh.
 - Responsive (breakpoints 480/768/1024/1440), touch target ≥ 44×44px, có `alt` cho ảnh đội/cầu thủ (thiếu ảnh → ảnh mặc định), điều hướng bàn phím cho form/nút (WCAG 2.1 AA cơ bản).
 

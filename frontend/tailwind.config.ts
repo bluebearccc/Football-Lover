@@ -1,15 +1,76 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * Elite Pitch palette — sporty football theme.
- * pitch  = field green (primary), gold = winner/reward accent (gold mechanic),
- * ink    = dark UI surfaces, whistle = neutral grays.
+ * Elite Pitch design system — baseline cho UI.
+ *
+ * Nguồn sự thật: `stitch_goalpredict_live_dashboard/elite_pitch/DESIGN.md` và các mockup
+ * `stitch_goalpredict_live_dashboard/<screen>/code.html`. Token bên dưới khớp 1-1 với config
+ * mà các mockup Stitch dùng, nên có thể port HTML mockup sang component mà class Tailwind
+ * vẫn resolve đúng (màu Material-3, typography, spacing, radius).
+ *
+ * Legacy scale `pitch` / `gold` / `ink` được giữ lại cho các trang đã build (auth, admin)
+ * trước khi baseline — không xoá để tránh vỡ giao diện cũ.
  */
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        // --- Elite Pitch (Material-3) — baseline mockup Stitch ---
+        background: '#0b1326',
+        'on-background': '#dae2fd',
+        surface: '#0b1326',
+        'surface-dim': '#0b1326',
+        'surface-bright': '#31394d',
+        'surface-container-lowest': '#060e20',
+        'surface-container-low': '#131b2e',
+        'surface-container': '#171f33',
+        'surface-container-high': '#222a3d',
+        'surface-container-highest': '#2d3449',
+        'surface-variant': '#2d3449',
+        'surface-tint': '#4ae176',
+        'on-surface': '#dae2fd',
+        'on-surface-variant': '#bccbb9',
+        'inverse-surface': '#dae2fd',
+        'inverse-on-surface': '#283044',
+        outline: '#869585',
+        'outline-variant': '#3d4a3d',
+
+        primary: '#4be277',
+        'on-primary': '#003915',
+        'primary-container': '#22c55e',
+        'on-primary-container': '#004b1e',
+        'inverse-primary': '#006e2f',
+        'primary-fixed': '#6bff8f',
+        'primary-fixed-dim': '#4ae176',
+        'on-primary-fixed': '#002109',
+        'on-primary-fixed-variant': '#005321',
+
+        secondary: '#7bd0ff',
+        'on-secondary': '#00354a',
+        'secondary-container': '#00a6e0',
+        'on-secondary-container': '#00374d',
+        'secondary-fixed': '#c4e7ff',
+        'secondary-fixed-dim': '#7bd0ff',
+        'on-secondary-fixed': '#001e2c',
+        'on-secondary-fixed-variant': '#004c69',
+
+        tertiary: '#ffb5ab',
+        'on-tertiary': '#60130d',
+        'tertiary-container': '#ff8b7c',
+        'on-tertiary-container': '#76231b',
+        'tertiary-fixed': '#ffdad5',
+        'tertiary-fixed-dim': '#ffb4a9',
+        'on-tertiary-fixed': '#410001',
+        'on-tertiary-fixed-variant': '#7f2a21',
+
+        error: '#ffb4ab',
+        'on-error': '#690005',
+        'error-container': '#93000a',
+        'on-error-container': '#ffdad6',
+
+        // --- Legacy (trang đã build trước baseline) ---
         pitch: {
           50: '#eafaf1',
           100: '#cdf2db',
@@ -43,7 +104,41 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
+        'display-lg': ['Inter'],
+        'headline-lg': ['Inter'],
+        'headline-lg-mobile': ['Inter'],
+        'headline-md': ['Inter'],
+        'body-lg': ['Inter'],
+        'body-sm': ['Inter'],
+        'label-caps': ['Inter'],
+        'data-mono': ['Inter'],
+      },
+      fontSize: {
+        'display-lg': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '800' }],
+        'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' }],
+        'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+        'headline-md': ['20px', { lineHeight: '28px', fontWeight: '600' }],
+        'body-lg': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+        'label-caps': ['12px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '700' }],
+        'data-mono': ['14px', { lineHeight: '20px', letterSpacing: '-0.01em', fontWeight: '600' }],
+      },
+      spacing: {
+        base: '8px',
+        gutter: '16px',
+        'margin-mobile': '16px',
+        'margin-desktop': '32px',
+        'card-padding': '20px',
+        'widget-gap': '24px',
+      },
+      // Radius giữ default Tailwind — đúng với config render của mockup Stitch
+      // (lg=.5rem, xl=.75rem, 2xl=1rem). Chỉ thêm `md` cho khớp DESIGN.md.
+      borderRadius: {
+        md: '0.75rem',
+      },
+      boxShadow: {
+        'accent-glow': '0 0 15px rgba(74, 225, 118, 0.3)',
       },
     },
   },

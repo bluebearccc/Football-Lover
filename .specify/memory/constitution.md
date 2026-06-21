@@ -1,32 +1,33 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: (template) → 1.0.0
-Bump rationale: Initial ratification of the project constitution from existing
-  project conventions (CLAUDE.md, SRS v1.1.0, layered-architecture.puml). No prior
-  versioned constitution existed; this establishes the baseline (MAJOR baseline = 1.0.0).
+Version change: 1.0.0 → 1.1.0
+Bump rationale: Principle IV (Frontend Discipline) materially expanded with a mandatory
+  UI baseline requirement — frontend layout/visuals MUST baseline on the Stitch mockups in
+  stitch_goalpredict_live_dashboard/ and elite_pitch/DESIGN.md. New normative guidance, no
+  redefinition/removal → MINOR bump.
 
-Principles defined (5):
-  I.   Spec-Driven Development (NON-NEGOTIABLE)  [new]
-  II.  Layered Architecture & Module Structure   [new]
-  III. Contract-First APIs & Validation          [new]
-  IV.  Frontend Discipline                        [new]
-  V.   Quality Gates & Traceability               [new]
+Principles (5):
+  I.   Spec-Driven Development (NON-NEGOTIABLE)
+  II.  Layered Architecture & Module Structure
+  III. Contract-First APIs & Validation
+  IV.  Frontend Discipline                        [amended — UI baseline on Stitch mockups]
+  V.   Quality Gates & Traceability
 
 Added sections:
   - Technology & Integration Constraints (Section 2)
   - Development Workflow & Review Process (Section 3)
   - Governance
 
-Removed sections: none (template placeholders fully replaced)
+Removed sections: none
 
 Templates requiring updates:
-  ✅ .specify/templates/plan-template.md   — Constitution Check gate aligns (generic, no change needed)
+  ✅ .specify/templates/plan-template.md   — Constitution Check gate now references UI baseline (updated)
   ✅ .specify/templates/spec-template.md   — scope/requirements alignment OK (no mandatory section added)
   ✅ .specify/templates/tasks-template.md  — task categories cover the principle-driven types
-  ✅ CLAUDE.md                              — source of these principles; remains consistent
+  ✅ CLAUDE.md                              — UI baseline section + frontend rules added in sync
 
-Follow-up TODOs: none. Ratification date set to 2026-06-20 (project inception per SRS v1.1.0).
+Follow-up TODOs: none. Ratification date unchanged (2026-06-20).
 -->
 
 # Football-Lover (GoalPredict Live) Constitution
@@ -86,17 +87,29 @@ and correctness perimeter; consistency here is non-negotiable for an app handlin
 
 ### IV. Frontend Discipline
 
-The frontend MUST mirror the per-UC frontend class diagrams and keep network access out of
-view components.
+The frontend MUST mirror the per-UC frontend class diagrams, baseline its visuals on the
+Stitch mockups, and keep network access out of view components.
 
 - Components MUST follow the class diagram decomposition (e.g.
   `RegisterPage → RegisterForm → AuthApiClient`, with `ValidationMessage`).
+- **UI layout and visuals MUST baseline on the Stitch mockups** in
+  `stitch_goalpredict_live_dashboard/<screen>/`. Before building or changing a screen, the
+  implementing agent MUST consult that screen's `screen.png` and `code.html`, plus the design
+  system `stitch_goalpredict_live_dashboard/elite_pitch/DESIGN.md`. The class diagram governs
+  component structure and data flow; the mockup governs layout and visual treatment — both
+  MUST be honored. Layout MUST NOT be invented outside the mockup.
 - API calls MUST go through the `src/api/*` clients. Components MUST NOT `fetch` directly.
-- Styling MUST use the **Elite Pitch** palette defined in `tailwind.config.js`. The stack is
-  Next.js + TypeScript + TailwindCSS.
+- Styling MUST use the **Elite Pitch** palette defined in `tailwind.config.ts`, kept in sync
+  with `elite_pitch/DESIGN.md`. Values needed by a mockup but missing from the config MUST be
+  added as tokens rather than hardcoded. The stack is Next.js + TypeScript + TailwindCSS.
+- Files under `stitch_goalpredict_live_dashboard/` are a read-only reference baseline and MUST
+  NOT be edited by coding agents. Where a mockup and the SRS/class diagram genuinely conflict,
+  spec wins for behavior/fields and the mockup wins for visuals; an irreconcilable conflict
+  MUST be raised, not silently resolved.
 
-**Rationale**: A diagram-aligned component tree and a single API layer keep the UI traceable
-to spec and prevent scattered, untestable data access.
+**Rationale**: A diagram-aligned component tree, a single API layer, and a fixed visual
+baseline keep the UI traceable to spec, visually consistent, and prevent scattered, untestable
+data access or ad-hoc layouts.
 
 ### V. Quality Gates & Traceability
 
@@ -153,4 +166,4 @@ coding guide is the runtime companion to these principles and MUST stay consiste
   any added complexity or deviation MUST be justified in the PR/spec, or refactored to
   comply. Persistent guidance for day-to-day work lives in CLAUDE.md.
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-20 | **Last Amended**: 2026-06-20
+**Version**: 1.1.0 | **Ratified**: 2026-06-20 | **Last Amended**: 2026-06-21

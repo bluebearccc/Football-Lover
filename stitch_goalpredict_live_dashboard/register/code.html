@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register | GoalPredict Live</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#ffb5ab",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-container": "#00374d",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-fixed-variant": "#005321",
+                        "primary-fixed-dim": "#4ae176",
+                        "outline": "#869585",
+                        "on-tertiary-fixed": "#410001",
+                        "on-primary": "#003915",
+                        "on-background": "#dae2fd",
+                        "on-tertiary": "#60130d",
+                        "surface-bright": "#31394d",
+                        "secondary-fixed": "#c4e7ff",
+                        "outline-variant": "#3d4a3d",
+                        "inverse-primary": "#006e2f",
+                        "background": "#0b1326",
+                        "surface-dim": "#0b1326",
+                        "inverse-surface": "#dae2fd",
+                        "inverse-on-surface": "#283044",
+                        "tertiary-container": "#ff8b7c",
+                        "on-primary-container": "#004b1e",
+                        "tertiary-fixed": "#ffdad5",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-container": "#22c55e",
+                        "primary": "#4be277",
+                        "surface-container-low": "#131b2e",
+                        "on-error": "#690005",
+                        "surface-tint": "#4ae176",
+                        "primary-fixed": "#6bff8f",
+                        "surface": "#0b1326",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#060e20",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "error": "#ffb4ab",
+                        "secondary": "#7bd0ff",
+                        "on-tertiary-container": "#76231b",
+                        "on-secondary-fixed": "#001e2c",
+                        "secondary-container": "#00a6e0",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-surface": "#dae2fd",
+                        "on-secondary": "#00354a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "widget-gap": "24px",
+                        "card-padding": "20px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .pitch-green-glow:focus-within {
+            box-shadow: 0 0 15px rgba(75, 226, 119, 0.2);
+            border-color: #4be277;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-center items-center relative overflow-hidden">
+<!-- Atmospheric Background Effects -->
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<main class="w-full max-w-md px-6 z-10">
+<!-- Brand Identity -->
+<div class="text-center mb-8">
+<h1 class="font-display-lg text-display-lg text-primary tracking-tighter mb-2">GoalPredict Live</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Precision analytics for the modern fan.</p>
+</div>
+<!-- Registration Card -->
+<div class="glass-panel p-8 rounded-xl shadow-2xl">
+<div class="mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Create Account</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Join 50k+ predictive analysts worldwide.</p>
+</div>
+<form action="#" class="space-y-5" method="POST">
+<!-- Username -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2" for="username">
+<span class="material-symbols-outlined text-[16px]">person</span> USERNAME
+                    </label>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-3 px-4 text-on-surface placeholder-on-surface-variant/40 outline-none transition-all pitch-green-glow" id="username" name="username" placeholder="pro_analyst_24" type="text"/>
+</div>
+<!-- Email -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2" for="email">
+<span class="material-symbols-outlined text-[16px]">mail</span> EMAIL ADDRESS
+                    </label>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-3 px-4 text-on-surface placeholder-on-surface-variant/40 outline-none transition-all pitch-green-glow" id="email" name="email" placeholder="name@example.com" type="email"/>
+</div>
+<!-- Password -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2" for="password">
+<span class="material-symbols-outlined text-[16px]">lock</span> PASSWORD
+                    </label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-3 px-4 text-on-surface placeholder-on-surface-variant/40 outline-none transition-all pitch-green-glow" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Favorite Team Selection -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2" for="team">
+<span class="material-symbols-outlined text-[16px]">sports_soccer</span> FAVORITE TEAM
+                    </label>
+<select class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-3 px-4 text-on-surface outline-none transition-all pitch-green-glow appearance-none cursor-pointer" id="team" name="team">
+<option disabled="" selected="" value="">Select your club</option>
+<option value="arsenal">Arsenal FC</option>
+<option value="liverpool">Liverpool FC</option>
+<option value="mancity">Manchester City</option>
+<option value="realmadrid">Real Madrid</option>
+<option value="bayern">Bayern Munich</option>
+<option value="other">Other / Neutral</option>
+</select>
+</div>
+<!-- CTA Button -->
+<button class="w-full bg-primary hover:bg-primary-fixed-dim text-on-primary font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-all transform active:scale-[0.98] shadow-lg shadow-primary/10 mt-8 group" type="submit">
+<span class="font-headline-md text-headline-md">Initialize Profile</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 pt-6 border-t border-outline-variant/10 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Already analyzing with us? 
+                    <a class="text-primary font-bold hover:underline transition-all" href="#">Log in here</a>
+</p>
+</div>
+</div>
+<!-- Footnote -->
+<p class="mt-8 text-center font-body-sm text-body-sm text-on-surface-variant/50 max-w-xs mx-auto">
+            By registering, you agree to our <a class="underline" href="#">Terms of Service</a> and <a class="underline" href="#">Data Privacy Policy</a>.
+        </p>
+</main>
+<!-- UI Decor: Floating Stats Bubble (Background Accent) -->
+<div class="hidden lg:block absolute left-[10%] top-[25%] animate-bounce" style="animation-duration: 4s;">
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">LIVE ACCURACY</p>
+<p class="font-data-mono text-data-mono text-primary">94.2%</p>
+</div>
+</div>
+</div>
+<div class="hidden lg:block absolute right-[10%] bottom-[20%] animate-pulse" style="animation-duration: 3s;">
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">groups</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">ACTIVE USERS</p>
+<p class="font-data-mono text-data-mono text-secondary">52,804</p>
+</div>
+</div>
+</div>
+<script>
+        // Micro-interaction for input fields focus effects
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Toggle Password Visibility
+        const togglePass = document.querySelector('button[type="button"]');
+        const passInput = document.getElementById('password');
+        togglePass.addEventListener('click', () => {
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            togglePass.querySelector('span').textContent = type === 'password' ? 'visibility' : 'visibility_off';
+        });
+    </script>
+</body></html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | GoalPredict Live</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#ffb5ab",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-container": "#00374d",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-fixed-variant": "#005321",
+                        "primary-fixed-dim": "#4ae176",
+                        "outline": "#869585",
+                        "on-tertiary-fixed": "#410001",
+                        "on-primary": "#003915",
+                        "on-background": "#dae2fd",
+                        "on-tertiary": "#60130d",
+                        "surface-bright": "#31394d",
+                        "secondary-fixed": "#c4e7ff",
+                        "outline-variant": "#3d4a3d",
+                        "inverse-primary": "#006e2f",
+                        "background": "#0b1326",
+                        "surface-dim": "#0b1326",
+                        "inverse-surface": "#dae2fd",
+                        "inverse-on-surface": "#283044",
+                        "tertiary-container": "#ff8b7c",
+                        "on-primary-container": "#004b1e",
+                        "tertiary-fixed": "#ffdad5",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-container": "#22c55e",
+                        "primary": "#4be277",
+                        "surface-container-low": "#131b2e",
+                        "on-error": "#690005",
+                        "surface-tint": "#4ae176",
+                        "primary-fixed": "#6bff8f",
+                        "surface": "#0b1326",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#060e20",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "error": "#ffb4ab",
+                        "secondary": "#7bd0ff",
+                        "on-tertiary-container": "#76231b",
+                        "on-secondary-fixed": "#001e2c",
+                        "secondary-container": "#00a6e0",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-surface": "#dae2fd",
+                        "on-secondary": "#00354a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "widget-gap": "24px",
+                        "card-padding": "20px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            font-family: 'Inter', sans-serif;
+        }
+        .stadium-bg {
+            background: linear-gradient(rgba(11, 19, 38, 0.85), rgba(11, 19, 38, 0.95)), 
+                        url('https://images.unsplash.com/photo-1522770179533-24471fcdba45?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 0 2px rgba(75, 226, 119, 0.2);
+            border-color: #4be277;
+        }
+        .accent-glow {
+            box-shadow: 0 0 20px rgba(75, 226, 119, 0.3);
+        }
+    </style>
+</head>
+<body class="antialiased text-on-surface overflow-hidden">
+<!-- Subtle Background Atmosphere -->
+<div class="fixed inset-0 stadium-bg z-0" data-alt="A wide-angle, cinematic shot of a professional football stadium at night, shrouded in a soft atmospheric mist. The vibrant pitch green grass is illuminated by powerful overhead floodlights creating a high-contrast environment with deep shadows. The color palette is dominated by deep navy blues and pitch greens, reflecting a high-performance sports analytics aesthetic."></div>
+<!-- Main Content -->
+<main class="relative z-10 flex min-h-screen items-center justify-center p-gutter">
+<div class="w-full max-w-md">
+<!-- Brand Anchor -->
+<div class="flex flex-col items-center mb-base gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">GoalPredict Live</h1>
+</div>
+<p class="text-on-surface-variant font-body-sm text-body-sm mb-6">Elevate Your Match Prediction Game</p>
+</div>
+<!-- Login Card -->
+<div class="glass-card rounded-xl p-8 shadow-2xl">
+<form class="space-y-6" onsubmit="return false;">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase" for="email">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg py-3 pl-11 pr-4 text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none input-glow transition-all font-body-lg text-body-lg" id="email" name="email" placeholder="name@example.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase" for="password">Password</label>
+<a class="text-primary font-label-caps text-[11px] hover:underline transition-all" href="#">Forgot password?</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg py-3 pl-11 pr-4 text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none input-glow transition-all font-body-lg text-body-lg" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center">
+<input class="h-4 w-4 rounded border-outline-variant/30 bg-surface-container-lowest text-primary focus:ring-primary/20" id="remember-me" name="remember-me" type="checkbox"/>
+<label class="ml-2 block font-body-sm text-body-sm text-on-surface-variant" for="remember-me">
+                            Keep me logged in for 30 days
+                        </label>
+</div>
+<!-- Sign In Button -->
+<button class="w-full bg-primary text-on-primary font-headline-md text-headline-md py-4 rounded-lg hover:brightness-110 active:scale-[0.98] transition-all accent-glow flex items-center justify-center gap-2" type="submit">
+                        Sign In
+                        <span class="material-symbols-outlined">chevron_right</span>
+</button>
+<!-- Divider -->
+<div class="relative flex items-center py-2">
+<div class="flex-grow border-t border-outline-variant/20"></div>
+<span class="flex-shrink mx-4 font-label-caps text-label-caps text-on-surface-variant">OR CONTINUE WITH</span>
+<div class="flex-grow border-t border-outline-variant/20"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 bg-surface-container-high border border-outline-variant/20 py-3 rounded-lg hover:bg-surface-bright transition-colors group" type="button">
+<img alt="Google" class="w-5 h-5 group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2yQhLvW8wF1N4Vf__smilAxmRQMV6EyKhBn5hrUBF_cLN9PZe_gWQgO9YyQD2EL8CpBXVgrCIY3TCGHxsfIxyONC3J_H3wFLAvQHx4R9SgfdLs-OMwr4R3KMUWFtY-Xv2tHuDfit0EAzjvUkYSCePwmktjKcvsghg_g0M1iUrTzHUh_yBEQXGyWT1HrBuHBfyEk4pmzRPTe2sYI8PTkalsqXP_kLmHarHk-RzvOXX__H_JSiI1ViQpa83otnjs7B68oVOaQSHJE37"/>
+<span class="font-body-sm text-body-sm font-semibold">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 bg-surface-container-high border border-outline-variant/20 py-3 rounded-lg hover:bg-surface-bright transition-colors group" type="button">
+<svg class="w-5 h-5 fill-[#1877F2] group-hover:scale-110 transition-transform" viewbox="0 0 24 24">
+<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+</svg>
+<span class="font-body-sm text-body-sm font-semibold">Facebook</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Footer Link -->
+<p class="mt-8 text-center font-body-sm text-body-sm text-on-surface-variant">
+                Don't have an account? 
+                <a class="text-primary font-bold hover:underline transition-all" href="#">Create Profile</a>
+</p>
+</div>
+</main>
+<!-- Interactive micro-effects -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.parentElement.classList.add('scale-[1.01]');
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.parentElement.classList.remove('scale-[1.01]');
+                });
+            });
+
+            // Smooth background parallax effect
+            document.addEventListener('mousemove', (e) => {
+                const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+                const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+                document.querySelector('.stadium-bg').style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+            });
+        });
+    </script>
+</body></html>
