@@ -42,6 +42,20 @@
 
 [Gates determined based on constitution file]
 
+**UI baseline (Principle IV) — required when the feature touches the frontend:**
+
+- [ ] Identify the matching screen folder(s) under `stitch_goalpredict_live_dashboard/` for
+      every screen this feature builds or changes, and list them here.
+- [ ] Plan reflects the layout/visuals from each screen's `screen.png` + `code.html` and the
+      design tokens in `stitch_goalpredict_live_dashboard/elite_pitch/DESIGN.md` (no invented
+      layout outside the mockups).
+- [ ] Any token a mockup needs but `frontend/tailwind.config.ts` lacks is captured as a planned
+      `tailwind.config.ts` addition (not a hardcoded value).
+- [ ] Mockup ↔ spec (SRS/class diagram) conflicts noted: spec wins for behavior/fields, mockup
+      wins for visuals; irreconcilable conflicts flagged in Complexity Tracking, not silently resolved.
+
+*(If the feature is backend-only, state "No frontend changes — UI baseline N/A".)*
+
 ## Project Structure
 
 ### Documentation (this feature)

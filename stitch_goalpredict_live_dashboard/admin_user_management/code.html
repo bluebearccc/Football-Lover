@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Management | GoalPredict Live</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b1326;
+            color: #dae2fd;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #4be277;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #4be277;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0b1326;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2d3449;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#ffb5ab",
+                      "surface-variant": "#2d3449",
+                      "on-secondary-container": "#00374d",
+                      "on-primary-fixed": "#002109",
+                      "surface-container-highest": "#2d3449",
+                      "on-primary-fixed-variant": "#005321",
+                      "primary-fixed-dim": "#4ae176",
+                      "outline": "#869585",
+                      "on-tertiary-fixed": "#410001",
+                      "on-primary": "#003915",
+                      "on-background": "#dae2fd",
+                      "on-tertiary": "#60130d",
+                      "surface-bright": "#31394d",
+                      "secondary-fixed": "#c4e7ff",
+                      "outline-variant": "#3d4a3d",
+                      "inverse-primary": "#006e2f",
+                      "background": "#0b1326",
+                      "surface-dim": "#0b1326",
+                      "inverse-surface": "#dae2fd",
+                      "inverse-on-surface": "#283044",
+                      "tertiary-container": "#ff8b7c",
+                      "on-primary-container": "#004b1e",
+                      "tertiary-fixed": "#ffdad5",
+                      "on-surface-variant": "#bccbb9",
+                      "primary-container": "#22c55e",
+                      "primary": "#4be277",
+                      "surface-container-low": "#131b2e",
+                      "on-error": "#690005",
+                      "surface-tint": "#4ae176",
+                      "primary-fixed": "#6bff8f",
+                      "surface": "#0b1326",
+                      "error-container": "#93000a",
+                      "surface-container-lowest": "#060e20",
+                      "secondary-fixed-dim": "#7bd0ff",
+                      "on-tertiary-fixed-variant": "#7f2a21",
+                      "error": "#ffb4ab",
+                      "secondary": "#7bd0ff",
+                      "on-tertiary-container": "#76231b",
+                      "on-secondary-fixed": "#001e2c",
+                      "secondary-fixed-dim": "#7bd0ff",
+                      "on-tertiary-fixed-variant": "#7f2a21",
+                      "error": "#ffb4ab",
+                      "secondary": "#7bd0ff",
+                      "on-tertiary-container": "#76231b",
+                      "on-secondary-fixed": "#001e2c",
+                      "secondary-container": "#00a6e0",
+                      "surface-container": "#171f33",
+                      "surface-container-high": "#222a3d",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#004c69",
+                      "tertiary-fixed-dim": "#ffb4a9",
+                      "on-surface": "#dae2fd",
+                      "on-secondary": "#00354a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "margin-desktop": "32px",
+                      "margin-mobile": "16px",
+                      "widget-gap": "24px",
+                      "card-padding": "20px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "data-mono": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant/10 shadow-sm flex justify-between items-center h-16 px-gutter md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-extrabold text-primary">GoalPredict Live</span>
+<div class="hidden md:flex bg-surface-container rounded-lg px-3 py-1 items-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface-variant mr-2 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-48 placeholder:text-on-surface-variant/50" placeholder="Search system..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center px-3 py-1 bg-primary-container/10 border border-primary/20 rounded-full">
+<span class="live-dot mr-2"></span>
+<span class="font-label-caps text-label-caps text-primary">1,280 pts</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<div class="h-8 w-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant/30">
+<img alt="Admin" class="w-full h-full object-cover" data-alt="A professional headshot of a sophisticated male administrator with a clean-cut look, wearing a stylish dark blazer. The lighting is dramatic and moody, reflecting a high-end corporate tech environment with soft teal and green rim lighting. The background is a blurred digital office space with faint data visualizations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVH7MYKu0eb4kPTGGXscH1h7OaHUFY8-HKyTxg5asyEhhZIdE-v-obGHUxkZiUn9YVbiBVLwm4vRl2LjXsavN5iU7J5HH4BmFbCPwBmdDt7y9PfMraR7Ee1UG6qUzMGxThYWxu1543MD1b4MDwswi440ovnsV9xS4Y3M964rwlH4m8pg47EcopFDrBKIbv7ds95Dfq-FV8YMT6LVVvd9ZN9IZKo9j8T2Z1bHI7E5kB_fP1YGpYfqR0gcFAQoFqFuMnC1HDujDMOPYP"/>
+</div>
+</div>
+</header>
+<!-- Side Navigation (Desktop Only) -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 border-r border-outline-variant/20 py-6 bg-surface z-30 pt-20">
+<div class="px-6 mb-8">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant opacity-50 uppercase tracking-widest">Management</h3>
+</div>
+<div class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined mr-4">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-6 py-3 text-primary bg-primary-container/10 border-r-4 border-primary font-bold font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined mr-4">person</span>
+                Settings
+            </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined mr-4">history</span>
+                Match History
+            </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-colors font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined mr-4">query_stats</span>
+                Predictions
+            </a>
+</div>
+<div class="px-6 mt-auto">
+<button class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl active:scale-95 transition-transform">
+                Upgrade to Pro
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="md:pl-64 pt-24 pb-24 md:pb-8 px-gutter md:px-margin-desktop min-h-screen">
+<div class="max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">User Management</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Oversee system participants, track performance, and maintain community integrity.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity active:scale-95">
+<span class="material-symbols-outlined">person_add</span>
+                    Add User
+                </button>
+</div>
+<!-- Stats Overview Bento -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-widget-gap mb-8">
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">group</span>
+</div>
+<span class="text-primary font-data-mono text-data-mono">+12%</span>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">TOTAL USERS</p>
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface">12,482</h2>
+</div>
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary">flash_on</span>
+</div>
+<span class="text-secondary font-data-mono text-data-mono">Active</span>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">ONLINE NOW</p>
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface">843</h2>
+</div>
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-tertiary/10 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">error</span>
+</div>
+<span class="text-tertiary font-data-mono text-data-mono">Risk</span>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">BANNED ACCOUNTS</p>
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface">142</h2>
+</div>
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary-container/10 rounded-lg">
+<span class="material-symbols-outlined text-primary-container">monitoring</span>
+</div>
+<span class="text-primary-container font-data-mono text-data-mono">72%</span>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">AVG ACCURACY</p>
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface">68.4%</h2>
+</div>
+</div>
+<!-- Table Filters and Search -->
+<div class="glass-panel rounded-t-xl p-card-padding flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 custom-scrollbar">
+<button class="px-4 py-2 bg-primary/20 text-primary border border-primary/30 rounded-full font-label-caps text-label-caps whitespace-nowrap">All Users</button>
+<button class="px-4 py-2 hover:bg-surface-variant text-on-surface-variant rounded-full font-label-caps text-label-caps whitespace-nowrap">Active</button>
+<button class="px-4 py-2 hover:bg-surface-variant text-on-surface-variant rounded-full font-label-caps text-label-caps whitespace-nowrap">Banned</button>
+<button class="px-4 py-2 hover:bg-surface-variant text-on-surface-variant rounded-full font-label-caps text-label-caps whitespace-nowrap">Pro Members</button>
+</div>
+<div class="relative w-full md:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container border border-outline-variant/30 rounded-xl pl-10 pr-4 py-2 text-body-sm focus:ring-1 focus:ring-primary focus:border-primary" placeholder="Search by name or email..." type="text"/>
+</div>
+</div>
+<!-- Data Table -->
+<div class="glass-panel rounded-b-xl overflow-x-auto border-t-0 custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/20">
+<th class="p-card-padding font-label-caps text-label-caps text-on-surface-variant uppercase">Name / ID</th>
+<th class="p-card-padding font-label-caps text-label-caps text-on-surface-variant uppercase">Status</th>
+<th class="p-card-padding font-label-caps text-label-caps text-on-surface-variant uppercase">Points</th>
+<th class="p-card-padding font-label-caps text-label-caps text-on-surface-variant uppercase">Accuracy</th>
+<th class="p-card-padding font-label-caps text-label-caps text-on-surface-variant uppercase">Joined</th>
+<th class="p-card-padding font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors">
+<td class="p-card-padding">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold">Julian Draxler</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant/60">ID: GP-88219</p>
+</div>
+</div>
+</td>
+<td class="p-card-padding">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+<span class="live-dot mr-1.5 h-1.5 w-1.5"></span> Active
+                                </span>
+</td>
+<td class="p-card-padding font-data-mono text-data-mono text-primary">4,820 pts</td>
+<td class="p-card-padding">
+<div class="w-24 bg-surface-variant h-1.5 rounded-full">
+<div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+</div>
+<span class="font-data-mono text-xs mt-1 block">78%</span>
+</td>
+<td class="p-card-padding font-body-sm text-body-sm text-on-surface-variant">Oct 12, 2023</td>
+<td class="p-card-padding text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-primary" title="Edit"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-secondary" title="Reset Password"><span class="material-symbols-outlined text-xl">lock_reset</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-tertiary" title="Ban User"><span class="material-symbols-outlined text-xl">block</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors">
+<td class="p-card-padding">
+<div class="flex items-center gap-3">
+<img alt="Sarah L." class="h-10 w-10 rounded-full object-cover" data-alt="A portrait of a vibrant young woman with a friendly smile, styled in modern athletic wear. High-contrast studio lighting with cool blue and neon green tones. Crisp digital resolution, focused on professional user profile aesthetic for a gaming and sports analytics app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6ixHezWbpTZ1pSrRdHl-qDSz_FP2nrqdcEmOZ9C_S43nLSsa-Hr-8jGd_kWB8jybLi2awqKfu1Sh3RXrHQ7pKnOq90ONCuss_ASNmpGMd_jhSJzh4kg7W9T6b32w3LE1Skt0qmQRbfZGbvcONrVdCp5s3yffR-EdN6KdR9ZkcqfM8E8tUi3zVe4TwNp0ADedH2LvV7Rzh_M-C5eVDERPb06bVAETMRoBWDQAhZ2yj0TVL7wcCDKdhuhtYj5eZfmWlEwNPvHAK-XVf"/>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold">Sarah Loftus</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant/60">ID: GP-91023</p>
+</div>
+</div>
+</td>
+<td class="p-card-padding">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-tertiary/10 text-tertiary border border-tertiary/20">
+                                    Banned
+                                </span>
+</td>
+<td class="p-card-padding font-data-mono text-data-mono text-tertiary">120 pts</td>
+<td class="p-card-padding">
+<div class="w-24 bg-surface-variant h-1.5 rounded-full">
+<div class="bg-tertiary h-full rounded-full" style="width: 32%"></div>
+</div>
+<span class="font-data-mono text-xs mt-1 block">32%</span>
+</td>
+<td class="p-card-padding font-body-sm text-body-sm text-on-surface-variant">Jan 05, 2024</td>
+<td class="p-card-padding text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-primary" title="Edit"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-secondary" title="Reset Password"><span class="material-symbols-outlined text-xl">lock_reset</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-primary" title="Unban"><span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors">
+<td class="p-card-padding">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-secondary/20 border border-secondary/30 flex items-center justify-center text-secondary font-bold">MK</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold">Marcus King</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant/60">ID: GP-77211</p>
+</div>
+</div>
+</td>
+<td class="p-card-padding">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+<span class="live-dot mr-1.5 h-1.5 w-1.5"></span> Active
+                                </span>
+</td>
+<td class="p-card-padding font-data-mono text-data-mono text-primary">12,450 pts</td>
+<td class="p-card-padding">
+<div class="w-24 bg-surface-variant h-1.5 rounded-full">
+<div class="bg-primary h-full rounded-full" style="width: 92%"></div>
+</div>
+<span class="font-data-mono text-xs mt-1 block">92%</span>
+</td>
+<td class="p-card-padding font-body-sm text-body-sm text-on-surface-variant">Nov 22, 2022</td>
+<td class="p-card-padding text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-primary" title="Edit"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-secondary" title="Reset Password"><span class="material-symbols-outlined text-xl">lock_reset</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-tertiary" title="Ban User"><span class="material-symbols-outlined text-xl">block</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-highest/50 transition-colors">
+<td class="p-card-padding">
+<div class="flex items-center gap-3">
+<img alt="Erik S." class="h-10 w-10 rounded-full object-cover" data-alt="A portrait of a male professional with sharp features, wearing high-tech glasses and a dark tactical hoodie. The environment is dark and atmospheric, lit by vibrant green and blue glowing screens in the background. Cinematic lighting, ultra-modern aesthetic, professional sports analyst vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlYPlGpsKnGj5R0y8BZPOtFiQlB74XH5Bf1KpQxBxwhvzkGIq7huaOFA3YMTrpF-uauY-8v1tIXWuBJ2yjRwaO7KcM1kUoVF8owxMMXGbH67D5Xx_ZJjYZuENsuN5Xk1OEpWbvpgIM-F6D6Dgmef2Cx9lTJGmRwfK-kmfpi0jiqfI7oFyzgPdpDUeXiIMY39PJww8bJAg94wNd2Tx51lhqAopWNOKfWeBUlSfsAfECNB2Y4R5VNHaTeuJUkhQTCQIPSDmbUtYLlDt2"/>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold">Erik Sorenson</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant/60">ID: GP-44322</p>
+</div>
+</div>
+</td>
+<td class="p-card-padding">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+<span class="live-dot mr-1.5 h-1.5 w-1.5"></span> Active
+                                </span>
+</td>
+<td class="p-card-padding font-data-mono text-data-mono text-primary">2,100 pts</td>
+<td class="p-card-padding">
+<div class="w-24 bg-surface-variant h-1.5 rounded-full">
+<div class="bg-primary h-full rounded-full" style="width: 55%"></div>
+</div>
+<span class="font-data-mono text-xs mt-1 block">55%</span>
+</td>
+<td class="p-card-padding font-body-sm text-body-sm text-on-surface-variant">Feb 14, 2024</td>
+<td class="p-card-padding text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-primary" title="Edit"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-secondary" title="Reset Password"><span class="material-symbols-outlined text-xl">lock_reset</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-tertiary" title="Ban User"><span class="material-symbols-outlined text-xl">block</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Showing 1 to 10 of 12,482 users</p>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-bold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-variant text-on-surface-variant">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-variant text-on-surface-variant">3</button>
+<span class="text-on-surface-variant px-1">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-variant text-on-surface-variant">1,248</button>
+<button class="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface-container rounded-t-xl border-t border-outline-variant/20 shadow-lg flex justify-around items-center h-16 px-4 pb-safe">
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-[10px] uppercase">Home</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-caps text-[10px] uppercase">Live</span>
+</a>
+<a class="flex flex-col items-center text-primary font-bold scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+<span class="font-label-caps text-[10px] uppercase">Admin</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-label-caps text-[10px] uppercase">Rank</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-caps text-[10px] uppercase">Me</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for row hovering effects
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'translateX(4px)';
+                row.style.transition = 'transform 0.2s ease-out';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Search bar interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('border-primary/50');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('border-primary/50');
+        });
+    </script>
+</body></html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Match Management | GoalPredict Live Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#ffb5ab",
+                    "surface-variant": "#2d3449",
+                    "on-secondary-container": "#00374d",
+                    "on-primary-fixed": "#002109",
+                    "surface-container-highest": "#2d3449",
+                    "on-primary-fixed-variant": "#005321",
+                    "primary-fixed-dim": "#4ae176",
+                    "outline": "#869585",
+                    "on-tertiary-fixed": "#410001",
+                    "on-primary": "#003915",
+                    "on-background": "#dae2fd",
+                    "on-tertiary": "#60130d",
+                    "surface-bright": "#31394d",
+                    "secondary-fixed": "#c4e7ff",
+                    "outline-variant": "#3d4a3d",
+                    "inverse-primary": "#006e2f",
+                    "background": "#000814",
+                    "surface-dim": "#0b1326",
+                    "inverse-surface": "#dae2fd",
+                    "inverse-on-surface": "#283044",
+                    "tertiary-container": "#ff8b7c",
+                    "on-primary-container": "#004b1e",
+                    "tertiary-fixed": "#ffdad5",
+                    "on-surface-variant": "#bccbb9",
+                    "primary-container": "#22c55e",
+                    "primary": "#4be277",
+                    "surface-container-low": "#131b2e",
+                    "on-error": "#690005",
+                    "surface-tint": "#4ae176",
+                    "primary-fixed": "#6bff8f",
+                    "surface": "#0b1326",
+                    "error-container": "#93000a",
+                    "surface-container-lowest": "#060e20",
+                    "secondary-fixed-dim": "#7bd0ff",
+                    "on-tertiary-fixed-variant": "#7f2a21",
+                    "error": "#ffb4ab",
+                    "secondary": "#7bd0ff",
+                    "on-tertiary-container": "#76231b",
+                    "on-secondary-fixed": "#001e2c",
+                    "secondary-container": "#00a6e0",
+                    "surface-container": "#171f33",
+                    "surface-container-high": "#222a3d",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#004c69",
+                    "tertiary-fixed-dim": "#ffb4a9",
+                    "on-surface": "#dae2fd",
+                    "on-secondary": "#00354a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-desktop": "32px",
+                    "margin-mobile": "16px",
+                    "widget-gap": "24px",
+                    "card-padding": "20px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "data-mono": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0b1326; color: #dae2fd; }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .live-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(75, 226, 119, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(75, 226, 119, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(75, 226, 119, 0); }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant/20 bg-surface flex flex-col h-full py-6 z-50 hidden md:flex">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">GoalPredict Live</h1>
+<p class="text-on-surface-variant text-sm mt-1">Admin Dashboard</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-body-lg text-body-lg">Dashboard</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-primary bg-primary-container/10 border-r-4 border-primary font-bold group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="live_tv">live_tv</span>
+<span class="font-body-lg text-body-lg">Live Matches</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="query_stats">query_stats</span>
+<span class="font-body-lg text-body-lg">Predictions</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="leaderboard">leaderboard</span>
+<span class="font-body-lg text-body-lg">Leaderboard</span>
+</a>
+<div class="pt-4 pb-2 px-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Management</div>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="history">history</span>
+<span class="font-body-lg text-body-lg">Match History</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="glass-panel p-4 rounded-xl">
+<div class="flex items-center space-x-3 mb-3">
+<img alt="Admin" class="w-10 h-10 rounded-full border border-primary/30" data-alt="A professional portrait of a senior sports data analyst in a modern office environment. The lighting is focused and clean, highlighting a look of expertise and authority. The background shows blurred displays of sports analytics charts, maintaining a high-tech corporate aesthetic with deep blues and crisp green accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3NQAhHtsDZuNSdiFXLtjf7CkfIBQXxFY37SIHgTXV_y4w1ZKBS7kezNvVx_WVjaTKAik8i0n52hL700SHRISf6bC362vuqRwOY68fTUhibguBqR7Yt4BRNaihSEcKrbP2di4BeLQFefQ7OF-Q-rvrvbcLAUSn1Sw-f4eElGm_vtBI5WcfjYLaqeyI-AJKgyt2mpucYWWVkCxhWc-QcZdM2gV2YGtVLVNFTO4ftI2_57M-sdNnuyLqD207UKt5pY9A8l6xb_S0gDWz"/>
+<div>
+<p class="font-bold text-sm">Admin User</p>
+<p class="text-xs text-primary">System Overlord</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-on-primary font-bold rounded-lg text-sm hover:opacity-90 transition-opacity active:scale-95">
+                    Log Out
+                </button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-64 min-h-screen pb-20 md:pb-8">
+<!-- Top App Bar Shell -->
+<header class="fixed top-0 md:left-64 right-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant/10 h-16 flex justify-between items-center px-6 md:px-margin-desktop">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-primary text-sm transition-all" placeholder="Search matches, teams, or leagues..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-6 ml-4">
+<div class="flex items-center bg-primary-container/10 px-3 py-1.5 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-primary mr-2 text-sm" data-icon="database" style="font-variation-settings: 'FILL' 1;">database</span>
+<span class="font-data-mono text-data-mono text-primary">System Live</span>
+</div>
+<button class="relative text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+</div>
+</header>
+<div class="pt-24 px-6 md:px-margin-desktop max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Match Management</h2>
+<p class="text-on-surface-variant mt-1">Real-time control center for live scores and prediction markets.</p>
+</div>
+<!-- Date Filter Row -->
+<div class="flex items-center space-x-2 bg-surface-container p-1 rounded-xl border border-outline-variant/20">
+<button class="px-4 py-2 rounded-lg text-sm font-bold bg-surface-bright text-on-surface shadow-sm">Today</button>
+<button class="px-4 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:bg-surface-bright transition-colors">Tomorrow</button>
+<button class="px-4 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-lg mr-1" data-icon="calendar_month">calendar_month</span>
+                        Select Date
+                    </button>
+</div>
+</div>
+<!-- Dashboard Stats Summary -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-widget-gap mb-8">
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-2">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Live Matches</span>
+<span class="material-symbols-outlined text-primary" data-icon="sensors">sensors</span>
+</div>
+<div class="text-3xl font-bold text-primary">12</div>
+<div class="text-xs text-on-surface-variant mt-1">+3 since last hour</div>
+</div>
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-2">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Total Predictions</span>
+<span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
+</div>
+<div class="text-3xl font-bold">48.2k</div>
+<div class="text-xs text-on-surface-variant mt-1">Across 42 markets</div>
+</div>
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-2">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Active Markets</span>
+<span class="material-symbols-outlined text-tertiary" data-icon="token">token</span>
+</div>
+<div class="text-3xl font-bold">156</div>
+<div class="text-xs text-on-surface-variant mt-1">98% settlement accuracy</div>
+</div>
+<div class="glass-panel p-card-padding rounded-xl">
+<div class="flex justify-between items-start mb-2">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">System Latency</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="speed">speed</span>
+</div>
+<div class="text-3xl font-bold font-data-mono">42ms</div>
+<div class="text-xs text-primary mt-1">Optimal Performance</div>
+</div>
+</div>
+<!-- Matches Control List -->
+<div class="space-y-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-headline-md">Current &amp; Upcoming</h3>
+<div class="flex space-x-2">
+<button class="flex items-center bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant/30 text-sm font-bold text-on-surface-variant hover:border-primary transition-colors">
+<span class="material-symbols-outlined mr-2 text-lg" data-icon="filter_list">filter_list</span>
+                            Filter
+                        </button>
+<button class="flex items-center bg-primary text-on-primary px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg hover:scale-[1.02] active:scale-95 transition-transform">
+<span class="material-symbols-outlined mr-2 text-lg" data-icon="add_circle">add_circle</span>
+                            New Match
+                        </button>
+</div>
+</div>
+<!-- Match Card: LIVE -->
+<div class="glass-panel rounded-xl overflow-hidden border-l-4 border-l-primary group transition-all hover:border-l-primary hover:bg-surface-container-high">
+<div class="p-card-padding flex flex-col md:flex-row gap-6">
+<!-- Match Info -->
+<div class="flex-1 flex items-center justify-between min-w-[300px]">
+<div class="flex flex-col items-center w-24 text-center">
+<img alt="Arsenal" class="w-12 h-12 mb-2" data-alt="A circular football club crest featuring a detailed gold and red cannon emblem on a white background. The badge has a sleek, modern finish with professional athletic branding elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBElSI9syC--tHOQ49vZ3yJg_K1LsnQuBI9ajCZ37W6kCcdMq06F2EFRVsJcMj5Trvrk6vo8zXiLOgrWwJLl1GEbO5u_PK023-zw4Qcobj-HXW2fwtNuzfngWPg8SiUZa8yr3V2FNT4BlTTgyC8u0Ld5R25p96XoZvcM1XpnB8eYfCCaUv2AbF-Km3Mj6pCI6I0Ev-oBjF8SWa3XdkiMbbHpwwd4GtQjbHqjJbU-V74W1rT2f78nwe1GNDjHxdPnPJiMM7d0l5yh4w4"/>
+<span class="font-bold text-sm">Arsenal</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="flex items-center space-x-4 mb-2">
+<input class="w-12 h-12 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-center text-xl font-bold text-primary focus:border-primary focus:ring-0" type="number" value="2"/>
+<span class="font-display-lg text-headline-md text-on-surface-variant">:</span>
+<input class="w-12 h-12 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-center text-xl font-bold text-on-surface focus:border-primary focus:ring-0" type="number" value="1"/>
+</div>
+<div class="flex items-center space-x-2">
+<span class="flex h-2 w-2 rounded-full bg-primary live-pulse"></span>
+<span class="text-primary font-bold text-xs uppercase tracking-widest">Live - 64'</span>
+</div>
+</div>
+<div class="flex flex-col items-center w-24 text-center">
+<img alt="Chelsea" class="w-12 h-12 mb-2" data-alt="A circular football club crest with a blue lion symbol on a white background. The design is sharp and vector-based, representing a world-class professional sports team with premium visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZxyOBOrGa-1Rjo3IvrOzPBJOjByVMFAwjXu7WGUUERkFvUI-cTrbP_CC0M383mgPWd4axZMoHuEbEIcUckmzTf-EwyBwI7GAH2-A3U8D1saEGOj4paeiUaMOOPoKgvoCdjyp58vYoaWugUVpywC0MW41nsYRB38YlJ2lqI_KCp8U1XSeS9jqp2o1QcOn_YA-kD81476jWbzFw2bsG9o-ecTiOuagaKdGqCY0TQpDXxWHudldU_VU3ddo3_t7vR7knaSSMkK3tsVoP"/>
+<span class="font-bold text-sm">Chelsea</span>
+</div>
+</div>
+<!-- Prediction Market Management -->
+<div class="flex-[1.5] border-t md:border-t-0 md:border-l border-outline-variant/20 pt-4 md:pt-0 md:pl-6">
+<div class="flex justify-between items-center mb-4">
+<span class="text-xs font-bold uppercase text-on-surface-variant">Prediction Markets</span>
+<span class="text-xs font-bold text-primary px-2 py-0.5 bg-primary/10 rounded">3 Markets Open</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/20 flex items-center justify-between">
+<span class="text-xs">Match Result</span>
+<button class="text-primary hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/20 flex items-center justify-between">
+<span class="text-xs">Over/Under 2.5</span>
+<button class="text-primary hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/20 flex items-center justify-between">
+<span class="text-xs">Next Scorer</span>
+<button class="text-primary hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+</div>
+<button class="p-3 border border-dashed border-outline-variant/40 rounded-lg text-xs text-on-surface-variant hover:border-primary hover:text-primary transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="add">add</span> Add Market
+                                </button>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="flex flex-col justify-between items-end gap-4 min-w-[120px]">
+<select class="w-full bg-surface-container border border-outline-variant/30 rounded-lg py-2 px-3 text-xs font-bold focus:border-primary focus:ring-0">
+<option value="live">Live</option>
+<option value="upcoming">Upcoming</option>
+<option value="finished">Finished</option>
+<option value="postponed">Postponed</option>
+</select>
+<div class="flex space-x-2">
+<button class="p-2 bg-surface-bright rounded-lg text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<button class="p-2 bg-primary text-on-primary rounded-lg shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Card: UPCOMING -->
+<div class="glass-panel rounded-xl overflow-hidden border-l-4 border-l-secondary/40 group transition-all hover:bg-surface-container-high">
+<div class="p-card-padding flex flex-col md:flex-row gap-6">
+<!-- Match Info -->
+<div class="flex-1 flex items-center justify-between min-w-[300px]">
+<div class="flex flex-col items-center w-24 text-center">
+<img alt="Man City" class="w-12 h-12 mb-2 opacity-80" data-alt="A professional football crest featuring a blue ship and red rose emblem. The style is clean, modern, and prestigious, representing a top-tier European sports organization with high-end graphic design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKeqBuFovGteUdLGrbRrPGu2Wwkn-Jc2KqyJkT-sYq-E1KTFL_jppJsgIVWR4GAsZQzu32IhYksMQQgLljn8u8TiDMaDXNieT6S-RUkTC8aKx8psmhA-1iBTGPFPafciYsMdvVcj6qpxzFHDLLTiwN5sRTabVYg6uL0msma1VO92maO4HHkavTSZvX4sZ5KwKiTHdCvvJTllJfxMLTwqDvCjqnoZ5NRmsJfvU1RD6flJ_hbDBuPDaLQQQBb0xL-G-007GXYd8zSJX5"/>
+<span class="font-bold text-sm">Man City</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-headline-md text-on-surface mb-1">VS</span>
+<span class="text-on-surface-variant font-bold text-xs uppercase tracking-widest">Starts in 2h 15m</span>
+</div>
+<div class="flex flex-col items-center w-24 text-center">
+<img alt="Liverpool" class="w-12 h-12 mb-2 opacity-80" data-alt="A striking football club crest with a red liver bird on a white shield background. The design is powerful and classic, reflecting a legendary sports heritage in a contemporary digital format." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaICUo3Eq4z19hShNRn7IFNjcLeU2HRPHyJJoGmhSodxAIHILEtMl0oqpGHyaZUFUq7y1kUnhStSdFvmvdGJxIPX9JHYoluU7Y0wXXJAA1My5qk65xoWj4tf-_xqSn8ZvvlVUGfpRxqF56MJW535sCq0tcoWK3Y97EKCtcwCek3wbg6DChUNZdVZISGfQ9cUqBxPtNFoPzioQqhHM1gF7yhcYVpn9Ov-dFzLV9K2GVe6-zPkgxhGRghPrqdw6SXVpwMHH4KhjTc38-"/>
+<span class="font-bold text-sm">Liverpool</span>
+</div>
+</div>
+<!-- Prediction Market Management -->
+<div class="flex-[1.5] border-t md:border-t-0 md:border-l border-outline-variant/20 pt-4 md:pt-0 md:pl-6 opacity-60 group-hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-center mb-4">
+<span class="text-xs font-bold uppercase text-on-surface-variant">Prediction Markets</span>
+<span class="text-xs font-bold text-secondary px-2 py-0.5 bg-secondary/10 rounded">Market Locked</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/20 flex items-center justify-between">
+<span class="text-xs">Match Result</span>
+<button class="text-secondary hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="lock_open">lock_open</span>
+</button>
+</div>
+<div class="p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/20 flex items-center justify-between">
+<span class="text-xs">Correct Score</span>
+<button class="text-secondary hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="lock_open">lock_open</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="flex flex-col justify-between items-end gap-4 min-w-[120px]">
+<select class="w-full bg-surface-container border border-outline-variant/30 rounded-lg py-2 px-3 text-xs font-bold focus:border-secondary focus:ring-0">
+<option value="upcoming">Upcoming</option>
+<option value="live">Live</option>
+<option value="finished">Finished</option>
+</select>
+<div class="flex space-x-2">
+<button class="p-2 bg-surface-bright rounded-lg text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-2 bg-secondary text-on-secondary rounded-lg shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Card: FINISHED -->
+<div class="glass-panel rounded-xl overflow-hidden border-l-4 border-l-on-surface-variant/20 group transition-all opacity-70 hover:opacity-100">
+<div class="p-card-padding flex flex-col md:flex-row gap-6">
+<div class="flex-1 flex items-center justify-between min-w-[300px]">
+<div class="flex flex-col items-center w-24 text-center">
+<img alt="B Munich" class="w-10 h-10 mb-2 grayscale" data-alt="A circular football badge with red and blue diamond patterns, emphasizing a prestigious German sporting legacy. Clean vector graphics with a high-end, professional look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrHi5doLYjbq3mskS5N7376ibDClw5KxWf-1ecWL_CVEKtWeBJwM7UL661A38YYUcmdjOUmODIXD_Qn7BA_lXf-QVRNVhqGruYAcWD1CTf1lS_hGY9PvW33xDVZKg3uFgT9AxdkxrbWXJ39T-Ixs89sCtYokqQiZ3S_A9ZFFd7OWo5zcmqL0hSrKEdJJq9OvMRP9EVNDuBYKmyJZc4oeJLlPjBUvNRTPjPVCjCmDB5rnDoYgRm0jk1m4fFtN_MRyeHFtnBE1bXZfzC"/>
+<span class="font-bold text-xs">B. Munich</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="flex items-center space-x-6">
+<span class="text-2xl font-bold">4</span>
+<span class="text-on-surface-variant font-bold text-sm">FT</span>
+<span class="text-2xl font-bold">0</span>
+</div>
+<span class="text-on-surface-variant text-[10px] uppercase mt-1">Settled: 1h ago</span>
+</div>
+<div class="flex flex-col items-center w-24 text-center">
+<img alt="Dortmund" class="w-10 h-10 mb-2 grayscale" data-alt="A round yellow football crest with black initials, symbolizing a high-energy German club. Professional branding with high-contrast, modern athletic design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbC_9h8uaEAppEfhZnUl7G5V4Kh_Rr0VT3u35ZuoxUc_JleG0n0OxWz3daa1bWmnePLY2kgnUalx8c_DnJnpLdb29y45ARNwonh-kt8jYSy7YzVJBccutFweiKYmfk5BewMpwxE79pPEoSisdCHFhDEt86FB242Utk6RKkHwc_zDqe98eWCWpU4KAZHOqe3C1zKpkOO3aXoQ9VvbgtyuUP_Uar7apPqepT5nZPVLmKw1SL_iJ2LRQHZH5NpblkG2HxwIUUe0aOk7Rv"/>
+<span class="font-bold text-xs">Dortmund</span>
+</div>
+</div>
+<div class="flex-[1.5] flex items-center justify-center border-t md:border-t-0 md:border-l border-outline-variant/20 pt-4 md:pt-0 md:pl-6">
+<div class="text-center">
+<p class="text-xs font-bold text-on-surface-variant mb-2">Payouts Dispersed</p>
+<div class="flex -space-x-2">
+<img alt="Winner" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="A high-quality avatar of a user celebrating a win." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkyz0uRUmVmXkTs13d7hR0YcGkQ0auG9oEyB7YbWgHMTxjLbDwZJ7h8EEPh_mBsv7oUwjmZAmeMcpketXpU4kNaQ9S4TwVV4YNYui5GJTGLCSazRGD_IvR6vZp2AcOUR9wBhfmpO0-evJ5dyqA8F7wQmbCCRiIYEx-xLNdyVvKdnOmKSYq7EdT_cMgwZGEV2yIrc7ZLDt7ki9AauKXuCF08Z64E_Vu55K5qvxjHcp1WQSgvRfQm6coWlGKkRd--4ULLElPfF_vx9P1"/>
+<img alt="Winner" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="A high-quality avatar of a professional user." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqA8YJdkCSkH3jML0900sp9OBMTsip01xszUA0fEw6lV1oU3pszyleV5NkGM8_1Crp2b5nXM_GqoiYQ-vms_YJgfCOJAWtrGQCuyVDTBTdO_KAc-w-7KlmL1qVN2oIeKjNaLj7zpvToYjMl64Q9BerMSYlQgoqJoDWlo5DKUF_z4nv6Y8qFEiE7stzArf-NvD0elVf8ddCKa5Fzrlzvb0N0iGf4kcGIFPc3eF-SaJJnwasTiuyXeGXJoCY4wGopDW-_OhbyvGBAMfJ"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary/20 text-primary flex items-center justify-center text-[10px] font-bold">+1.2k</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-center items-end gap-2 min-w-[120px]">
+<button class="w-full py-2 bg-surface-bright text-xs font-bold rounded-lg hover:text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="summarize">summarize</span> Report
+                            </button>
+<button class="w-full py-2 border border-outline-variant/30 text-xs font-bold rounded-lg hover:bg-surface-container transition-colors">
+                                View Logs
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container border-t border-outline-variant/20 shadow-lg flex justify-around items-center h-16 px-4 pb-safe">
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center text-primary font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="sensors" style="font-variation-settings: 'FILL' 1;">sensors</span>
+<span class="font-label-caps text-label-caps mt-1">Live</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-caps text-label-caps mt-1">Predict</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="emoji_events">emoji_events</span>
+<span class="font-label-caps text-label-caps mt-1">Rank</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Me</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and subtle glow effects
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('ring-2', 'ring-primary/20');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('ring-2', 'ring-primary/20');
+            });
+        });
+
+        // Simple mock for "Save" interaction
+        const saveButtons = document.querySelectorAll('[data-icon="save"]');
+        saveButtons.forEach(btn => {
+            btn.parentElement.addEventListener('click', () => {
+                const icon = btn;
+                icon.innerHTML = 'check';
+                setTimeout(() => { icon.innerHTML = 'save'; }, 2000);
+            });
+        });
+    </script>
+</body></html>
