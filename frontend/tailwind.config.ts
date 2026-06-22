@@ -141,6 +141,25 @@ const config: Config = {
         'accent-glow': '0 0 15px rgba(74, 225, 118, 0.3)',
         'input-glow': '0 0 0 2px rgba(75, 226, 119, 0.2)',
       },
+      animation: {
+        'fade-in-up': 'fade-in-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+        'fade-in-right': 'fade-in-right 0.6s ease-out forwards',
+        'scale-up': 'scale-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      },
+      keyframes: {
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in-right': {
+          '0%': { opacity: '0', transform: 'translateX(-20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'scale-up': {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+      },
     },
   },
   plugins: [],
