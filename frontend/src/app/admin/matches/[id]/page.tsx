@@ -4,26 +4,50 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { adminCriteriaApi, adminMatchesApi, type MatchDetail } from '@/api/admin/matches';
-import type { ScoringSummary, TeamSide } from '@/api/admin/types';
+import { adminTeamsApi } from '@/api/admin/teams';
+import type { ScoringSummary, Team, TeamSide } from '@/api/admin/types';
 import { ApiError } from '@/api/client';
-import { Badge, Banner, Button, Card, TextInput } from '@/components/admin/ui';
+import { Badge, Banner, Button, Card, Select, TextInput } from '@/components/admin/ui';
 import { formatDateTime, formatGold, statusLabel } from '@/lib/format';
 
 export default function AdminMatchDetailPage() {
   const params = useParams<{ id: string }>();
   const matchId = params.id;
   const [match, setMatch] = useState<MatchDetail | null>(null);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [newCriterion, setNewCriterion] = useState('');
   const [result, setResult] = useState({ homeScore: 0, awayScore: 0 });
   const [summary, setSummary] = useState<ScoringSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ homeTeamId: '', awayTeamId: '', matchTime: '', entryGold: 100, startDate: '', endDate: '' });
+  const [editLoading, setEditLoading] = useState(false);
 
   const load = useCallback(async () => {
     try {
-      const m = await adminMatchesApi.get(matchId);
+      const [m, t] = await Promise.all([
+        adminMatchesApi.get(matchId),
+        adminTeamsApi.list({ active: 'true', pageSize: 100 }),
+      ]);
       setMatch(m);
+      setTeams(t.items);
       setResult({ homeScore: m.homeScore ?? 0, awayScore: m.awayScore ?? 0 });
+      const localTime = new Date(m.matchTime);
+      localTime.setMinutes(localTime.getMinutes() - localTime.getTimezoneOffset());
+      const toLocal = (iso: string | null): string => {
+        if (!iso) return '';
+        const d = new Date(iso);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        return d.toISOString().slice(0, 16);
+      };
+      setEditForm({
+        homeTeamId: m.homeTeamId,
+        awayTeamId: m.awayTeamId,
+        matchTime: localTime.toISOString().slice(0, 16),
+        entryGold: Number(m.entryGold),
+        startDate: toLocal(m.startDate),
+        endDate: toLocal(m.endDate),
+      });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Không tải được trận đấu');
     }
@@ -56,6 +80,17 @@ export default function AdminMatchDetailPage() {
     }
   }
 
+  async function deactivateCriterion(id: string) {
+    setError(null);
+    try {
+      await adminCriteriaApi.deactivate(id);
+      setNotice('Đã ẩn tiêu chí');
+      await load();
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Ẩn tiêu chí thất bại');
+    }
+  }
+
   async function setCriterionResult(id: string, resultTeam: TeamSide) {
     setError(null);
     try {
@@ -84,6 +119,33 @@ export default function AdminMatchDetailPage() {
     }
   }
 
+  async function saveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setNotice(null);
+    if (editForm.homeTeamId === editForm.awayTeamId) {
+      setError('Đội nhà và đội khách phải khác nhau');
+      return;
+    }
+    setEditLoading(true);
+    try {
+      await adminMatchesApi.update(matchId, {
+        homeTeamId: editForm.homeTeamId,
+        awayTeamId: editForm.awayTeamId,
+        matchTime: new Date(editForm.matchTime).toISOString(),
+        entryGold: editForm.entryGold,
+        startDate: editForm.startDate ? new Date(editForm.startDate).toISOString() : undefined,
+        endDate: editForm.endDate ? new Date(editForm.endDate).toISOString() : undefined,
+      });
+      setNotice('Đã lưu thay đổi');
+      await load();
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Lưu thay đổi thất bại');
+    } finally {
+      setEditLoading(false);
+    }
+  }
+
   if (!match) {
     return (
       <div className="flex flex-col gap-4">
@@ -97,6 +159,9 @@ export default function AdminMatchDetailPage() {
   const away = match.awayTeam?.name ?? 'Đội khách';
   const editable = match.status === 'SCHEDULED';
   const winners = match.participations.filter((p) => p.isWinner);
+  const unresolvedCriteria = match.criteria.filter((c) => c.resultTeam === null);
+  const allCriteriaResolved = match.criteria.length > 0 && unresolvedCriteria.length === 0;
+  const canScore = allCriteriaResolved && match.status !== 'FINISHED' && match.status !== 'CANCELLED';
 
   return (
     <div className="flex flex-col gap-6">
@@ -120,6 +185,62 @@ export default function AdminMatchDetailPage() {
       <Banner message={error} />
       <Banner message={notice} tone="success" />
 
+      {editable && (
+        <Card title="Chỉnh sửa thông tin trận">
+          <form onSubmit={saveEdit} className="grid gap-3 md:grid-cols-4">
+            <Select
+              label="Đội nhà"
+              value={editForm.homeTeamId}
+              onChange={(e) => setEditForm({ ...editForm, homeTeamId: e.target.value })}
+            >
+              {teams.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </Select>
+            <Select
+              label="Đội khách"
+              value={editForm.awayTeamId}
+              onChange={(e) => setEditForm({ ...editForm, awayTeamId: e.target.value })}
+            >
+              {teams.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </Select>
+            <TextInput
+              label="Thời gian"
+              type="datetime-local"
+              value={editForm.matchTime}
+              onChange={(e) => setEditForm({ ...editForm, matchTime: e.target.value })}
+            />
+            <TextInput
+              label="Entry gold"
+              type="number"
+              min={0}
+              step="0.01"
+              value={editForm.entryGold}
+              onChange={(e) => setEditForm({ ...editForm, entryGold: Number(e.target.value) })}
+            />
+            <TextInput
+              label="Ngày bắt đầu"
+              type="datetime-local"
+              value={editForm.startDate}
+              onChange={(e) => setEditForm({ ...editForm, startDate: e.target.value })}
+            />
+            <TextInput
+              label="Ngày kết thúc"
+              type="datetime-local"
+              value={editForm.endDate}
+              onChange={(e) => setEditForm({ ...editForm, endDate: e.target.value })}
+            />
+            <div className="flex items-end md:col-span-2">
+              <Button type="submit" disabled={editLoading}>
+                Lưu thay đổi
+              </Button>
+            </div>
+          </form>
+        </Card>
+      )}
+
       <Card title="Tiêu chí dự đoán">
         {editable && (
           <form onSubmit={addCriterion} className="mb-4 flex gap-2">
@@ -137,22 +258,34 @@ export default function AdminMatchDetailPage() {
         ) : (
           <ul className="flex flex-col gap-2">
             {match.criteria.map((c) => (
-              <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink-100 px-3 py-2 text-sm">
-                <span className="font-medium">{c.name}</span>
+              <li key={c.id} className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink-100 px-3 py-2 text-sm${!c.isActive ? ' opacity-50' : ''}`}>
+                <span className="font-medium">
+                  {c.name}
+                  {!c.isActive && <> <Badge tone="neutral">Đã ẩn</Badge></>}
+                </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-ink-700">Kết quả:</span>
-                  <Button
-                    variant={c.resultTeam === 'HOME' ? 'primary' : 'secondary'}
-                    onClick={() => setCriterionResult(c.id, 'HOME')}
-                  >
-                    {home}
-                  </Button>
-                  <Button
-                    variant={c.resultTeam === 'AWAY' ? 'primary' : 'secondary'}
-                    onClick={() => setCriterionResult(c.id, 'AWAY')}
-                  >
-                    {away}
-                  </Button>
+                  {c.isActive && (
+                    <>
+                      <span className="text-ink-700">Kết quả:</span>
+                      <Button
+                        variant={c.resultTeam === 'HOME' ? 'primary' : 'secondary'}
+                        onClick={() => setCriterionResult(c.id, 'HOME')}
+                      >
+                        {home}
+                      </Button>
+                      <Button
+                        variant={c.resultTeam === 'AWAY' ? 'primary' : 'secondary'}
+                        onClick={() => setCriterionResult(c.id, 'AWAY')}
+                      >
+                        {away}
+                      </Button>
+                    </>
+                  )}
+                  {c.isActive && (
+                    <Button variant="secondary" onClick={() => deactivateCriterion(c.id)}>
+                      Ẩn
+                    </Button>
+                  )}
                   {editable && (
                     <Button variant="danger" onClick={() => removeCriterion(c.id)}>
                       Xoá
@@ -187,10 +320,22 @@ export default function AdminMatchDetailPage() {
             onChange={(e) => setResult({ ...result, awayScore: Number(e.target.value) })}
             className="w-32"
           />
-          <Button type="submit" disabled={match.status === 'FINISHED' || match.status === 'CANCELLED'}>
+          <Button type="submit" disabled={!canScore}>
             Chốt kết quả
           </Button>
         </form>
+        {unresolvedCriteria.length > 0 && match.status !== 'FINISHED' && match.status !== 'CANCELLED' && (
+          <div className="mt-3 rounded-lg border border-gold-500/30 bg-gold-500/10 p-3 text-sm text-gold-400">
+            ⚠ Chưa có kết quả cho {unresolvedCriteria.length} tiêu chí:{' '}
+            <strong>{unresolvedCriteria.map((c) => c.name).join(', ')}</strong>.
+            Vui lòng đặt kết quả tất cả tiêu chí trước khi chốt.
+          </div>
+        )}
+        {match.criteria.length === 0 && match.status !== 'FINISHED' && match.status !== 'CANCELLED' && (
+          <div className="mt-3 rounded-lg border border-gold-500/30 bg-gold-500/10 p-3 text-sm text-gold-400">
+            ⚠ Trận chưa có tiêu chí nào. Vui lòng thêm tiêu chí trước khi chốt kết quả.
+          </div>
+        )}
         {summary && (
           <div className="mt-3 rounded-lg bg-ink-50 p-3 text-sm text-ink-800">
             Pool: <strong>{formatGold(summary.pool)}</strong> gold · Người thắng: {summary.winnerCount} · Mỗi người{' '}

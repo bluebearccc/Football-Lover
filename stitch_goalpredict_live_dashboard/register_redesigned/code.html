@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register | GoalPredict Live</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#0b1326",
+                        "on-secondary-fixed": "#001e2c",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "primary": "#4be277",
+                        "on-surface": "#dae2fd",
+                        "outline-variant": "#3d4a3d",
+                        "on-error-container": "#ffdad6",
+                        "inverse-primary": "#006e2f",
+                        "tertiary": "#ffb5ab",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "inverse-surface": "#dae2fd",
+                        "surface-container": "#171f33",
+                        "on-secondary": "#00354a",
+                        "primary-fixed": "#6bff8f",
+                        "on-primary": "#003915",
+                        "on-tertiary-fixed": "#410001",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-background": "#dae2fd",
+                        "surface-container-highest": "#2d3449",
+                        "secondary-fixed": "#c4e7ff",
+                        "on-tertiary-container": "#76231b",
+                        "on-surface-variant": "#bccbb9",
+                        "error-container": "#93000a",
+                        "secondary": "#7bd0ff",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "surface-bright": "#31394d",
+                        "on-secondary-container": "#00374d",
+                        "on-primary-container": "#004b1e",
+                        "tertiary-container": "#ff8b7c",
+                        "surface-variant": "#2d3449",
+                        "surface-container-low": "#131b2e",
+                        "secondary-container": "#00a6e0",
+                        "primary-container": "#22c55e",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#ffdad5",
+                        "surface-tint": "#4ae176",
+                        "on-tertiary": "#60130d",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-lowest": "#060e20",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#283044",
+                        "primary-fixed-dim": "#4ae176",
+                        "surface-dim": "#0b1326",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "surface-container-high": "#222a3d",
+                        "background": "#0b1326",
+                        "outline": "#869585"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "widget-gap": "24px",
+                        "card-padding": "20px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>body {
+    background-color: #0b1326;
+    color: #dae2fd;
+    font-family: "Inter", sans-serif;
+    background-image: linear-gradient(to bottom, rgba(11, 19, 38, 0.8), #0b1326), url(https://lh3.googleusercontent.com/aida-public/AB6AXuB1p9gb4RcH5D149QLDx3zwDfBupQDMCza5bhwHa6v-kRp3Yhx3n8ySqiZ3jJBKspH_kb5oh2hzZlVQUTy1EHCukAuLAA1PFrj5qSavrHUC-9AfMpkLLgEQr_v5U4b3WLMHLybqfQWwwwesiWE2-I_gXurnGODnyO4uTzsnyFgm_efx9VhuOgFCK2AEkpPta1iJVFseOTaFcHvbaMdr1KFtrQNdYSbK6-TPrSZQiC5yRh6-sPqop-oIXYAJh_D48UWH1PNSeQd9vkhz);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed
+    }
+.glass-panel {
+    background: rgba(23, 31, 51, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5)
+    }
+.input-glass {
+    background: rgba(11, 19, 38, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px)
+    }
+.input-glass:focus-within {
+    background: rgba(11, 19, 38, 0.8);
+    border-color: #4be277;
+    box-shadow: 0 0 0 1px #4be277
+    }
+.btn-gradient {
+    background: linear-gradient(135deg, #4be277 0%, #22c55e 100%)
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }</style>
+</head>
+<body class="min-h-screen flex flex-col justify-center items-center relative py-12">
+<!-- Brand Identity -->
+<div class="text-center mb-8 z-10">
+<h1 class="font-display-lg text-display-lg text-primary tracking-tighter mb-2 drop-shadow-md">GoalPredict Live</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant drop-shadow-sm">Precision analytics for the modern fan.</p>
+</div>
+<!-- Main Content Area -->
+<div class="relative w-full max-w-4xl px-6 flex flex-col lg:flex-row items-center justify-center gap-8 z-10">
+<!-- Stats Badges (Left) -->
+<div class="hidden lg:flex flex-col gap-6 self-start mt-20">
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">LIVE ACCURACY</p>
+<p class="font-data-mono text-data-mono text-primary text-xl">94.2%</p>
+</div>
+</div>
+</div>
+<!-- Registration Card -->
+<main class="w-full max-w-md shrink-0">
+<div class="glass-panel p-8 rounded-2xl relative overflow-hidden">
+<!-- Decorative top gradient -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Create Account</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Join 50k+ predictive analysts worldwide.</p>
+</div>
+<span class="font-label-caps text-label-caps text-primary/70 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Step 1 of 1</span>
+</div>
+<form action="#" class="space-y-5" method="POST">
+<!-- Account Details Section -->
+<div class="space-y-5 pb-5 border-b border-white/5">
+<!-- Username -->
+<div class="space-y-1.5">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="username">USERNAME</label>
+<div class="relative input-glass rounded-xl overflow-hidden transition-all duration-200">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">person</span>
+</div>
+<input class="w-full bg-transparent border-none py-3.5 pl-11 pr-4 text-on-surface placeholder-on-surface-variant/40 focus:ring-0" id="username" name="username" placeholder="pro_analyst_24" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div class="space-y-1.5">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="email">EMAIL ADDRESS</label>
+<div class="relative input-glass rounded-xl overflow-hidden transition-all duration-200">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">mail</span>
+</div>
+<input class="w-full bg-transparent border-none py-3.5 pl-11 pr-4 text-on-surface placeholder-on-surface-variant/40 focus:ring-0" id="email" name="email" placeholder="name@example.com" type="email"/>
+</div>
+</div>
+<!-- Password -->
+<div class="space-y-1.5">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="password">PASSWORD</label>
+<div class="relative input-glass rounded-xl overflow-hidden transition-all duration-200">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">lock</span>
+</div>
+<input class="w-full bg-transparent border-none py-3.5 pl-11 pr-12 text-on-surface placeholder-on-surface-variant/40 focus:ring-0" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Preferences Section -->
+<div class="space-y-5 pt-2">
+<!-- Favorite Team Selection -->
+<div class="space-y-1.5">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="team">FAVORITE TEAM</label>
+<div class="relative input-glass rounded-xl overflow-hidden transition-all duration-200">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">sports_soccer</span>
+</div>
+<select class="w-full bg-transparent border-none py-3.5 pl-11 pr-10 text-on-surface focus:ring-0 appearance-none cursor-pointer" id="team" name="team">
+<option class="bg-surface" disabled="" selected="" value="">Select your club</option>
+<option class="bg-surface" value="arsenal">Arsenal FC</option>
+<option class="bg-surface" value="liverpool">Liverpool FC</option>
+<option class="bg-surface" value="mancity">Manchester City</option>
+<option class="bg-surface" value="realmadrid">Real Madrid</option>
+<option class="bg-surface" value="bayern">Bayern Munich</option>
+<option class="bg-surface" value="other">Other / Neutral</option>
+</select>
+<div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA Button -->
+<button class="w-full btn-gradient hover:brightness-110 text-on-primary font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-primary/20 mt-8 group" type="submit">
+<span class="font-headline-md text-headline-md">Initialize Profile</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 pt-6 border-t border-white/5 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Already analyzing with us? 
+                        <a class="text-primary font-bold hover:text-primary-fixed transition-colors" href="#">Log in here</a>
+</p>
+</div>
+</div>
+<!-- Footnote -->
+<p class="mt-6 text-center font-body-sm text-body-sm text-on-surface-variant/60 max-w-xs mx-auto drop-shadow-md">
+                By registering, you agree to our <a class="hover:text-on-surface transition-colors underline decoration-white/20" href="#">Terms of Service</a> and <a class="hover:text-on-surface transition-colors underline decoration-white/20" href="#">Data Privacy Policy</a>.
+            </p>
+</main>
+<!-- Stats Badges (Right) -->
+<div class="hidden lg:flex flex-col gap-6 self-end mb-20">
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">groups</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">ACTIVE USERS</p>
+<p class="font-data-mono text-data-mono text-secondary text-xl">52,804</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Toggle Password Visibility
+        const togglePass = document.querySelector('button[type="button"]');
+        const passInput = document.getElementById('password');
+        togglePass.addEventListener('click', () => {
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            togglePass.querySelector('span').textContent = type === 'password' ? 'visibility' : 'visibility_off';
+        });
+    </script>
+</body></html>

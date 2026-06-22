@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+<!-- STITCH_THREEJS_START:ANIMATION_20 class="fixed inset-0 w-full h-full bg-transparent" -->
+<div class="fixed inset-0 w-full h-full bg-transparent" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_20" style="width:100%;height:100%"></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_20');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  const width = container.clientWidth || window.innerWidth;
+const height = container.clientHeight || window.innerHeight;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+renderer.setSize(width, height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+// Lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambientLight);
+
+const pointLight = new THREE.PointLight(0x22c55e, 1.5);
+pointLight.position.set(5, 5, 5);
+scene.add(pointLight);
+
+// Football Geometry (simplified Sphere with hexagon texture pattern via shader)
+const geometry = new THREE.SphereGeometry(2, 32, 32);
+
+// Custom shader material for the ball to look like a modern football
+const footballMaterial = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    shininess: 100,
+    bumpScale: 0.05
+});
+
+const ball = new THREE.Mesh(geometry, footballMaterial);
+scene.add(ball);
+
+// Add some "hexagon" detail lines (using a wireframe overlay for tech look)
+const wireframe = new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(2.05, 1));
+const line = new THREE.LineSegments(wireframe);
+line.material.color.setHex(0x22c55e);
+line.material.transparent = true;
+line.material.opacity = 0.3;
+ball.add(line);
+
+camera.position.z = 8;
+
+// Mouse Interaction
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+
+window.addEventListener('mousemove', (event) => {
+    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
+// Click interaction
+window.addEventListener('mousedown', () => {
+    ball.scale.set(0.9, 0.9, 0.9);
+});
+window.addEventListener('mouseup', () => {
+    ball.scale.set(1, 1, 1);
+});
+
+function animate() {
+    requestAnimationFrame(animate);
+    
+    // Smooth follow mouse
+    targetX += (mouseX - targetX) * 0.05;
+    targetY += (mouseY - targetY) * 0.05;
+    
+    ball.rotation.y += 0.01;
+    ball.rotation.x += 0.005;
+    
+    // Look at mouse (subtle)
+    ball.position.x = targetX * 2;
+    ball.position.y = targetY * 1.5;
+    
+    renderer.render(scene, camera);
+}
+
+window.addEventListener('resize', () => {
+    const w = container.clientWidth || window.innerWidth;
+    const h = container.clientHeight || window.innerHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+});
+
+animate();
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_20 -->
+</body>
+</html>

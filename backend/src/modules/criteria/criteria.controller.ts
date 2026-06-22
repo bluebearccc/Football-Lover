@@ -22,4 +22,9 @@ export const criteriaController = {
     await criteriaService.remove(req.params.id);
     res.status(204).send();
   },
+
+  async deactivate(req: Request, res: Response): Promise<void> {
+    const criterion = await criteriaService.deactivate(req.params.id);
+    res.status(200).json(criterion);
+  },
 };
