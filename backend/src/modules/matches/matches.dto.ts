@@ -17,6 +17,8 @@ export const updateMatchSchema = z.object({
   homeTeamId: z.string().uuid().optional(),
   awayTeamId: z.string().uuid().optional(),
   matchTime: z.coerce.date().optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
   entryGold: z.coerce.number().min(0, 'entry_gold không được âm').optional(),
 });
 
@@ -31,8 +33,14 @@ export const setCriterionResultSchema = z.object({
 
 export const listMatchesQuerySchema = z.object({
   status: z.string().trim().optional(),
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(20),
+});
+
+export const syncMatchesSchema = z.object({
+  leagueId: z.number().int().positive('League ID phải là số dương'),
+  season: z.coerce.number().int().min(2000).max(2100).optional(),
 });
 
 export type CreateMatchInput = z.infer<typeof createMatchSchema>;

@@ -137,8 +137,9 @@ model Match {
   homeScore  Int?        @map("home_score")
   awayScore  Int?        @map("away_score")
   entryGold  Decimal     @default(100) @map("entry_gold") @db.Decimal(12, 2)
-  externalId String?     @unique @map("external_id")
-  createdAt  DateTime    @default(now()) @map("created_at")
+  externalId       String?     @unique @map("external_id")
+  manuallyEditedAt DateTime?   @map("manually_edited_at")
+  createdAt        DateTime    @default(now()) @map("created_at")
 
   homeTeam       Team                 @relation("HomeTeam", fields: [homeTeamId], references: [id])
   awayTeam       Team                 @relation("AwayTeam", fields: [awayTeamId], references: [id])
@@ -164,6 +165,7 @@ model PredictionCriterion {
   resultTeam  TeamSide?       @map("result_team") // actual outcome, set when match FINISHED
   resolvedAt  DateTime?       @map("resolved_at")
   source      CriterionSource @default(MANUAL)
+  isActive    Boolean         @default(true) @map("is_active")
 
   match       Match        @relation(fields: [matchId], references: [id])
   predictions Prediction[]

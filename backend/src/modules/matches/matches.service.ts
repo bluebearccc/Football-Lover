@@ -1,5 +1,6 @@
 import { MatchStatus, Prisma, TeamSide, type Match } from '@prisma/client';
 import { ApiError } from '../../utils/ApiError';
+import { criteriaRepository } from '../criteria/criteria.repository';
 import { scoringService, type ScoringSummary } from '../scoring/scoring.service';
 import { matchesRepository } from './matches.repository';
 import type {
@@ -37,6 +38,7 @@ export const matchesService = {
       where,
       skip: (query.page - 1) * query.pageSize,
       take: query.pageSize,
+      sortOrder: query.sortOrder,
     });
     return { items, total, page: query.page, pageSize: query.pageSize };
   },
@@ -72,12 +74,16 @@ export const matchesService = {
     if (input.homeTeamId !== undefined || input.awayTeamId !== undefined) {
       await assertTeams(homeTeamId, awayTeamId);
     }
-    return matchesRepository.update(id, {
+    const updated = await matchesRepository.update(id, {
       matchTime: input.matchTime,
+      startDate: input.startDate,
+      endDate: input.endDate,
       entryGold: input.entryGold !== undefined ? new Prisma.Decimal(input.entryGold) : undefined,
       homeTeam: input.homeTeamId ? { connect: { id: input.homeTeamId } } : undefined,
       awayTeam: input.awayTeamId ? { connect: { id: input.awayTeamId } } : undefined,
+      manuallyEditedAt: new Date(),
     });
+    return updated;
   },
 
   async setEntryGold(id: string, entryGold: number): Promise<Match> {
@@ -98,6 +104,16 @@ export const matchesService = {
     if (match.status === MatchStatus.CANCELLED) {
       throw ApiError.badRequest('Trận đã huỷ không thể cập nhật kết quả');
     }
+
+    const criteria = await criteriaRepository.findByMatch(id);
+    const unresolved = criteria.filter((c) => c.resultTeam === null);
+    if (unresolved.length > 0) {
+      const names = unresolved.map((c) => c.name).join(', ');
+      throw ApiError.badRequest(
+        `Chưa có kết quả cho các tiêu chí: ${names}. Vui lòng đặt kết quả tất cả tiêu chí trước khi chốt.`,
+      );
+    }
+
     await matchesRepository.update(id, {
       homeScore: input.homeScore,
       awayScore: input.awayScore,

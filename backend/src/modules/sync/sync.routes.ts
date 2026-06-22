@@ -2,6 +2,7 @@ import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { validateBody } from '../../middleware/validate';
 import { wrap } from '../../utils/asyncHandler';
+import { syncMatchesSchema } from '../matches/matches.dto';
 import { syncTeamsSchema } from '../teams/teams.dto';
 import { syncService } from './sync.service';
 
@@ -13,6 +14,16 @@ syncRoutes.post(
   wrap(async (req: Request, res: Response) => {
     const { leagueId, season } = req.body as { leagueId: number; season?: number };
     const result = await syncService.syncTeamsByLeague(leagueId, season);
+    res.status(200).json(result);
+  }),
+);
+
+syncRoutes.post(
+  '/matches',
+  validateBody(syncMatchesSchema),
+  wrap(async (req: Request, res: Response) => {
+    const { leagueId, season } = req.body as { leagueId: number; season?: number };
+    const result = await syncService.syncMatchesByLeague(leagueId, season);
     res.status(200).json(result);
   }),
 );

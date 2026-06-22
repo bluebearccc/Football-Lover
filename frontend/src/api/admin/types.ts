@@ -43,6 +43,8 @@ export interface Match {
   homeTeamId: string;
   awayTeamId: string;
   matchTime: string;
+  startDate: string | null;
+  endDate: string | null;
   status: MatchStatus;
   homeScore: number | null;
   awayScore: number | null;
@@ -60,6 +62,7 @@ export interface Criterion {
   resultTeam: TeamSide | null;
   resolvedAt: string | null;
   source: CriterionSource;
+  isActive: boolean;
 }
 
 export interface ScoringSummary {
@@ -124,5 +127,14 @@ export interface SyncResult {
   season: number;
   teams: SyncCounts;
   players: SyncCounts;
+  note: string;
+}
+
+export interface MatchSyncResult {
+  triggeredAt: string;
+  provider: 'api-football';
+  leagueId: number;
+  season: number;
+  matches: SyncCounts;
   note: string;
 }

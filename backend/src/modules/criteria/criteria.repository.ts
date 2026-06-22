@@ -13,6 +13,13 @@ export const criteriaRepository = {
     });
   },
 
+  findActiveByMatch(matchId: string): Promise<PredictionCriterion[]> {
+    return prisma.predictionCriterion.findMany({
+      where: { matchId, isActive: true },
+      orderBy: { name: 'asc' },
+    });
+  },
+
   findById(id: string): Promise<PredictionCriterion | null> {
     return prisma.predictionCriterion.findUnique({ where: { id } });
   },

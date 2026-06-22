@@ -6,6 +6,7 @@ import { adminMatchesApi, type MatchInput } from '@/api/admin/matches';
 import { adminTeamsApi } from '@/api/admin/teams';
 import type { Match, Team } from '@/api/admin/types';
 import { ApiError } from '@/api/client';
+import { MatchSyncPanel } from '@/components/admin/matches/MatchSyncPanel';
 import { Badge, Banner, Button, Card, Select, TextInput } from '@/components/admin/ui';
 import { formatDateTime, formatGold, statusLabel } from '@/lib/format';
 
@@ -16,11 +17,17 @@ export default function AdminMatchesPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const load = useCallback(async () => {
     try {
       const [m, t] = await Promise.all([
-        adminMatchesApi.list({ pageSize: 100 }),
+        adminMatchesApi.list({
+          pageSize: 100,
+          status: statusFilter || undefined,
+          sortOrder,
+        }),
         adminTeamsApi.list({ active: 'true', pageSize: 100 }),
       ]);
       setMatches(m.items);
@@ -28,7 +35,7 @@ export default function AdminMatchesPage() {
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Không tải được dữ liệu');
     }
-  }, []);
+  }, [statusFilter, sortOrder]);
 
   useEffect(() => {
     void load();
@@ -122,6 +129,28 @@ export default function AdminMatchesPage() {
       </Card>
 
       <Card title={`Danh sách trận (${matches.length})`}>
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <Select
+            label="Trạng thái"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="">Tất cả</option>
+            <option value="SCHEDULED">Sắp diễn ra</option>
+            <option value="LIVE">Đang diễn ra</option>
+            <option value="FINISHED">Đã kết thúc</option>
+            <option value="CANCELLED">Đã huỷ</option>
+            <option value="POSTPONED">Hoãn</option>
+          </Select>
+          <div className="flex items-end">
+            <Button
+              variant="secondary"
+              onClick={() => setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'))}
+            >
+              Thời gian {sortOrder === 'desc' ? '↓ Mới nhất' : '↑ Cũ nhất'}
+            </Button>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -176,6 +205,8 @@ export default function AdminMatchesPage() {
           </table>
         </div>
       </Card>
+
+      <MatchSyncPanel onSyncComplete={load} />
     </div>
   );
 }

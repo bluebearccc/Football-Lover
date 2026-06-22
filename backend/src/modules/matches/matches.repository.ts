@@ -8,12 +8,12 @@ const matchInclude = {
 } satisfies Prisma.MatchInclude;
 
 export const matchesRepository = {
-  list(params: { where: Prisma.MatchWhereInput; skip: number; take: number }) {
+  list(params: { where: Prisma.MatchWhereInput; skip: number; take: number; sortOrder?: 'asc' | 'desc' }) {
     return Promise.all([
       prisma.match.findMany({
         where: params.where,
         include: matchInclude,
-        orderBy: { matchTime: 'desc' },
+        orderBy: { matchTime: params.sortOrder ?? 'desc' },
         skip: params.skip,
         take: params.take,
       }),
@@ -71,5 +71,62 @@ export const matchesRepository = {
       prisma.statistic.deleteMany({ where: { matchId: id } }),
       prisma.match.delete({ where: { id } }),
     ]);
+  },
+
+  async upsertMatchByExternalId(data: {
+    externalId: string;
+    homeTeamId: string;
+    awayTeamId: string;
+    matchTime: Date;
+    homeScore: number | null;
+    awayScore: number | null;
+  }): Promise<{ match: Match; created: boolean; changed: boolean }> {
+    const existing = await prisma.match.findUnique({
+      where: { externalId: data.externalId },
+    });
+
+    if (!existing) {
+      const match = await prisma.match.create({
+        data: {
+          externalId: data.externalId,
+          homeTeam: { connect: { id: data.homeTeamId } },
+          awayTeam: { connect: { id: data.awayTeamId } },
+          matchTime: data.matchTime,
+          homeScore: data.homeScore,
+          awayScore: data.awayScore,
+        },
+      });
+      return { match, created: true, changed: false };
+    }
+
+    if (existing.manuallyEditedAt) {
+      return { match: existing, created: false, changed: false };
+    }
+
+    const updates: Prisma.MatchUpdateInput = {};
+    let changed = false;
+
+    if (existing.matchTime.getTime() !== data.matchTime.getTime()) {
+      updates.matchTime = data.matchTime;
+      changed = true;
+    }
+    if (data.homeScore !== null && existing.homeScore !== data.homeScore) {
+      updates.homeScore = data.homeScore;
+      changed = true;
+    }
+    if (data.awayScore !== null && existing.awayScore !== data.awayScore) {
+      updates.awayScore = data.awayScore;
+      changed = true;
+    }
+
+    if (!changed) {
+      return { match: existing, created: false, changed: false };
+    }
+
+    const match = await prisma.match.update({
+      where: { id: existing.id },
+      data: updates,
+    });
+    return { match, created: false, changed: true };
   },
 };

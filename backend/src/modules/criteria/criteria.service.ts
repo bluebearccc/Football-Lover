@@ -59,4 +59,9 @@ export const criteriaService = {
     }
     await criteriaRepository.delete(id);
   },
+
+  async deactivate(id: string): Promise<PredictionCriterion> {
+    await ensureCriterion(id);
+    return criteriaRepository.update(id, { isActive: false });
+  },
 };
