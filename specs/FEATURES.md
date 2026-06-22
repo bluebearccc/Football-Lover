@@ -3,9 +3,9 @@
 | # | Feature | UC liên quan | Priority | Status | Spec | Plan | Tasks |
 |---|---------|-------------|----------|--------|------|------|-------|
 | 001 | [user-auth](001-user-auth/spec.md) | UC01, UC02, UC15 | Must | ✔️ Done & verified | ✅ | ✅ | ✅ |
-| 002 | [team-management](002-team-management/spec.md) | UC13, UC12 | Must | 🚧 Implementing | ✅ | ✅ | ✅ |
+| 002 | [team-management](002-team-management/spec.md) | UC13, UC12 | Must | ✔️ Done & verified | ✅ | ✅ | ✅ |
 | 003 | [match-management](003-match-management/spec.md) | UC06 | Must | ✔️ Done & verified | ✅ | ✅ | ✅ |
-| 004 | match-viewing | UC03, UC04 | Must | ⬜ Not started | — | — | — |
+| 004 | [match-viewing](004-match-viewing/spec.md) | UC03, UC04 | Must | ✔️ Done & verified | ✅ | ✅ | ✅ |
 | 005 | prediction-criteria | UC05, UC07 | Must | ⬜ Not started | — | — | — |
 | 006 | gold-scoring | BR26–BR29 | Must | ⬜ Not started | — | — | — |
 | 007 | comments | UC08 | Should | ⬜ Not started | — | — | — |

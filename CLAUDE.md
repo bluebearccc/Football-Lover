@@ -3,8 +3,8 @@ Dự án theo quy trình spec-driven. Nguồn sự thật là tài liệu trong
 `docs/Football-Lover/` (SRS, ER diagram, class diagram theo UC). Đọc spec liên quan
 TRƯỚC khi code; không tự bịa thông tin ngoài spec.
 
-**Active feature**: `003-match-management` — UC06 Manage Matches, UC07 Manage Criteria, scoring/gold payout.
-Plan: `specs/003-match-management/plan.md` | Spec: `specs/003-match-management/spec.md`
+**Active feature**: `004-match-viewing` — UC03 View Match List, UC04 View Match Details, prediction visibility (BR21/BR22).
+Plan: `specs/004-match-viewing/plan.md` | Spec: `specs/004-match-viewing/spec.md`
 <!-- SPECKIT END -->
 
 # Football-Lover (GoalPredict Live) — Coding Guide
