@@ -99,4 +99,13 @@ export const matchesApi = {
     const token = session.getToken();
     return apiFetch<MatchDetail>(`/matches/${id}`, token ? { token } : {});
   },
+
+  createComment(matchId: string, content: string): Promise<MatchComment> {
+    const token = session.getToken();
+    return apiFetch<MatchComment>(`/matches/${matchId}/comments`, {
+      method: 'POST',
+      body: { content },
+      token: token ?? undefined,
+    });
+  },
 };

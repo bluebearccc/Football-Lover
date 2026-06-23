@@ -12,5 +12,14 @@ export const setCommentStatusSchema = z.object({
   status: z.nativeEnum(CommentStatus),
 });
 
+export const createCommentSchema = z.object({
+  content: z
+    .string()
+    .trim()
+    .min(1, 'Bình luận không được để trống')
+    .max(1000, 'Bình luận không được vượt quá 1000 ký tự'),
+});
+
 export type ListCommentsQuery = z.infer<typeof listCommentsQuerySchema>;
 export type SetCommentStatusInput = z.infer<typeof setCommentStatusSchema>;
+export type CreateCommentInput = z.infer<typeof createCommentSchema>;

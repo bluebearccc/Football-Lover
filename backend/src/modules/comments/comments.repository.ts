@@ -22,4 +22,15 @@ export const commentsRepository = {
   setStatus(id: string, status: CommentStatus) {
     return prisma.comment.update({ where: { id }, data: { status } });
   },
+
+  save(data: { matchId: string; userId: string; content: string }) {
+    return prisma.comment.create({
+      data,
+      include: { user: { select: { id: true, displayName: true } } },
+    });
+  },
+
+  findMatchById(id: string) {
+    return prisma.match.findUnique({ where: { id }, select: { id: true } });
+  },
 };

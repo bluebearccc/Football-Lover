@@ -1,6 +1,7 @@
 import type { CommentStatus, Prisma } from '@prisma/client';
 import { ApiError } from '../../utils/ApiError';
 import { commentsRepository } from './comments.repository';
+import { moderationService } from './moderation.service';
 import type { ListCommentsQuery } from './comments.dto';
 
 export const commentsService = {
@@ -20,5 +21,13 @@ export const commentsService = {
     const comment = await commentsRepository.findById(id);
     if (!comment) throw ApiError.notFound('Không tìm thấy bình luận');
     return commentsRepository.setStatus(id, status);
+  },
+
+  async create(userId: string, matchId: string, content: string) {
+    const match = await commentsRepository.findMatchById(matchId);
+    if (!match) throw ApiError.notFound('Không tìm thấy trận đấu');
+    moderationService.validateContent(content);
+    moderationService.checkRateLimit(userId);
+    return commentsRepository.save({ matchId, userId, content: content.trim() });
   },
 };

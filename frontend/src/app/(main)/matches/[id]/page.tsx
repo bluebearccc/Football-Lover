@@ -10,7 +10,7 @@ import { session } from '@/lib/session';
 import TeamInfoPanel from '@/components/matches/TeamInfoPanel';
 import CriteriaList from '@/components/matches/CriteriaList';
 import StatsPanel from '@/components/matches/StatsPanel';
-import CommentList from '@/components/matches/CommentList';
+import CommentSection from '@/components/matches/CommentSection';
 import PredictionsList from '@/components/matches/PredictionsList';
 
 type Tab = 'overview' | 'stats' | 'predictions' | 'comments';
@@ -236,11 +236,11 @@ export default function MatchDetailPage() {
 
           {activeTab === 'comments' && (
             <div className="bg-surface-container-low/70 backdrop-blur-sm rounded-xl p-card-padding border border-outline-variant/10">
-              <h3 className="font-headline-md text-headline-md mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">chat</span>
-                Bình luận ({match.comments.length})
-              </h3>
-              <CommentList comments={match.comments} />
+              <CommentSection
+                matchId={match.id}
+                initialComments={match.comments}
+                isLoggedIn={isLoggedIn}
+              />
             </div>
           )}
         </section>
