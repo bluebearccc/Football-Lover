@@ -127,9 +127,21 @@ export const scoringRepository = {
     });
   },
 
-  /** Cancel: void participations and notify participants (BR14/BR30). */
+  /** Cancel: void participations, revert totalPoints, and notify participants (BR14/BR30/FR-GS-009). */
   async applyCancel(matchId: string, participantUserIds: string[]): Promise<void> {
     await prisma.$transaction(async (tx) => {
+      const participations = await tx.matchParticipation.findMany({
+        where: { matchId },
+        select: { userId: true, score: true },
+      });
+
+      for (const p of participations.filter((x) => x.score > 0)) {
+        await tx.user.update({
+          where: { id: p.userId },
+          data: { totalPoints: { decrement: p.score } },
+        });
+      }
+
       await tx.matchParticipation.deleteMany({ where: { matchId } });
       await tx.prediction.updateMany({ where: { matchId }, data: { isCorrect: null } });
       if (participantUserIds.length > 0) {
