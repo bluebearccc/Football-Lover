@@ -1,5 +1,10 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { session } from '@/lib/session';
 
 const ShaderBackground = dynamic(() => import('@/components/landing/ShaderBackground'), {
   ssr: false,
@@ -9,6 +14,13 @@ const FootballHero = dynamic(() => import('@/components/landing/FootballHero'), 
 });
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session.getToken()) {
+      router.replace('/matches');
+    }
+  }, [router]);
   return (
     <div className="bg-surface text-on-surface font-body-lg antialiased overflow-x-hidden selection:bg-primary/30 selection:text-primary min-h-screen">
       <ShaderBackground />

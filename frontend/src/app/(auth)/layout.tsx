@@ -1,6 +1,18 @@
-import Link from 'next/link';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { session } from '@/lib/session';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session.getToken()) {
+      router.replace('/matches');
+    }
+  }, [router]);
+
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-surface p-gutter text-on-surface">
       {children}
