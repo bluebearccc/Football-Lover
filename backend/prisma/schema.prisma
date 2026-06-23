@@ -166,6 +166,7 @@ model PredictionCriterion {
   resolvedAt  DateTime?       @map("resolved_at")
   source      CriterionSource @default(MANUAL)
   isActive    Boolean         @default(true) @map("is_active")
+  createdAt   DateTime        @default(now()) @map("created_at")
 
   match       Match        @relation(fields: [matchId], references: [id])
   predictions Prediction[]

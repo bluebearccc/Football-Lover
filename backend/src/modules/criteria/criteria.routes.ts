@@ -15,4 +15,5 @@ criteriaRoutes.post(
 );
 criteriaRoutes.patch('/:id', validateBody(updateCriterionSchema), wrap(criteriaController.update));
 criteriaRoutes.post('/:id/deactivate', wrap(criteriaController.deactivate));
+criteriaRoutes.post('/:id/reactivate', wrap(criteriaController.reactivate));
 criteriaRoutes.delete('/:id', wrap(criteriaController.remove));

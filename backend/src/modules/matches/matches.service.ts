@@ -95,6 +95,10 @@ export const matchesService = {
   async setCriterionResult(criterionId: string, resultTeam: TeamSide) {
     const criterion = await matchesRepository.findCriterion(criterionId);
     if (!criterion) throw ApiError.notFound('Không tìm thấy tiêu chí');
+    const match = await matchesRepository.findById(criterion.matchId);
+    if (!match || match.status !== MatchStatus.FINISHED) {
+      throw ApiError.badRequest('Chỉ được đặt kết quả tiêu chí khi trận đã kết thúc');
+    }
     return matchesRepository.setCriterionResult(criterionId, resultTeam);
   },
 

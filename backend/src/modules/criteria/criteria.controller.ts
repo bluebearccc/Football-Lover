@@ -27,4 +27,9 @@ export const criteriaController = {
     const criterion = await criteriaService.deactivate(req.params.id);
     res.status(200).json(criterion);
   },
+
+  async reactivate(req: Request, res: Response): Promise<void> {
+    const criterion = await criteriaService.reactivate(req.params.id);
+    res.status(200).json(criterion);
+  },
 };
