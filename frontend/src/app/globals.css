@@ -91,7 +91,33 @@ body {
       opacity: 0.5;
     }
   }
+
+  /* Box-shadow ripple pulse for the green "live" dot indicator */
+  .dot-live-pulse {
+    box-shadow: 0 0 0 0 rgba(75, 226, 119, 0.7);
+    animation: dot-pulse 2s infinite;
+  }
+  @keyframes dot-pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(75, 226, 119, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 8px rgba(75, 226, 119, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(75, 226, 119, 0);
+    }
+  }
 }
+
+/* Custom scrollbar for admin dark layout */
+.admin-layout ::-webkit-scrollbar { width: 6px; }
+.admin-layout ::-webkit-scrollbar-track { background: #0b1326; }
+.admin-layout ::-webkit-scrollbar-thumb { background: #2d3449; border-radius: 10px; }
+.admin-layout ::-webkit-scrollbar-thumb:hover { background: #4be277; }
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
