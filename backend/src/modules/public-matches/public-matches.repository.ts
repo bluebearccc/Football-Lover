@@ -50,7 +50,7 @@ export const publicMatchesRepository = {
       include: {
         homeTeam: true,
         awayTeam: true,
-        criteria: { where: { isActive: true }, orderBy: { name: 'asc' } },
+        criteria: { where: { isActive: true }, orderBy: { createdAt: 'asc' } },
         statistics: true,
         comments: {
           where: { status: CommentStatus.VISIBLE },

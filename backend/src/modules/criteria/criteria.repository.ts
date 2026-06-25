@@ -9,14 +9,14 @@ export const criteriaRepository = {
   findByMatch(matchId: string): Promise<PredictionCriterion[]> {
     return prisma.predictionCriterion.findMany({
       where: { matchId },
-      orderBy: { name: 'asc' },
+      orderBy: { createdAt: 'asc' },
     });
   },
 
   findActiveByMatch(matchId: string): Promise<PredictionCriterion[]> {
     return prisma.predictionCriterion.findMany({
       where: { matchId, isActive: true },
-      orderBy: { name: 'asc' },
+      orderBy: { createdAt: 'asc' },
     });
   },
 

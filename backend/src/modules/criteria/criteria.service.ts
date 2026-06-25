@@ -61,7 +61,19 @@ export const criteriaService = {
   },
 
   async deactivate(id: string): Promise<PredictionCriterion> {
-    await ensureCriterion(id);
+    const criterion = await ensureCriterion(id);
+    const match = await ensureMatch(criterion.matchId);
+    assertEditable(match);
     return criteriaRepository.update(id, { isActive: false });
+  },
+
+  async reactivate(id: string): Promise<PredictionCriterion> {
+    const criterion = await ensureCriterion(id);
+    if (criterion.isActive) {
+      throw ApiError.badRequest('Tiêu chí đã ở trạng thái hoạt động');
+    }
+    const match = await ensureMatch(criterion.matchId);
+    assertEditable(match);
+    return criteriaRepository.update(id, { isActive: true });
   },
 };

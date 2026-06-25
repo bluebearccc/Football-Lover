@@ -22,6 +22,7 @@ export default function AdminMatchDetailPage() {
   const [notice, setNotice] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ homeTeamId: '', awayTeamId: '', matchTime: '', entryGold: 100, startDate: '', endDate: '' });
   const [editLoading, setEditLoading] = useState(false);
+  const [editingCriterion, setEditingCriterion] = useState<{ id: string; name: string; description: string } | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -88,6 +89,33 @@ export default function AdminMatchDetailPage() {
       await load();
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Ẩn tiêu chí thất bại');
+    }
+  }
+
+  async function reactivateCriterion(id: string) {
+    setError(null);
+    try {
+      await adminCriteriaApi.reactivate(id);
+      setNotice('Đã hiện lại tiêu chí');
+      await load();
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Hiện lại tiêu chí thất bại');
+    }
+  }
+
+  async function saveCriterionEdit() {
+    if (!editingCriterion) return;
+    setError(null);
+    try {
+      await adminCriteriaApi.update(editingCriterion.id, {
+        name: editingCriterion.name.trim(),
+        description: editingCriterion.description.trim() || undefined,
+      });
+      setEditingCriterion(null);
+      setNotice('Đã cập nhật tiêu chí');
+      await load();
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Cập nhật tiêu chí thất bại');
     }
   }
 
@@ -259,39 +287,71 @@ export default function AdminMatchDetailPage() {
           <ul className="flex flex-col gap-2">
             {match.criteria.map((c) => (
               <li key={c.id} className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink-100 px-3 py-2 text-sm${!c.isActive ? ' opacity-50' : ''}`}>
-                <span className="font-medium">
-                  {c.name}
-                  {!c.isActive && <> <Badge tone="neutral">Đã ẩn</Badge></>}
-                </span>
-                <div className="flex items-center gap-2">
-                  {c.isActive && (
-                    <>
-                      <span className="text-ink-700">Kết quả:</span>
-                      <Button
-                        variant={c.resultTeam === 'HOME' ? 'primary' : 'secondary'}
-                        onClick={() => setCriterionResult(c.id, 'HOME')}
-                      >
-                        {home}
-                      </Button>
-                      <Button
-                        variant={c.resultTeam === 'AWAY' ? 'primary' : 'secondary'}
-                        onClick={() => setCriterionResult(c.id, 'AWAY')}
-                      >
-                        {away}
-                      </Button>
-                    </>
-                  )}
-                  {c.isActive && (
-                    <Button variant="secondary" onClick={() => deactivateCriterion(c.id)}>
-                      Ẩn
-                    </Button>
-                  )}
-                  {editable && (
-                    <Button variant="danger" onClick={() => removeCriterion(c.id)}>
-                      Xoá
-                    </Button>
-                  )}
-                </div>
+                {editingCriterion?.id === c.id ? (
+                  <div className="flex flex-1 flex-wrap items-center gap-2">
+                    <TextInput
+                      placeholder="Tên tiêu chí"
+                      value={editingCriterion.name}
+                      onChange={(e) => setEditingCriterion({ ...editingCriterion, name: e.target.value })}
+                      className="flex-1"
+                    />
+                    <TextInput
+                      placeholder="Mô tả (tùy chọn)"
+                      value={editingCriterion.description}
+                      onChange={(e) => setEditingCriterion({ ...editingCriterion, description: e.target.value })}
+                      className="flex-1"
+                    />
+                    <Button onClick={saveCriterionEdit}>Lưu</Button>
+                    <Button variant="secondary" onClick={() => setEditingCriterion(null)}>Huỷ</Button>
+                  </div>
+                ) : (
+                  <>
+                    <span className="font-medium">
+                      {c.name}
+                      {c.description && <span className="ml-2 text-ink-700 font-normal">— {c.description}</span>}
+                      {!c.isActive && <> <Badge tone="neutral">Đã ẩn</Badge></>}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {c.isActive && (
+                        <>
+                          <span className="text-ink-700">Kết quả:</span>
+                          <Button
+                            variant={c.resultTeam === 'HOME' ? 'primary' : 'secondary'}
+                            onClick={() => setCriterionResult(c.id, 'HOME')}
+                          >
+                            {home}
+                          </Button>
+                          <Button
+                            variant={c.resultTeam === 'AWAY' ? 'primary' : 'secondary'}
+                            onClick={() => setCriterionResult(c.id, 'AWAY')}
+                          >
+                            {away}
+                          </Button>
+                        </>
+                      )}
+                      {editable && c.isActive && (
+                        <Button variant="secondary" onClick={() => setEditingCriterion({ id: c.id, name: c.name, description: c.description ?? '' })}>
+                          Sửa
+                        </Button>
+                      )}
+                      {c.isActive && (
+                        <Button variant="secondary" onClick={() => deactivateCriterion(c.id)}>
+                          Ẩn
+                        </Button>
+                      )}
+                      {!c.isActive && editable && (
+                        <Button variant="secondary" onClick={() => reactivateCriterion(c.id)}>
+                          Hiện lại
+                        </Button>
+                      )}
+                      {editable && (
+                        <Button variant="danger" onClick={() => removeCriterion(c.id)}>
+                          Xoá
+                        </Button>
+                      )}
+                    </div>
+                  </>
+                )}
               </li>
             ))}
           </ul>

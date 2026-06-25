@@ -75,4 +75,7 @@ export const adminCriteriaApi = {
   deactivate(id: string) {
     return adminFetch<Criterion>(`/criteria/${id}/deactivate`, { method: 'POST' });
   },
+  reactivate(id: string) {
+    return adminFetch<Criterion>(`/criteria/${id}/reactivate`, { method: 'POST' });
+  },
 };
