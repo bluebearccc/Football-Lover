@@ -142,11 +142,14 @@ export const publicMatchesService = {
         description: c.description,
         resultTeam: c.resultTeam,
       })),
-      statistics: match.statistics.map((s) => ({
-        criterionId: s.criterionId,
-        totalHomeVotes: s.totalHomeVotes,
-        totalAwayVotes: s.totalAwayVotes,
-      })),
+      statistics:
+        match.status === MatchStatus.SCHEDULED || match.status === MatchStatus.POSTPONED
+          ? []
+          : match.statistics.map((s) => ({
+              criterionId: s.criterionId,
+              totalHomeVotes: s.totalHomeVotes,
+              totalAwayVotes: s.totalAwayVotes,
+            })),
       comments: match.comments.map((c) => ({
         id: c.id,
         user: c.user,

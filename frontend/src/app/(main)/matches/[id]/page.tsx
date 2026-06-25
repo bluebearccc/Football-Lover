@@ -216,7 +216,7 @@ export default function MatchDetailPage() {
                 <span className="material-symbols-outlined text-primary">query_stats</span>
                 Thống kê dự đoán
               </h3>
-              <StatsPanel criteria={match.criteria} statistics={match.statistics} />
+              <StatsPanel criteria={match.criteria} statistics={match.statistics} matchStatus={match.status} />
             </div>
           )}
 

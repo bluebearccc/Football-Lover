@@ -3,8 +3,8 @@ Dự án theo quy trình spec-driven. Nguồn sự thật là tài liệu trong
 `docs/Football-Lover/` (SRS, ER diagram, class diagram theo UC). Đọc spec liên quan
 TRƯỚC khi code; không tự bịa thông tin ngoài spec.
 
-**Active feature**: `007-match-comments` — Match comments (UC08): user comment submission, rate limiting, content moderation, admin hide/delete, CommentSection frontend component.
-Plan: `specs/007-match-comments/plan.md` | Spec: `specs/007-match-comments/spec.md`
+**Active feature**: `008-stats-leaderboard` — Statistics & Leaderboard (UC09): monthly win-count leaderboard with accuracy tiebreaker, win streak, podium top 3, prediction vote statistics per criterion (hidden pre-kickoff), leaderboard page frontend.
+Plan: `specs/008-stats-leaderboard/plan.md` | Spec: `specs/008-stats-leaderboard/spec.md`
 <!-- SPECKIT END -->
 
 # Football-Lover (GoalPredict Live) — Coding Guide
