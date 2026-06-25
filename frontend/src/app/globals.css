@@ -91,7 +91,33 @@ body {
       opacity: 0.5;
     }
   }
+
+  /* Box-shadow ripple pulse for the green "live" dot indicator */
+  .dot-live-pulse {
+    box-shadow: 0 0 0 0 rgba(75, 226, 119, 0.7);
+    animation: dot-pulse 2s infinite;
+  }
+  @keyframes dot-pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(75, 226, 119, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 8px rgba(75, 226, 119, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(75, 226, 119, 0);
+    }
+  }
 }
+
+/* Custom scrollbar for admin dark layout */
+.admin-layout ::-webkit-scrollbar { width: 6px; }
+.admin-layout ::-webkit-scrollbar-track { background: #0b1326; }
+.admin-layout ::-webkit-scrollbar-thumb { background: #2d3449; border-radius: 10px; }
+.admin-layout ::-webkit-scrollbar-thumb:hover { background: #4be277; }
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
@@ -110,3 +136,37 @@ body {
 .stagger-1 { animation-delay: 0.1s; }
 .stagger-2 { animation-delay: 0.2s; }
 .stagger-3 { animation-delay: 0.3s; }
+
+/* ── Landing page scroll-reveal animations (matches mockup Stitch) ── */
+.reveal-item {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@keyframes lp-fade-in-up {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes lp-slide-in-left {
+  0% { opacity: 0; transform: translateX(-60px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes lp-slide-in-right {
+  0% { opacity: 0; transform: translateX(60px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes lp-pull-up-parallax {
+  0% { opacity: 0; transform: translateY(100px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-fade-up       { animation: lp-fade-in-up      1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.animate-slide-left    { animation: lp-slide-in-left    1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.animate-slide-right   { animation: lp-slide-in-right   1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.animate-pull-up       { animation: lp-pull-up-parallax  1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.25s; }
+.delay-3 { animation-delay: 0.4s; }
+.delay-4 { animation-delay: 0.55s; }
+.delay-5 { animation-delay: 0.7s; }

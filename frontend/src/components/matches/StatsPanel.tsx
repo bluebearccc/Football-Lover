@@ -3,9 +3,19 @@ import type { MatchCriterion, MatchStatistic } from '@/api/matches';
 interface StatsPanelProps {
   criteria: MatchCriterion[];
   statistics: MatchStatistic[];
+  matchStatus: string;
 }
 
-export default function StatsPanel({ criteria, statistics }: StatsPanelProps) {
+export default function StatsPanel({ criteria, statistics, matchStatus }: StatsPanelProps) {
+  if (matchStatus === 'SCHEDULED' || matchStatus === 'POSTPONED') {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-on-surface-variant">
+        <span className="material-symbols-outlined text-3xl mb-2">visibility_off</span>
+        <p className="font-body-sm text-body-sm">Thống kê sẽ hiển thị sau khi trận đấu bắt đầu</p>
+      </div>
+    );
+  }
+
   if (statistics.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-on-surface-variant">

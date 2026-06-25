@@ -16,10 +16,10 @@ export function computePool(entryGold: DecimalLike, participantCount: number): P
   return toDecimal(entryGold).mul(participantCount);
 }
 
-/** gold_won = pool ÷ winnerCount, rounded to 2 decimal places (BR28). */
+/** gold_won = pool ÷ winnerCount, floored to 2 decimal places (BR28, FR-GS-004). */
 export function splitTwoDecimals(pool: Prisma.Decimal, winnerCount: number): Prisma.Decimal {
   if (winnerCount <= 0) return new Prisma.Decimal(0);
-  return pool.div(winnerCount).toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
+  return pool.div(winnerCount).toDecimalPlaces(2, Prisma.Decimal.ROUND_DOWN);
 }
 
 /** Serialize a Decimal to a fixed 2-decimal string for API responses. */

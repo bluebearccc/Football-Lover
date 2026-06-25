@@ -30,7 +30,7 @@ export class ApiError extends Error {
     return new ApiError(409, message);
   }
 
-  static tooManyRequests(message = 'Bạn thao tác quá nhanh, vui lòng thử lại sau'): ApiError {
-    return new ApiError(429, message);
+  static tooManyRequests(message = 'Bạn thao tác quá nhanh, vui lòng thử lại sau', details?: unknown): ApiError {
+    return new ApiError(429, message, details);
   }
 }

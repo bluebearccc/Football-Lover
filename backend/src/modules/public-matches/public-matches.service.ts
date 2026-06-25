@@ -48,6 +48,36 @@ export const publicMatchesService = {
     return { items: mapped, total, page: query.page, pageSize: query.pageSize };
   },
 
+  async getMatchResults(id: string) {
+    const match = await publicMatchesRepository.findMatchResults(id);
+    if (!match || match.status !== MatchStatus.FINISHED) {
+      throw ApiError.notFound('Không tìm thấy kết quả trận đấu');
+    }
+
+    const participantCount = match.participations.length;
+    const pool = match.entryGold.mul(new Decimal(participantCount));
+    const winnerCount = match.participations.filter((p) => p.isWinner).length;
+    const goldPerWinner =
+      winnerCount > 0 ? pool.div(winnerCount).toDecimalPlaces(2, Decimal.ROUND_DOWN) : new Decimal(0);
+
+    return {
+      matchId: match.id,
+      status: match.status,
+      entryGold: match.entryGold.toFixed(2),
+      pool: pool.toFixed(2),
+      participantCount,
+      winnerCount,
+      goldPerWinner: goldPerWinner.toFixed(2),
+      participants: match.participations.map((p) => ({
+        userId: p.userId,
+        displayName: p.user.displayName,
+        score: p.score,
+        isWinner: p.isWinner,
+        goldWon: p.goldWon.toFixed(2),
+      })),
+    };
+  },
+
   async getDetailedPublic(id: string, viewerId?: string) {
     const match = await publicMatchesRepository.findDetailedPublic(id);
     if (!match) throw ApiError.notFound('Không tìm thấy trận đấu');
@@ -112,11 +142,14 @@ export const publicMatchesService = {
         description: c.description,
         resultTeam: c.resultTeam,
       })),
-      statistics: match.statistics.map((s) => ({
-        criterionId: s.criterionId,
-        totalHomeVotes: s.totalHomeVotes,
-        totalAwayVotes: s.totalAwayVotes,
-      })),
+      statistics:
+        match.status === MatchStatus.SCHEDULED || match.status === MatchStatus.POSTPONED
+          ? []
+          : match.statistics.map((s) => ({
+              criterionId: s.criterionId,
+              totalHomeVotes: s.totalHomeVotes,
+              totalAwayVotes: s.totalAwayVotes,
+            })),
       comments: match.comments.map((c) => ({
         id: c.id,
         user: c.user,

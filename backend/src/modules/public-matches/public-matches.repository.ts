@@ -44,6 +44,27 @@ export const publicMatchesRepository = {
     return [allItems.slice(params.skip, params.skip + params.take), allItems.length];
   },
 
+  findMatchResults(id: string) {
+    return prisma.match.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        entryGold: true,
+        participations: {
+          select: {
+            userId: true,
+            score: true,
+            isWinner: true,
+            goldWon: true,
+            user: { select: { displayName: true } },
+          },
+          orderBy: { score: 'desc' },
+        },
+      },
+    });
+  },
+
   findDetailedPublic(id: string) {
     return prisma.match.findUnique({
       where: { id },

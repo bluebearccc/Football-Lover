@@ -70,6 +70,11 @@ const config: Config = {
         'error-container': '#93000a',
         'on-error-container': '#ffdad6',
 
+        // --- Podium (leaderboard top-3) ---
+        'podium-gold': '#FFD700',
+        'podium-silver': '#C0C0C0',
+        'podium-bronze': '#CD7F32',
+
         // --- Legacy (trang đã build trước baseline) ---
         pitch: {
           50: '#eafaf1',

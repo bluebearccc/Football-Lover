@@ -10,6 +10,11 @@ export const publicMatchesController = {
     res.status(200).json(result);
   },
 
+  async getResults(req: Request, res: Response): Promise<void> {
+    const result = await publicMatchesService.getMatchResults(req.params.id);
+    res.status(200).json(result);
+  },
+
   async getById(req: Request, res: Response): Promise<void> {
     const viewerId = req.user?.id;
     const result = await publicMatchesService.getDetailedPublic(req.params.id, viewerId);

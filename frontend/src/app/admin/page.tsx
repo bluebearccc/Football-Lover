@@ -1,69 +1,425 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { adminDashboardApi } from '@/api/admin/dashboard';
-import type { DashboardOverview } from '@/api/admin/types';
+import { adminCommentsApi } from '@/api/admin/comments';
+import type { AdminComment, DashboardOverview } from '@/api/admin/types';
 import { ApiError } from '@/api/client';
-import { Badge, Banner, Card } from '@/components/admin/ui';
-import { formatDateTime, statusLabel } from '@/lib/format';
+import { formatDateTime } from '@/lib/format';
 
-const METRICS: { key: keyof DashboardOverview['stats']; label: string }[] = [
-  { key: 'users', label: 'Người dùng' },
-  { key: 'lockedUsers', label: 'Tài khoản khoá' },
-  { key: 'teams', label: 'Đội bóng' },
-  { key: 'activeTeams', label: 'Đội đang hoạt động' },
-  { key: 'matches', label: 'Tổng số trận' },
-  { key: 'liveOrScheduled', label: 'Sắp/đang diễn ra' },
-  { key: 'finishedMatches', label: 'Trận đã kết thúc' },
-  { key: 'predictions', label: 'Lượt dự đoán' },
-  { key: 'comments', label: 'Bình luận' },
-  { key: 'hiddenComments', label: 'Bình luận bị ẩn' },
-];
+function matchStatusLog(status: string): {
+  action: string;
+  badge: string;
+  cls: string;
+} {
+  switch (status) {
+    case 'FINISHED':
+      return { action: 'Trận đấu kết thúc — đã tính điểm', badge: 'SUCCESS', cls: 'bg-primary/20 text-primary' };
+    case 'LIVE':
+      return { action: 'Trận đấu đang diễn ra', badge: 'LIVE', cls: 'bg-secondary/20 text-secondary' };
+    case 'SCHEDULED':
+      return { action: 'Trận đấu sắp diễn ra', badge: 'PENDING', cls: 'bg-outline/20 text-on-surface-variant' };
+    case 'CANCELLED':
+      return { action: 'Trận đấu bị huỷ', badge: 'CANCELLED', cls: 'bg-error/20 text-error' };
+    case 'POSTPONED':
+      return { action: 'Trận đấu bị hoãn', badge: 'POSTPONED', cls: 'bg-tertiary/20 text-tertiary' };
+    default:
+      return { action: status, badge: status, cls: 'bg-outline/20 text-on-surface-variant' };
+  }
+}
+
+const CHART_BARS = [30, 45, 85, 60, 40, 55, 95, 70, 50, 30];
 
 export default function AdminDashboardPage() {
   const [data, setData] = useState<DashboardOverview | null>(null);
+  const [hiddenComments, setHiddenComments] = useState<AdminComment[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    adminDashboardApi
-      .overview()
-      .then(setData)
+    Promise.all([
+      adminDashboardApi.overview(),
+      adminCommentsApi.list({ status: 'HIDDEN', pageSize: 3 }),
+    ])
+      .then(([overview, comments]) => {
+        setData(overview);
+        setHiddenComments(comments.items);
+      })
       .catch((e) => setError(e instanceof ApiError ? e.message : 'Không tải được dữ liệu'));
   }, []);
 
-  return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">Tổng quan hệ thống</h1>
-      <Banner message={error} />
+  const s = data?.stats;
+  const todayVN = new Intl.DateTimeFormat('vi-VN', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(new Date());
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-        {METRICS.map((m) => (
-          <div key={m.key} className="rounded-2xl border border-ink-100 bg-white p-4 shadow-sm">
-            <p className="text-2xl font-bold text-pitch-600">{data ? data.stats[m.key] : '—'}</p>
-            <p className="mt-1 text-xs text-ink-700">{m.label}</p>
+  return (
+    <div className="flex flex-col gap-widget-gap">
+      {/* ── Header ── */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 className="text-headline-lg font-headline-lg text-on-surface">Admin Overview</h2>
+          <div className="flex items-center gap-3 mt-1">
+            <span className="flex items-center gap-1 text-on-surface-variant text-body-sm">
+              <span className="material-symbols-outlined text-sm">calendar_today</span>
+              {todayVN}
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-primary dot-live-pulse inline-block" />
+            <span className="text-primary font-bold text-xs uppercase tracking-widest">Hệ thống Live</span>
           </div>
-        ))}
+        </div>
+
+        {error && <p className="text-error text-body-sm">{error}</p>}
+
+        <div className="flex gap-2">
+          <button className="glass-card px-4 py-2 rounded-lg text-body-sm font-semibold flex items-center gap-2 hover:bg-surface-variant/50 transition-colors text-on-surface">
+            <span className="material-symbols-outlined text-sm">filter_list</span> Filter
+          </button>
+          <Link
+            href="/admin/matches"
+            className="bg-primary text-on-primary px-4 py-2 rounded-lg text-body-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity"
+          >
+            <span className="material-symbols-outlined text-sm">add</span> New Match
+          </Link>
+        </div>
       </div>
 
-      <Card title="Trận đấu gần đây">
-        {data && data.recentMatches.length > 0 ? (
-          <ul className="divide-y divide-ink-100">
-            {data.recentMatches.map((m) => (
-              <li key={m.id} className="flex items-center justify-between py-2 text-sm">
-                <span className="font-medium">
-                  {m.homeTeam?.name ?? '?'} vs {m.awayTeam?.name ?? '?'}
+      {/* ── Key Metrics Row ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-widget-gap">
+        {/* Card 1 — Users */}
+        <div className="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
+          <p className="text-on-surface-variant font-label-caps text-label-caps mb-2">
+            Người dùng hoạt động
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold text-on-surface">
+              {s ? s.users.toLocaleString('vi-VN') : '—'}
+            </span>
+            {s && s.lockedUsers > 0 && (
+              <span className="text-error text-xs font-bold">{s.lockedUsers} khoá</span>
+            )}
+          </div>
+          <div className="mt-4 w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary transition-all duration-700"
+              style={{ width: s && s.users > 0 ? `${Math.round(((s.users - s.lockedUsers) / s.users) * 100)}%` : '0%' }}
+            />
+          </div>
+        </div>
+
+        {/* Card 2 — Live / Scheduled */}
+        <div className="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-secondary/5 rounded-full blur-2xl" />
+          <p className="text-on-surface-variant font-label-caps text-label-caps mb-2">
+            Trận Live / Sắp diễn ra
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold text-on-surface">
+              {s ? s.liveOrScheduled : '—'}
+            </span>
+            <span className="text-secondary text-xs font-bold">Đang theo dõi</span>
+          </div>
+          <div className="mt-4 flex gap-1 items-end h-6">
+            <div className="w-1 bg-secondary/20 h-2 rounded-full" />
+            <div className="w-1 bg-secondary/40 h-4 rounded-full" />
+            <div className="w-1 bg-secondary/60 h-6 rounded-full" />
+            <div className="w-1 bg-secondary/80 h-5 rounded-full" />
+            <div className="w-1 bg-secondary h-6 rounded-full" />
+          </div>
+        </div>
+
+        {/* Card 3 — Predictions */}
+        <div className="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
+          <p className="text-on-surface-variant font-label-caps text-label-caps mb-2">
+            Lượt dự đoán
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold text-on-surface">
+              {s ? s.predictions.toLocaleString('vi-VN') : '—'}
+            </span>
+            <span className="text-on-surface-variant text-xs">Tổng cộng</span>
+          </div>
+          <div className="mt-4 flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-sm">trending_up</span>
+            <span className="text-xs text-on-surface-variant">
+              {s ? `${s.finishedMatches} trận đã kết thúc` : '—'}
+            </span>
+          </div>
+        </div>
+
+        {/* Card 4 — Comments */}
+        <div className="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
+          <p className="text-on-surface-variant font-label-caps text-label-caps mb-2">
+            Bình luận
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold text-on-surface">
+              {s ? s.comments.toLocaleString('vi-VN') : '—'}
+            </span>
+            {s && s.hiddenComments > 0 && (
+              <span className="text-error text-xs font-bold">{s.hiddenComments} ẩn</span>
+            )}
+          </div>
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex gap-1">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <div className="w-2 h-2 rounded-full bg-primary/40" />
+              <div className="w-2 h-2 rounded-full bg-primary/20" />
+            </div>
+            <span className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">
+              Kiểm duyệt
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Main Grid ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-widget-gap">
+        {/* Left: Activity bar chart */}
+        <div className="lg:col-span-2 glass-card rounded-xl p-card-padding flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-headline-md text-on-surface">Hoạt động trận đấu</h3>
+            <select className="bg-surface-container border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-1 focus:ring-primary py-1 px-2 outline-none">
+              <option>24 giờ qua</option>
+              <option>7 ngày</option>
+            </select>
+          </div>
+          <div className="flex-1 min-h-[220px] w-full relative">
+            {/* Bars */}
+            <div className="absolute inset-0 flex items-end justify-between px-2">
+              {CHART_BARS.map((h, i) => (
+                <div
+                  key={i}
+                  className="rounded-t-lg border-t-2 transition-all"
+                  style={{
+                    width: '8%',
+                    height: `${h}%`,
+                    background: `rgba(75, 226, 119, ${h > 70 ? 0.3 : 0.1})`,
+                    borderColor: `rgba(75, 226, 119, ${h > 70 ? 1 : h / 100 + 0.2})`,
+                  }}
+                />
+              ))}
+            </div>
+            {/* Grid lines */}
+            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none border-b border-l border-outline-variant/30">
+              <div className="w-full border-t border-outline-variant/10" />
+              <div className="w-full border-t border-outline-variant/10" />
+              <div className="w-full border-t border-outline-variant/10" />
+              <div className="w-full border-t border-outline-variant/10" />
+            </div>
+          </div>
+          <div className="mt-4 flex justify-between text-[10px] text-on-surface-variant font-bold px-2">
+            <span>00:00</span>
+            <span>06:00</span>
+            <span>12:00</span>
+            <span>18:00</span>
+            <span>23:59</span>
+          </div>
+        </div>
+
+        {/* Right: Platform stats */}
+        <div className="glass-card rounded-xl p-card-padding">
+          <h3 className="font-headline-md text-on-surface mb-6">Thống kê nền tảng</h3>
+          <div className="space-y-4">
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-body-sm font-bold text-on-surface">Đội bóng hoạt động</span>
+                <span className="text-data-mono text-primary">
+                  {s ? `${s.activeTeams}/${s.teams}` : '—'}
                 </span>
-                <span className="flex items-center gap-3 text-ink-700">
-                  {formatDateTime(m.matchTime)}
-                  <Badge tone={m.status === 'FINISHED' ? 'green' : 'neutral'}>{statusLabel(m.status)}</Badge>
+              </div>
+              <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-700"
+                  style={{ width: s && s.teams > 0 ? `${(s.activeTeams / s.teams) * 100}%` : '0%' }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-body-sm font-bold text-on-surface">Trận đã kết thúc</span>
+                <span className="text-data-mono text-primary">
+                  {s
+                    ? `${s.matches > 0 ? Math.round((s.finishedMatches / s.matches) * 100) : 0}%`
+                    : '—'}
                 </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-ink-700">Chưa có trận đấu nào.</p>
-        )}
-      </Card>
+              </div>
+              <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-700"
+                  style={{ width: s && s.matches > 0 ? `${(s.finishedMatches / s.matches) * 100}%` : '0%' }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-body-sm font-bold text-on-surface">Tài khoản an toàn</span>
+                <span className="text-data-mono text-primary">
+                  {s
+                    ? `${s.users > 0 ? Math.round(((s.users - s.lockedUsers) / s.users) * 100) : 100}%`
+                    : '—'}
+                </span>
+              </div>
+              <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-700"
+                  style={{
+                    width:
+                      s && s.users > 0
+                        ? `${((s.users - s.lockedUsers) / s.users) * 100}%`
+                        : '100%',
+                  }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-body-sm font-bold text-on-surface">Bình luận sạch</span>
+                <span className="text-data-mono text-primary">
+                  {s
+                    ? `${s.comments > 0 ? Math.round(((s.comments - s.hiddenComments) / s.comments) * 100) : 100}%`
+                    : '—'}
+                </span>
+              </div>
+              <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-700"
+                  style={{
+                    width:
+                      s && s.comments > 0
+                        ? `${((s.comments - s.hiddenComments) / s.comments) * 100}%`
+                        : '100%',
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <Link
+            href="/admin/matches"
+            className="block w-full mt-8 py-3 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors border-t border-outline-variant/30 text-center uppercase tracking-widest"
+          >
+            Xem tất cả trận đấu
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Bottom Section ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-widget-gap pb-6">
+        {/* Recent Activity Table */}
+        <div className="lg:col-span-3 glass-card rounded-xl overflow-hidden">
+          <div className="p-card-padding flex items-center justify-between border-b border-outline-variant/30">
+            <h3 className="font-headline-md text-on-surface">Hoạt động gần đây</h3>
+            <Link
+              href="/admin/matches"
+              className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
+            >
+              Xem tất cả{' '}
+              <span className="material-symbols-outlined text-sm">open_in_new</span>
+            </Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-surface-container-high/50">
+                  <th className="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant whitespace-nowrap">
+                    Thời gian
+                  </th>
+                  <th className="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant whitespace-nowrap">
+                    Sự kiện
+                  </th>
+                  <th className="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant whitespace-nowrap">
+                    Trận đấu
+                  </th>
+                  <th className="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant whitespace-nowrap">
+                    Trạng thái
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/20">
+                {data?.recentMatches.length ? (
+                  data.recentMatches.map((m) => {
+                    const { action, badge, cls } = matchStatusLog(m.status);
+                    return (
+                      <tr key={m.id} className="hover:bg-surface-variant/20 transition-colors">
+                        <td className="px-6 py-4 text-data-mono text-xs text-on-surface-variant whitespace-nowrap">
+                          {formatDateTime(m.matchTime)}
+                        </td>
+                        <td className="px-6 py-4 text-body-sm text-on-surface font-semibold">
+                          {action}
+                        </td>
+                        <td className="px-6 py-4 text-body-sm text-on-surface-variant whitespace-nowrap">
+                          {m.homeTeam?.name ?? '?'} vs {m.awayTeam?.name ?? '?'}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2 py-1 rounded text-[10px] font-bold ${cls}`}>
+                            {badge}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-6 py-10 text-center text-on-surface-variant text-body-sm"
+                    >
+                      {data ? 'Chưa có trận đấu nào.' : 'Đang tải...'}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Moderation Queue */}
+        <div className="glass-card rounded-xl p-card-padding flex flex-col">
+          <h3 className="font-headline-md text-on-surface mb-4">Hàng đợi kiểm duyệt</h3>
+          <div className="space-y-4 flex-1">
+            {hiddenComments.length > 0 ? (
+              hiddenComments.map((c) => (
+                <div
+                  key={c.id}
+                  className="p-3 bg-surface-container rounded-lg border-l-4 border-error"
+                >
+                  <p className="text-xs font-bold text-on-surface line-clamp-2">{c.content}</p>
+                  <p className="text-[10px] text-on-surface-variant mt-1">
+                    {c.user?.displayName ?? 'Ẩn danh'} • {formatDateTime(c.createdAt)}
+                  </p>
+                  <div className="flex gap-2 mt-3">
+                    <Link
+                      href="/admin/comments"
+                      className="text-[10px] font-bold text-primary hover:underline"
+                    >
+                      Xem xét
+                    </Link>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="p-3 bg-surface-container rounded-lg border-l-4 border-primary">
+                <p className="text-xs font-bold text-on-surface">Không có bình luận bị ẩn</p>
+                <p className="text-[10px] text-on-surface-variant mt-1">
+                  Hệ thống đang hoạt động bình thường
+                </p>
+              </div>
+            )}
+          </div>
+          <Link
+            href="/admin/comments"
+            className="block w-full mt-6 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-center hover:bg-surface-variant transition-colors text-on-surface"
+          >
+            Đến Kiểm duyệt ({s?.hiddenComments ?? 0})
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
