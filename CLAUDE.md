@@ -3,8 +3,8 @@ Dự án theo quy trình spec-driven. Nguồn sự thật là tài liệu trong
 `docs/Football-Lover/` (SRS, ER diagram, class diagram theo UC). Đọc spec liên quan
 TRƯỚC khi code; không tự bịa thông tin ngoài spec.
 
-**Active feature**: `011-admin-dashboard` — Admin Dashboard: overview page with key metrics (users, matches, predictions, gold pool), dynamic traffic chart, platform stats panel, admin action logs (new AdminLog entity), moderation queue (UI-only, backend deferred), 30–60s periodic polling, date range filter, CSV export. Enhances existing dashboard module + adds new admin-log module.
-Plan: `specs/011-admin-dashboard/plan.md` | Spec: `specs/011-admin-dashboard/spec.md`
+**Active feature**: `012-manage-users` — Admin User Management: paginated user list with search/filters, ban/unban with mandatory reason, edit user (display name + role) via modal, admin-triggered password reset, user statistics overview (total, online, locked, accuracy). Enhances existing users module + redesigns frontend to match Stitch mockup.
+Plan: `specs/012-manage-users/plan.md` | Spec: `specs/012-manage-users/spec.md`
 <!-- SPECKIT END -->
 
 # Football-Lover (GoalPredict Live) — Coding Guide

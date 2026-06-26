@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate, tryAuthenticate } from '../../middleware/auth';
+import { trackLastActive } from '../../middleware/lastActive';
 import { validateBody, validateQuery } from '../../middleware/validate';
 import { wrap } from '../../utils/asyncHandler';
 import { publicMatchesController } from './public-matches.controller';
@@ -20,6 +21,7 @@ publicMatchesRoutes.get('/:id/results', wrap(publicMatchesController.getResults)
 publicMatchesRoutes.post(
   '/:id/comments',
   authenticate,
+  trackLastActive,
   validateBody(createCommentSchema),
   wrap(commentsController.create),
 );

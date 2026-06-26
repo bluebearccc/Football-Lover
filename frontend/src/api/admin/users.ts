@@ -1,5 +1,5 @@
 import { adminFetch } from './client';
-import type { AdminUser, Paginated, Role, UserStatus } from './types';
+import type { AdminUser, Paginated, Role, UserStats, UserStatus } from './types';
 
 export const adminUsersApi = {
   list(params: { search?: string; role?: Role; status?: UserStatus; page?: number; pageSize?: number } = {}) {
@@ -15,10 +15,19 @@ export const adminUsersApi = {
   get(id: string) {
     return adminFetch<AdminUser>(`/users/${id}`);
   },
-  setStatus(id: string, status: UserStatus) {
-    return adminFetch<AdminUser>(`/users/${id}/status`, { method: 'PATCH', body: { status } });
+  setStatus(id: string, status: UserStatus, reason?: string) {
+    return adminFetch<AdminUser>(`/users/${id}/status`, { method: 'PATCH', body: { status, reason } });
   },
   setRole(id: string, role: Role) {
     return adminFetch<AdminUser>(`/users/${id}/role`, { method: 'PATCH', body: { role } });
+  },
+  editUser(id: string, data: { displayName?: string; role?: Role }) {
+    return adminFetch<AdminUser>(`/users/${id}`, { method: 'PATCH', body: data });
+  },
+  resetPassword(id: string) {
+    return adminFetch<{ message: string }>(`/users/${id}/reset-password`, { method: 'POST' });
+  },
+  getStats() {
+    return adminFetch<UserStats>('/users/stats');
   },
 };
