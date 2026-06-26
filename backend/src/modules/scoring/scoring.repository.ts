@@ -7,6 +7,8 @@ export interface MatchForScoring {
   entryGold: Prisma.Decimal;
   homeScore: number | null;
   awayScore: number | null;
+  homeTeam: { name: string };
+  awayTeam: { name: string };
   criteria: { id: string; resultTeam: TeamSide | null }[];
   predictions: { id: string; userId: string; criterionId: string; selectedTeam: TeamSide }[];
 }
@@ -45,6 +47,8 @@ export const scoringRepository = {
         entryGold: true,
         homeScore: true,
         awayScore: true,
+        homeTeam: { select: { name: true } },
+        awayTeam: { select: { name: true } },
         criteria: { select: { id: true, resultTeam: true } },
         predictions: {
           select: { id: true, userId: true, criterionId: true, selectedTeam: true },
@@ -128,7 +132,7 @@ export const scoringRepository = {
   },
 
   /** Cancel: void participations, revert totalPoints, and notify participants (BR14/BR30/FR-GS-009). */
-  async applyCancel(matchId: string, participantUserIds: string[]): Promise<void> {
+  async applyCancel(matchId: string, participantUserIds: string[], homeName: string, awayName: string): Promise<void> {
     await prisma.$transaction(async (tx) => {
       const participations = await tx.matchParticipation.findMany({
         where: { matchId },
@@ -150,7 +154,7 @@ export const scoringRepository = {
             userId,
             type: NotificationType.MATCH_CANCELLED,
             title: 'Trận đấu đã bị huỷ',
-            body: 'Trận bạn tham gia đã bị huỷ. Kết quả của trận này không được tính.',
+            body: `Trận ${homeName} vs ${awayName} đã bị hủy, kết quả không được tính.`,
             matchId,
           })),
         });

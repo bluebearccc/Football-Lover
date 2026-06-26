@@ -3,8 +3,8 @@ Dự án theo quy trình spec-driven. Nguồn sự thật là tài liệu trong
 `docs/Football-Lover/` (SRS, ER diagram, class diagram theo UC). Đọc spec liên quan
 TRƯỚC khi code; không tự bịa thông tin ngoài spec.
 
-**Active feature**: `008-stats-leaderboard` — Statistics & Leaderboard (UC09): monthly win-count leaderboard with accuracy tiebreaker, win streak, podium top 3, prediction vote statistics per criterion (hidden pre-kickoff), leaderboard page frontend.
-Plan: `specs/008-stats-leaderboard/plan.md` | Spec: `specs/008-stats-leaderboard/spec.md`
+**Active feature**: `009-notifications` — Win/Lose Notifications (UC14): in-app notifications for match outcomes (won/lost/cancelled), notification list with read/unread state, mark-read (individual + bulk), unread count badge, click-through to match detail.
+Plan: `specs/009-notifications/plan.md` | Spec: `specs/009-notifications/spec.md`
 <!-- SPECKIT END -->
 
 # Football-Lover (GoalPredict Live) — Coding Guide

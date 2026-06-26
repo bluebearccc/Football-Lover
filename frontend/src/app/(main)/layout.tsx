@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 interface NavItem {
   href: string;
@@ -74,12 +75,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           </span>
         </div>
         <div className="flex items-center space-x-6">
-          <Link
-            href="/notifications"
-            className="text-on-surface-variant hover:text-primary transition-colors relative"
-          >
-            <span className="material-symbols-outlined">notifications</span>
-          </Link>
+          <NotificationBell />
           <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/20 bg-surface-container-highest flex items-center justify-center">
             <span className="material-symbols-outlined text-on-surface-variant text-sm">person</span>
           </div>
