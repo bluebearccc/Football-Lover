@@ -57,7 +57,10 @@ function buildPlan(match: MatchForScoring): { plan: ScoringPlan; summary: Scorin
     goldWon: p.goldWon,
   }));
 
-  const notifications = notificationService.buildResultNotifications(participations);
+  const notifications = notificationService.buildResultNotifications(participations, {
+    homeName: match.homeTeam.name,
+    awayName: match.awayTeam.name,
+  });
 
   const plan: ScoringPlan = {
     participations,
@@ -110,6 +113,6 @@ export const scoringService = {
     if (!match) throw ApiError.notFound('Không tìm thấy trận đấu');
     if (match.status === MatchStatus.CANCELLED) return;
     const participantIds = [...new Set(match.predictions.map((p) => p.userId))];
-    await scoringRepository.applyCancel(matchId, participantIds);
+    await scoringRepository.applyCancel(matchId, participantIds, match.homeTeam.name, match.awayTeam.name);
   },
 };
