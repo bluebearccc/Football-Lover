@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import ChatbotWidget from '@/components/chatbot/ChatbotWidget';
 
 interface NavItem {
   href: string;
@@ -86,6 +87,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       <main className="md:pl-64 pt-20 pb-24 md:pb-8 min-h-screen px-4 md:px-8">
         {children}
       </main>
+
+      {/* Chatbot Widget */}
+      <ChatbotWidget />
 
       {/* Mobile Bottom NavBar */}
       <footer className="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container border-t border-outline-variant/20 shadow-lg flex justify-around items-center h-16 px-4">
