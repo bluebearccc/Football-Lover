@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/auth';
+import { trackLastActive } from '../../middleware/lastActive';
 import { validateQuery } from '../../middleware/validate';
 import { wrap } from '../../utils/asyncHandler';
 import { leaderboardController } from './leaderboard.controller';
@@ -16,6 +17,7 @@ leaderboardRoutes.get(
 leaderboardRoutes.get(
   '/me',
   authenticate,
+  trackLastActive,
   validateQuery(leaderboardMeQuerySchema),
   wrap(leaderboardController.getMe),
 );

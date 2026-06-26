@@ -82,8 +82,17 @@ export interface AdminUser {
   role: Role;
   status: UserStatus;
   totalPoints: number;
+  accuracy: number | null;
+  banReason: string | null;
   createdAt: string;
   _count?: { predictions: number; participations: number; comments: number };
+}
+
+export interface UserStats {
+  totalUsers: number;
+  onlineNow: number;
+  lockedUsers: number;
+  averageAccuracy: number;
 }
 
 export interface AdminComment {

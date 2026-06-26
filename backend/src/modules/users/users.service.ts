@@ -1,7 +1,9 @@
-import { Role, UserStatus, type Prisma } from '@prisma/client';
+import { Role, UserStatus } from '@prisma/client';
 import { ApiError } from '../../utils/ApiError';
 import { usersRepository } from './users.repository';
+import { authService } from '../auth/auth.service';
 import type { ListUsersQuery } from './users.dto';
+import type { Prisma } from '@prisma/client';
 
 export const usersService = {
   async list(query: ListUsersQuery) {
@@ -14,11 +16,18 @@ export const usersService = {
         { displayName: { contains: query.search, mode: 'insensitive' } },
       ];
     }
-    const [items, total] = await usersRepository.list({
+    const [users, total] = await usersRepository.list({
       where,
       skip: (query.page - 1) * query.pageSize,
       take: query.pageSize,
     });
+
+    const accuracyMap = await usersRepository.getAccuracyMap(users.map((u) => u.id));
+    const items = users.map((u) => ({
+      ...u,
+      accuracy: accuracyMap.get(u.id) ?? null,
+    }));
+
     return { items, total, page: query.page, pageSize: query.pageSize };
   },
 
@@ -28,17 +37,21 @@ export const usersService = {
     return user;
   },
 
-  /** Admin cannot lock their own account (avoid lockout). */
-  async setStatus(actorId: string, targetId: string, status: UserStatus) {
+  async setStatus(actorId: string, targetId: string, status: UserStatus, reason?: string) {
     if (actorId === targetId && status === UserStatus.LOCKED) {
       throw ApiError.badRequest('Bạn không thể tự khoá tài khoản của mình');
     }
     const user = await usersRepository.findById(targetId);
     if (!user) throw ApiError.notFound('Không tìm thấy người dùng');
-    return usersRepository.setStatus(targetId, status);
+
+    if (status === UserStatus.LOCKED && user.role === Role.ADMIN) {
+      throw ApiError.badRequest('Không thể khoá tài khoản Admin');
+    }
+
+    const banReason = status === UserStatus.LOCKED ? (reason ?? null) : null;
+    return usersRepository.setStatus(targetId, status, banReason);
   },
 
-  /** Admin cannot demote their own admin role (avoid lockout). */
   async setRole(actorId: string, targetId: string, role: Role) {
     if (actorId === targetId && role !== Role.ADMIN) {
       throw ApiError.badRequest('Bạn không thể tự hạ quyền quản trị của mình');
@@ -46,5 +59,26 @@ export const usersService = {
     const user = await usersRepository.findById(targetId);
     if (!user) throw ApiError.notFound('Không tìm thấy người dùng');
     return usersRepository.setRole(targetId, role);
+  },
+
+  async editUser(actorId: string, targetId: string, data: { displayName?: string; role?: Role }) {
+    const user = await usersRepository.findById(targetId);
+    if (!user) throw ApiError.notFound('Không tìm thấy người dùng');
+
+    if (data.role && actorId === targetId && data.role !== Role.ADMIN) {
+      throw ApiError.badRequest('Bạn không thể tự hạ quyền quản trị của mình');
+    }
+
+    return usersRepository.update(targetId, data);
+  },
+
+  async adminResetPassword(targetId: string) {
+    const user = await usersRepository.findById(targetId);
+    if (!user) throw ApiError.notFound('Không tìm thấy người dùng');
+    await authService.forgotPassword({ email: user.email });
+  },
+
+  async getStats() {
+    return usersRepository.getStats();
   },
 };

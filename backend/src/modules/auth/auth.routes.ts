@@ -1,5 +1,6 @@
 import { Router, type NextFunction, type Request, type Response } from 'express';
 import { authenticate } from '../../middleware/auth';
+import { trackLastActive } from '../../middleware/lastActive';
 import { createRateLimiter } from '../../middleware/rate-limit';
 import { validateBody } from '../../middleware/validate';
 import { authController } from './auth.controller';
@@ -39,7 +40,7 @@ authRoutes.post('/register', validateBody(registerSchema), wrap(authController.r
 // UC02
 authRoutes.post('/login', loginRateLimiter, validateBody(loginSchema), wrap(authController.login));
 authRoutes.post('/logout', wrap(authController.logout));
-authRoutes.get('/me', authenticate, wrap(authController.me));
+authRoutes.get('/me', authenticate, trackLastActive, wrap(authController.me));
 // UC15
 authRoutes.post('/forgot-password', forgotPasswordRateLimiter, validateBody(forgotPasswordSchema), wrap(authController.forgotPassword));
 authRoutes.post('/reset-password', validateBody(resetPasswordSchema), wrap(authController.resetPassword));
