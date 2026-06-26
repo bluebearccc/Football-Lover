@@ -81,6 +81,7 @@ model User {
   notifications        Notification[]
   chatbotConversations ChatbotConversation[]
   passwordResetTokens  PasswordResetToken[]
+  adminLogs            AdminLog[]
 
   @@index([status])
   @@map("users")
@@ -301,4 +302,26 @@ model PasswordResetToken {
 
   @@index([userId])
   @@map("password_reset_tokens")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Admin activity logs
+// ─────────────────────────────────────────────────────────────
+
+model AdminLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  adminId     String   @map("admin_id") @db.Uuid
+  action      String
+  description String
+  entityType  String?  @map("entity_type")
+  entityId    String?  @map("entity_id") @db.Uuid
+  status      String   @default("SUCCESS")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  admin User @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@index([action])
+  @@map("admin_logs")
 }
