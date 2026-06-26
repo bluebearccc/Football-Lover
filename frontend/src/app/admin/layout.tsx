@@ -10,7 +10,10 @@ const NAV = [
   { href: '/admin/users', label: 'User Manager', icon: 'group', exact: false },
   { href: '/admin/matches', label: 'Match Center', icon: 'sports_soccer', exact: false },
   { href: '/admin/teams', label: 'Teams', icon: 'shield', exact: false },
+  { href: '/admin/matches', label: 'Point Rules', icon: 'rule', exact: false },
   { href: '/admin/comments', label: 'Comments', icon: 'chat', exact: false },
+  { href: '/admin/logs', label: 'Activity Logs', icon: 'history', exact: false },
+  { href: '/admin', label: 'Analytics', icon: 'analytics', exact: false },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

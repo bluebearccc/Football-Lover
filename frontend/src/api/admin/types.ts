@@ -107,11 +107,30 @@ export interface DashboardStats {
   predictions: number;
   comments: number;
   hiddenComments: number;
+  totalGoldPool: string;
+}
+
+export interface TrafficBucket {
+  bucket: string;
+  count: number;
+}
+
+export interface AdminLogEntry {
+  id: string;
+  adminId: string;
+  action: string;
+  description: string;
+  entityType: string | null;
+  entityId: string | null;
+  status: string;
+  createdAt: string;
+  admin: { id: string; displayName: string };
 }
 
 export interface DashboardOverview {
   stats: DashboardStats;
-  recentMatches: Match[];
+  recentLogs: AdminLogEntry[];
+  traffic: TrafficBucket[];
 }
 
 export interface SyncCounts {

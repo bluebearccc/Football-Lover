@@ -1,54 +1,97 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { adminDashboardApi } from '@/api/admin/dashboard';
+import type { DashboardParams } from '@/api/admin/dashboard';
 import { adminCommentsApi } from '@/api/admin/comments';
-import type { AdminComment, DashboardOverview } from '@/api/admin/types';
+import type { AdminComment, AdminLogEntry, DashboardOverview, TrafficBucket } from '@/api/admin/types';
 import { ApiError } from '@/api/client';
-import { formatDateTime } from '@/lib/format';
+import { formatDateTime, formatGold } from '@/lib/format';
+import { logStatusBadge } from '@/lib/admin-helpers';
 
-function matchStatusLog(status: string): {
-  action: string;
-  badge: string;
-  cls: string;
-} {
-  switch (status) {
-    case 'FINISHED':
-      return { action: 'Trận đấu kết thúc — đã tính điểm', badge: 'SUCCESS', cls: 'bg-primary/20 text-primary' };
-    case 'LIVE':
-      return { action: 'Trận đấu đang diễn ra', badge: 'LIVE', cls: 'bg-secondary/20 text-secondary' };
-    case 'SCHEDULED':
-      return { action: 'Trận đấu sắp diễn ra', badge: 'PENDING', cls: 'bg-outline/20 text-on-surface-variant' };
-    case 'CANCELLED':
-      return { action: 'Trận đấu bị huỷ', badge: 'CANCELLED', cls: 'bg-error/20 text-error' };
-    case 'POSTPONED':
-      return { action: 'Trận đấu bị hoãn', badge: 'POSTPONED', cls: 'bg-tertiary/20 text-tertiary' };
-    default:
-      return { action: status, badge: status, cls: 'bg-outline/20 text-on-surface-variant' };
-  }
-}
-
-const CHART_BARS = [30, 45, 85, 60, 40, 55, 95, 70, 50, 30];
+const POLL_INTERVAL = 30_000;
 
 export default function AdminDashboardPage() {
   const [data, setData] = useState<DashboardOverview | null>(null);
   const [hiddenComments, setHiddenComments] = useState<AdminComment[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [period, setPeriod] = useState<'24h' | '7d'>('24h');
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [filterFrom, setFilterFrom] = useState('');
+  const [filterTo, setFilterTo] = useState('');
+  const [showFilter, setShowFilter] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
-    Promise.all([
-      adminDashboardApi.overview(),
-      adminCommentsApi.list({ status: 'HIDDEN', pageSize: 3 }),
-    ])
-      .then(([overview, comments]) => {
+  const fetchData = useCallback(
+    async (params?: DashboardParams, signal?: AbortSignal) => {
+      try {
+        const p: DashboardParams = {
+          period: params?.period ?? period,
+          ...(filterFrom ? { from: filterFrom } : {}),
+          ...(filterTo ? { to: filterTo } : {}),
+          ...params,
+        };
+        const [overview, comments] = await Promise.all([
+          adminDashboardApi.overview(p),
+          adminCommentsApi.list({ status: 'HIDDEN', pageSize: 3 }),
+        ]);
+        if (signal?.aborted) return;
         setData(overview);
         setHiddenComments(comments.items);
-      })
-      .catch((e) => setError(e instanceof ApiError ? e.message : 'Không tải được dữ liệu'));
-  }, []);
+        setLastUpdated(new Date());
+        setError(null);
+      } catch (e) {
+        if (signal?.aborted) return;
+        setError(e instanceof ApiError ? e.message : 'Không tải được dữ liệu');
+      }
+    },
+    [period, filterFrom, filterTo],
+  );
+
+  useEffect(() => {
+    const ac = new AbortController();
+    fetchData(undefined, ac.signal);
+    intervalRef.current = setInterval(() => fetchData(undefined, ac.signal), POLL_INTERVAL);
+    return () => {
+      ac.abort();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [fetchData]);
+
+  function handlePeriodChange(newPeriod: '24h' | '7d') {
+    setPeriod(newPeriod);
+  }
+
+  function applyFilter() {
+    setShowFilter(false);
+    fetchData({ from: filterFrom || undefined, to: filterTo || undefined });
+  }
+
+  function clearFilter() {
+    setFilterFrom('');
+    setFilterTo('');
+    setShowFilter(false);
+    fetchData({ from: undefined, to: undefined });
+  }
+
+  async function handleExport() {
+    try {
+      await adminDashboardApi.exportCsv({
+        ...(filterFrom ? { from: filterFrom } : {}),
+        ...(filterTo ? { to: filterTo } : {}),
+      });
+    } catch {
+      setError('Không thể xuất báo cáo. Vui lòng thử lại.');
+    }
+  }
 
   const s = data?.stats;
+  const traffic = data?.traffic ?? [];
+  const recentLogs = data?.recentLogs ?? [];
+
+  const maxTraffic = Math.max(...traffic.map((t) => t.count), 1);
+
   const todayVN = new Intl.DateTimeFormat('vi-VN', {
     timeZone: 'Asia/Ho_Chi_Minh',
     day: '2-digit',
@@ -69,21 +112,68 @@ export default function AdminDashboardPage() {
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-primary dot-live-pulse inline-block" />
             <span className="text-primary font-bold text-xs uppercase tracking-widest">Hệ thống Live</span>
+            {lastUpdated && (
+              <span className="text-on-surface-variant text-[10px] ml-2">
+                Cập nhật lần cuối:{' '}
+                {lastUpdated.toLocaleTimeString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}
+              </span>
+            )}
           </div>
         </div>
 
         {error && <p className="text-error text-body-sm">{error}</p>}
 
-        <div className="flex gap-2">
-          <button className="glass-card px-4 py-2 rounded-lg text-body-sm font-semibold flex items-center gap-2 hover:bg-surface-variant/50 transition-colors text-on-surface">
-            <span className="material-symbols-outlined text-sm">filter_list</span> Filter
+        <div className="flex gap-2 relative">
+          <button
+            onClick={() => setShowFilter(!showFilter)}
+            className="glass-card px-4 py-2 rounded-lg text-body-sm font-semibold flex items-center gap-2 hover:bg-surface-variant/50 transition-colors text-on-surface"
+          >
+            <span className="material-symbols-outlined text-sm">filter_list</span>
+            Filter
+            {(filterFrom || filterTo) && (
+              <span className="w-2 h-2 rounded-full bg-primary" />
+            )}
           </button>
-          <Link
-            href="/admin/matches"
+
+          {showFilter && (
+            <div className="absolute right-0 top-12 z-50 glass-card rounded-xl p-4 flex flex-col gap-3 min-w-[280px] border border-outline-variant/30">
+              <label className="text-xs text-on-surface-variant font-bold">Từ ngày</label>
+              <input
+                type="date"
+                value={filterFrom}
+                onChange={(e) => setFilterFrom(e.target.value)}
+                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 py-2 text-body-sm text-on-surface outline-none focus:ring-1 focus:ring-primary"
+              />
+              <label className="text-xs text-on-surface-variant font-bold">Đến ngày</label>
+              <input
+                type="date"
+                value={filterTo}
+                onChange={(e) => setFilterTo(e.target.value)}
+                className="bg-surface-container border border-outline-variant/30 rounded-lg px-3 py-2 text-body-sm text-on-surface outline-none focus:ring-1 focus:ring-primary"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={applyFilter}
+                  className="flex-1 bg-primary text-on-primary rounded-lg py-2 text-xs font-bold"
+                >
+                  Áp dụng
+                </button>
+                <button
+                  onClick={clearFilter}
+                  className="flex-1 glass-card rounded-lg py-2 text-xs font-bold text-on-surface-variant"
+                >
+                  Xoá
+                </button>
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={handleExport}
             className="bg-primary text-on-primary px-4 py-2 rounded-lg text-body-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity"
           >
-            <span className="material-symbols-outlined text-sm">add</span> New Match
-          </Link>
+            <span className="material-symbols-outlined text-sm">download</span> Export Report
+          </button>
         </div>
       </div>
 
@@ -106,7 +196,12 @@ export default function AdminDashboardPage() {
           <div className="mt-4 w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
             <div
               className="h-full bg-primary transition-all duration-700"
-              style={{ width: s && s.users > 0 ? `${Math.round(((s.users - s.lockedUsers) / s.users) * 100)}%` : '0%' }}
+              style={{
+                width:
+                  s && s.users > 0
+                    ? `${Math.round(((s.users - s.lockedUsers) / s.users) * 100)}%`
+                    : '0%',
+              }}
             />
           </div>
         </div>
@@ -152,61 +247,65 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Card 4 — Comments */}
+        {/* Card 4 — Gold Pool */}
         <div className="glass-card p-card-padding rounded-xl relative overflow-hidden group">
           <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
           <p className="text-on-surface-variant font-label-caps text-label-caps mb-2">
-            Bình luận
+            Tổng Gold Pool
           </p>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-bold text-on-surface">
-              {s ? s.comments.toLocaleString('vi-VN') : '—'}
+              {s ? formatGold(s.totalGoldPool) : '—'}
             </span>
-            {s && s.hiddenComments > 0 && (
-              <span className="text-error text-xs font-bold">{s.hiddenComments} ẩn</span>
-            )}
+            <span className="text-on-surface-variant text-xs">GP</span>
           </div>
-          <div className="mt-4 flex items-center justify-between">
-            <div className="flex gap-1">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <div className="w-2 h-2 rounded-full bg-primary/40" />
-              <div className="w-2 h-2 rounded-full bg-primary/20" />
-            </div>
-            <span className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">
-              Kiểm duyệt
-            </span>
+          <div className="mt-4 flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-sm">trending_up</span>
+            <span className="text-xs text-on-surface-variant">Tổng gold đã phân phối</span>
           </div>
         </div>
       </div>
 
       {/* ── Main Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-widget-gap">
-        {/* Left: Activity bar chart */}
+        {/* Left: Traffic bar chart */}
         <div className="lg:col-span-2 glass-card rounded-xl p-card-padding flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-headline-md text-on-surface">Hoạt động trận đấu</h3>
-            <select className="bg-surface-container border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-1 focus:ring-primary py-1 px-2 outline-none">
-              <option>24 giờ qua</option>
-              <option>7 ngày</option>
+            <h3 className="font-headline-md text-on-surface">Hoạt động dự đoán</h3>
+            <select
+              value={period}
+              onChange={(e) => handlePeriodChange(e.target.value as '24h' | '7d')}
+              className="bg-surface-container border border-outline-variant/30 text-on-surface text-xs rounded-lg focus:ring-1 focus:ring-primary py-1 px-2 outline-none"
+            >
+              <option value="24h">24 giờ qua</option>
+              <option value="7d">7 ngày</option>
             </select>
           </div>
           <div className="flex-1 min-h-[220px] w-full relative">
-            {/* Bars */}
             <div className="absolute inset-0 flex items-end justify-between px-2">
-              {CHART_BARS.map((h, i) => (
-                <div
-                  key={i}
-                  className="rounded-t-lg border-t-2 transition-all"
-                  style={{
-                    width: '8%',
-                    height: `${h}%`,
-                    background: `rgba(75, 226, 119, ${h > 70 ? 0.3 : 0.1})`,
-                    borderColor: `rgba(75, 226, 119, ${h > 70 ? 1 : h / 100 + 0.2})`,
-                  }}
-                />
-              ))}
+              {traffic.length > 0 ? (
+                traffic.map((t, i) => {
+                  const pct = (t.count / maxTraffic) * 100;
+                  return (
+                    <div
+                      key={i}
+                      className="rounded-t-lg border-t-2 transition-all"
+                      style={{
+                        width: `${Math.max(90 / traffic.length, 4)}%`,
+                        height: `${Math.max(pct, 2)}%`,
+                        background: `rgba(75, 226, 119, ${pct > 70 ? 0.3 : 0.1})`,
+                        borderColor: `rgba(75, 226, 119, ${pct > 70 ? 1 : pct / 100 + 0.2})`,
+                      }}
+                      title={`${t.count} dự đoán`}
+                    />
+                  );
+                })
+              ) : (
+                <div className="w-full flex items-center justify-center text-on-surface-variant text-body-sm">
+                  Chưa có dữ liệu
+                </div>
+              )}
             </div>
-            {/* Grid lines */}
             <div className="absolute inset-0 flex flex-col justify-between pointer-events-none border-b border-l border-outline-variant/30">
               <div className="w-full border-t border-outline-variant/10" />
               <div className="w-full border-t border-outline-variant/10" />
@@ -215,11 +314,24 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div className="mt-4 flex justify-between text-[10px] text-on-surface-variant font-bold px-2">
-            <span>00:00</span>
-            <span>06:00</span>
-            <span>12:00</span>
-            <span>18:00</span>
-            <span>23:59</span>
+            {period === '24h' ? (
+              <>
+                <span>00:00</span>
+                <span>06:00</span>
+                <span>12:00</span>
+                <span>18:00</span>
+                <span>23:59</span>
+              </>
+            ) : (
+              traffic.map((t, i) => (
+                <span key={i}>
+                  {new Date(t.bucket).toLocaleDateString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                  })}
+                </span>
+              ))
+            )}
           </div>
         </div>
 
@@ -237,7 +349,9 @@ export default function AdminDashboardPage() {
               <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
                 <div
                   className="h-full bg-primary transition-all duration-700"
-                  style={{ width: s && s.teams > 0 ? `${(s.activeTeams / s.teams) * 100}%` : '0%' }}
+                  style={{
+                    width: s && s.teams > 0 ? `${(s.activeTeams / s.teams) * 100}%` : '0%',
+                  }}
                 />
               </div>
             </div>
@@ -253,7 +367,10 @@ export default function AdminDashboardPage() {
               <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
                 <div
                   className="h-full bg-primary transition-all duration-700"
-                  style={{ width: s && s.matches > 0 ? `${(s.finishedMatches / s.matches) * 100}%` : '0%' }}
+                  style={{
+                    width:
+                      s && s.matches > 0 ? `${(s.finishedMatches / s.matches) * 100}%` : '0%',
+                  }}
                 />
               </div>
             </div>
@@ -311,12 +428,12 @@ export default function AdminDashboardPage() {
 
       {/* ── Bottom Section ── */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-widget-gap pb-6">
-        {/* Recent Activity Table */}
+        {/* Recent Activity Logs Table */}
         <div className="lg:col-span-3 glass-card rounded-xl overflow-hidden">
           <div className="p-card-padding flex items-center justify-between border-b border-outline-variant/30">
             <h3 className="font-headline-md text-on-surface">Hoạt động gần đây</h3>
             <Link
-              href="/admin/matches"
+              href="/admin/logs"
               className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
             >
               Xem tất cả{' '}
@@ -334,7 +451,7 @@ export default function AdminDashboardPage() {
                     Sự kiện
                   </th>
                   <th className="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant whitespace-nowrap">
-                    Trận đấu
+                    Người thực hiện
                   </th>
                   <th className="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant whitespace-nowrap">
                     Trạng thái
@@ -342,23 +459,23 @@ export default function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/20">
-                {data?.recentMatches.length ? (
-                  data.recentMatches.map((m) => {
-                    const { action, badge, cls } = matchStatusLog(m.status);
+                {recentLogs.length > 0 ? (
+                  recentLogs.map((log: AdminLogEntry) => {
+                    const badge = logStatusBadge(log.status);
                     return (
-                      <tr key={m.id} className="hover:bg-surface-variant/20 transition-colors">
+                      <tr key={log.id} className="hover:bg-surface-variant/20 transition-colors">
                         <td className="px-6 py-4 text-data-mono text-xs text-on-surface-variant whitespace-nowrap">
-                          {formatDateTime(m.matchTime)}
+                          {formatDateTime(log.createdAt)}
                         </td>
                         <td className="px-6 py-4 text-body-sm text-on-surface font-semibold">
-                          {action}
+                          {log.description}
                         </td>
                         <td className="px-6 py-4 text-body-sm text-on-surface-variant whitespace-nowrap">
-                          {m.homeTeam?.name ?? '?'} vs {m.awayTeam?.name ?? '?'}
+                          {log.admin?.displayName ?? 'System'}
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded text-[10px] font-bold ${cls}`}>
-                            {badge}
+                          <span className={`px-2 py-1 rounded text-[10px] font-bold ${badge.cls}`}>
+                            {badge.label}
                           </span>
                         </td>
                       </tr>
@@ -370,7 +487,7 @@ export default function AdminDashboardPage() {
                       colSpan={4}
                       className="px-6 py-10 text-center text-on-surface-variant text-body-sm"
                     >
-                      {data ? 'Chưa có trận đấu nào.' : 'Đang tải...'}
+                      {data ? 'Chưa có hoạt động nào.' : 'Đang tải...'}
                     </td>
                   </tr>
                 )}

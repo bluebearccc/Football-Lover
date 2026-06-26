@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate, requireRole } from '../middleware/auth';
+import { adminLogRoutes } from '../modules/admin-log/admin-log.routes';
 import { commentsRoutes } from '../modules/comments/comments.routes';
 import { criteriaRoutes } from '../modules/criteria/criteria.routes';
 import { dashboardRoutes } from '../modules/dashboard/dashboard.routes';
@@ -18,6 +19,7 @@ export const adminRoutes = Router();
 adminRoutes.use(authenticate, requireRole('ADMIN'));
 
 adminRoutes.use('/dashboard', dashboardRoutes);
+adminRoutes.use('/logs', adminLogRoutes);
 adminRoutes.use('/teams', teamsRoutes);
 adminRoutes.use('/matches', matchesRoutes);
 adminRoutes.use('/criteria', criteriaRoutes);
