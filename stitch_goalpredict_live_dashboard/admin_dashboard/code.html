@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScoreMaster AI | GoalPredict Live Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .live-pulse {
+            box-shadow: 0 0 0 0 rgba(75, 226, 119, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(75, 226, 119, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(75, 226, 119, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(75, 226, 119, 0); }
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b1326; }
+        ::-webkit-scrollbar-thumb { background: #2d3449; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4be277; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#0b1326",
+                        "on-surface-variant": "#bccbb9",
+                        "primary-container": "#22c55e",
+                        "on-primary-fixed-variant": "#005321",
+                        "primary-fixed-dim": "#4ae176",
+                        "on-secondary": "#00354a",
+                        "on-primary": "#003915",
+                        "background": "#0b1326",
+                        "on-surface": "#dae2fd",
+                        "on-primary-container": "#004b1e",
+                        "surface-container-high": "#222a3d",
+                        "on-secondary-container": "#00374d",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "on-tertiary": "#60130d",
+                        "tertiary": "#ffb5ab",
+                        "surface-container-highest": "#2d3449",
+                        "primary": "#4be277",
+                        "inverse-primary": "#006e2f",
+                        "tertiary-fixed": "#ffdad5",
+                        "surface-dim": "#0b1326",
+                        "error-container": "#93000a",
+                        "surface-variant": "#2d3449",
+                        "primary-fixed": "#6bff8f",
+                        "surface-container-low": "#131b2e",
+                        "surface-tint": "#4ae176",
+                        "tertiary-container": "#ff8b7c",
+                        "outline": "#869585",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "outline-variant": "#3d4a3d",
+                        "inverse-surface": "#dae2fd",
+                        "surface-container": "#171f33",
+                        "secondary-container": "#00a6e0",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "secondary": "#7bd0ff",
+                        "surface-bright": "#31394d",
+                        "on-tertiary-fixed": "#410001",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "secondary-fixed": "#c4e7ff",
+                        "on-secondary-fixed": "#001e2c",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#283044",
+                        "on-primary-fixed": "#002109",
+                        "on-tertiary-container": "#76231b",
+                        "error": "#ffb4ab",
+                        "on-background": "#dae2fd",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "card-padding": "20px",
+                        "gutter": "16px",
+                        "widget-gap": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-lg">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen p-4 gap-4 bg-surface-container-low border-r border-outline-variant w-64 z-40 shrink-0">
+<div class="flex items-center gap-3 px-2 py-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary leading-none">GoalPredict</h1>
+<p class="font-label-caps text-[10px] text-on-surface-variant tracking-widest">ADMIN PORTAL</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-3 glass-card rounded-xl">
+<img class="w-10 h-10 rounded-full border border-primary/20" data-alt="A sharp, professional headshot of a male system administrator in his late 30s wearing a dark navy polo shirt. He is set against a blurred background of a high-tech server room with glowing green LED indicators. The lighting is moody and cinematic, emphasizing the professional and reliable nature of the platform's authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX4jG8y8jxEW5NYg__b3Q8a-YHu4qiez7_Q16Ddr5lYOWctEzT4VhO-qm9QcCHaRVIjC7-97kR_ePhZZ9jssaH29wfJ3SSaKJn44bapDGpDIbzqByOAAtiZi3tGreTOx_JqSAyqk9QbUv2b-V9uff01qZyuR1C5katOlBGN8N3L5j-s9tqNjibI_JQqfILkQdiwHEXN3k46DrR3mxICAJkcNBz0BI3ozi087k75LdjPT83YxNmaClO8ibVkdRJ91-LGjeVLzLxNbie"/>
+<div class="overflow-hidden">
+<p class="font-bold text-sm truncate text-on-surface">Admin Portal</p>
+<p class="text-xs text-on-surface-variant truncate">System Controller</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 mt-4 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-caps text-label-caps">User Manager</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="sports_soccer">sports_soccer</span>
+<span class="font-label-caps text-label-caps">Match Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="font-label-caps text-label-caps">Point Rules</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="font-label-caps text-label-caps">Achievements</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+</nav>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="font-label-caps">New Match</span>
+</button>
+<div class="border-t border-outline-variant pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-caps text-label-caps">Logout</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col overflow-hidden relative">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 z-30 h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant flex items-center justify-between px-gutter">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-full pl-10 pr-4 py-2 text-body-sm focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50" placeholder="Search users, matches, or logs..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2">
+<img class="w-full h-full object-cover" data-alt="Small circular avatar of the admin user for ScoreMaster AI dashboard. The image shows a close up of an eye with a digital circuit overlay, symbolizing the 'AI' aspect of the brand. The color palette matches the deep navy and electric green of the main platform, creating a cohesive visual link to the data-rich analytics theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3EtZwbrjiVP6DNkbRLLla-HlsEW6udkkOXauajg8EDYRgly91rsdDZYrvYDiDKqcbAuheQZSDjXgrTaPt0M-yLhWeRBLEHOg6V7KQegF2PaO2j8-gXd7owNyWvMjsfQ3aioSab1HnF0dC9L6h5GWmaHG5e3kaNkXugNyNGpCgnFrag5hzVCC6AvzhCivd679QovACe5xnIjsYMid17f0XNOwD4rB_DEa4VwBUD14Mkw-OVCXBhcU9Ezs0xxJE5KjFfX20tjeQeiZQ"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto pt-20 px-gutter pb-24 md:pb-8 bg-surface">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-widget-gap">
+<div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface">Admin Overview</h2>
+<div class="flex items-center gap-3 mt-1">
+<span class="flex items-center gap-1 text-on-surface-variant text-body-sm">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                Oct 24, 2023 - Today
+                            </span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary live-pulse"></span>
+<span class="text-primary font-bold text-xs uppercase tracking-widest">System Live</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="glass-card px-4 py-2 rounded-lg text-body-sm font-semibold flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                        </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-body-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">download</span> Export Report
+                        </button>
+</div>
+</div>
+<!-- Key Metrics Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-widget-gap mb-widget-gap">
+<!-- Metric Card 1 -->
+<div class="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-2">Total Active Users</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-on-surface">12,482</span>
+<span class="text-primary text-xs font-bold">+12%</span>
+</div>
+<div class="mt-4 w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 72%"></div>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary/5 rounded-full blur-2xl"></div>
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-2">Live Predictions</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-on-surface">8.4k</span>
+<span class="text-secondary text-xs font-bold">Peak</span>
+</div>
+<div class="mt-4 flex gap-1 items-end h-6">
+<div class="w-1 bg-secondary/20 h-2 rounded-full"></div>
+<div class="w-1 bg-secondary/40 h-4 rounded-full"></div>
+<div class="w-1 bg-secondary/60 h-6 rounded-full"></div>
+<div class="w-1 bg-secondary/80 h-5 rounded-full"></div>
+<div class="w-1 bg-secondary h-6 rounded-full"></div>
+</div>
+</div>
+<!-- Metric Card 3 -->
+<div class="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl"></div>
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-2">Platform Revenue</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-on-surface">1.2M GP</span>
+<span class="text-on-surface-variant text-xs">Total</span>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+<span class="text-xs text-on-surface-variant">Ahead of target by 5%</span>
+</div>
+</div>
+<!-- Metric Card 4 -->
+<div class="glass-card p-card-padding rounded-xl relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl"></div>
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-2">System Latency</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-on-surface">42ms</span>
+<span class="text-primary text-xs font-bold">Optimal</span>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex gap-1">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary/40"></div>
+<div class="w-2 h-2 rounded-full bg-primary/20"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Global CDN</span>
+</div>
+</div>
+</div>
+<!-- Main Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-widget-gap mb-widget-gap">
+<!-- Left: Traffic Chart -->
+<div class="lg:col-span-2 glass-card rounded-xl p-card-padding flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-on-surface">Live Match Traffic</h3>
+<select class="bg-surface-container border-none text-xs rounded-lg focus:ring-1 focus:ring-primary py-1">
+<option>Last 24 Hours</option>
+<option>Last 7 Days</option>
+</select>
+</div>
+<div class="flex-1 min-h-[300px] w-full relative">
+<!-- Visual placeholder for chart -->
+<div class="absolute inset-0 flex items-end justify-between px-2">
+<div class="w-[8%] bg-primary/10 h-[30%] rounded-t-lg border-t-2 border-primary/40"></div>
+<div class="w-[8%] bg-primary/10 h-[45%] rounded-t-lg border-t-2 border-primary/40"></div>
+<div class="w-[8%] bg-primary/20 h-[85%] rounded-t-lg border-t-2 border-primary"></div>
+<div class="w-[8%] bg-primary/10 h-[60%] rounded-t-lg border-t-2 border-primary/60"></div>
+<div class="w-[8%] bg-primary/5 h-[40%] rounded-t-lg border-t-2 border-primary/20"></div>
+<div class="w-[8%] bg-primary/10 h-[55%] rounded-t-lg border-t-2 border-primary/50"></div>
+<div class="w-[8%] bg-primary/30 h-[95%] rounded-t-lg border-t-2 border-primary"></div>
+<div class="w-[8%] bg-primary/10 h-[70%] rounded-t-lg border-t-2 border-primary/70"></div>
+<div class="w-[8%] bg-primary/10 h-[50%] rounded-t-lg border-t-2 border-primary/50"></div>
+<div class="w-[8%] bg-primary/5 h-[30%] rounded-t-lg border-t-2 border-primary/20"></div>
+</div>
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none border-b border-l border-outline-variant/30">
+<div class="w-full border-t border-outline-variant/10"></div>
+<div class="w-full border-t border-outline-variant/10"></div>
+<div class="w-full border-t border-outline-variant/10"></div>
+<div class="w-full border-t border-outline-variant/10"></div>
+</div>
+</div>
+<div class="mt-4 flex justify-between text-[10px] text-on-surface-variant font-bold px-2">
+<span>00:00</span>
+<span>06:00</span>
+<span>12:00</span>
+<span>18:00</span>
+<span>23:59</span>
+</div>
+</div>
+<!-- Right: Top Markets -->
+<div class="glass-card rounded-xl p-card-padding">
+<h3 class="font-headline-md text-on-surface mb-6">Top Performing Markets</h3>
+<div class="space-y-4">
+<div class="group cursor-pointer">
+<div class="flex justify-between items-center mb-1">
+<span class="text-body-sm font-bold text-on-surface flex items-center gap-2">
+<img class="w-4 h-4 rounded-full" data-alt="Small circular flag icon representing the United Kingdom. Stylized for a dark sports UI with a subtle glow around the edges. High contrast and minimalist." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDrKk3AmBM4eS_e02fkj_Ian___U_3jYKa9gqqCkYXqRAX1xfi26m5k9ZiPrdjqRxXKrcisH3sMxpuOW5ESNecAd0qYF4fFtSTeFChFBIXWFzWX70g3Xv4UrLGoiReRokXWoXRt5OGxB51ZXDeaspxHq0L3SJrtahy_eWd4HUX6imfdFHiYAlwvooLz2lewQeQOiWfH-y7OZQlgLI3JNOId_y12NXb9pIiFqdNGSrUTSX75wnqqI0B38zUePTL16KNUNskYpjRPQBH"/>
+                                        Premier League
+                                    </span>
+<span class="text-data-mono text-primary">42.4%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 42.4%"></div>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="flex justify-between items-center mb-1">
+<span class="text-body-sm font-bold text-on-surface flex items-center gap-2">
+<img class="w-4 h-4 rounded-full" data-alt="Small circular flag icon representing Spain. Stylized for a dark sports UI with a subtle glow around the edges. Professional digital asset." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGdbXZFwyN61HcGOSAyrxCE-pIPa9RrfXY30hMwlJfKu9JeqUMf_oatudeYL72UdE7Ym8zyVfOYIjkOk7vDq7fRLWT7fNMRJXTo26fqqKA_jxeC97JmjeuXXpqLHFMED7CMLtGoG8ExFmEh5XNqEWsWRVTKmtKKhbKp53gqflWzYYgq2ReJTD_Zzm6AfiR3x5NPB3_HEY25NlvKcPBhmivoLk_wBa6zUTmL1soIcXZhDftiPjGOurYiDRRhhGnscX7q3_mBTuOe7Rz"/>
+                                        La Liga
+                                    </span>
+<span class="text-data-mono text-primary">28.1%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 28.1%"></div>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="flex justify-between items-center mb-1">
+<span class="text-body-sm font-bold text-on-surface flex items-center gap-2">
+<img class="w-4 h-4 rounded-full" data-alt="Small circular flag icon representing Germany. Stylized for a dark sports UI with a subtle glow around the edges. Precise and high-quality vector feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxa8G-X26A-Ek-6bb_aKfxL_dOfuKiiIviUy54yhteDYefgkYOCSMVKo00umyoSG3g3e7B6I9fmt5LUiYzNv0MMcn6Y7uTkCha_B7rjywiWxJEcBmx_jp_M9fv06mjtsdbSOm0tMnzcLjGrUNGzSEM9aDAnq_lBC_7gFFBJF97Sj_Ae-hAQpmeh7xxUVeNkRwNYjH-s6ji0vddnBqM_U5gUTsmVldq6sIuQto_xVLr45jx5CilfVVsvJ3pb3ARKYDN1hZqCVhz_k9P"/>
+                                        Bundesliga
+                                    </span>
+<span class="text-data-mono text-primary">15.5%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 15.5%"></div>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="flex justify-between items-center mb-1">
+<span class="text-body-sm font-bold text-on-surface flex items-center gap-2">
+<img class="w-4 h-4 rounded-full" data-alt="Small circular flag icon representing Italy. Stylized for a dark sports UI with a subtle glow around the edges. Modern and sophisticated design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB4awyP26t1Ws_XcMvsKDgd96iIH9QyGuepRhgQSJWK7ysnfw035Mkkwf8lcQoKErxygfFLqV7sMQnAUbvm6i6OMj6IDqGmag4c3xErAu465d-0z-PhqDH0T9RAjVTehsy95YbGcFiygVRuuDqllAjq9aHvTaIzaUoKJMhtHPp3JkV2U0eC3Lz_ULkHL3NFLFFuQkf0TBi-jMHUXkb0zsVmy-5C7Rdz0rJEI5OB8nQGRo37plO3KNiW7tmgN9hxujMYSLg5aC6_Ln7"/>
+                                        Serie A
+                                    </span>
+<span class="text-data-mono text-primary">14.0%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 14.0%"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors border-t border-outline-variant/30 uppercase tracking-widest">
+                            View All Markets
+                        </button>
+</div>
+</div>
+<!-- Bottom Section -->
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-widget-gap">
+<!-- Recent System Logs Table -->
+<div class="lg:col-span-3 glass-card rounded-xl overflow-hidden">
+<div class="p-card-padding flex items-center justify-between border-b border-outline-variant/30">
+<h3 class="font-headline-md text-on-surface">Recent System Logs</h3>
+<button class="text-primary text-xs font-bold flex items-center gap-1">View Full Logs <span class="material-symbols-outlined text-sm">open_in_new</span></button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-high/50">
+<th class="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant">Timestamp</th>
+<th class="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant">Action / Event</th>
+<th class="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant">User / Admin</th>
+<th class="px-6 py-3 font-label-caps text-[10px] text-on-surface-variant">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="px-6 py-4 text-data-mono text-xs">14:22:15</td>
+<td class="px-6 py-4 text-body-sm text-on-surface font-semibold">Match ID #8821 Settled</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Auto-System</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded bg-primary/20 text-primary text-[10px] font-bold">SUCCESS</span></td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="px-6 py-4 text-data-mono text-xs">14:18:42</td>
+<td class="px-6 py-4 text-body-sm text-on-surface font-semibold">Flag: Suspicious Betting Pattern</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">User_ID_294</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded bg-error/20 text-error text-[10px] font-bold">WARNING</span></td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="px-6 py-4 text-data-mono text-xs">14:10:05</td>
+<td class="px-6 py-4 text-body-sm text-on-surface font-semibold">Point Multiplier Updated</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Admin_Mike</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded bg-secondary/20 text-secondary text-[10px] font-bold">UPDATED</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Moderation Queue -->
+<div class="glass-card rounded-xl p-card-padding flex flex-col">
+<h3 class="font-headline-md text-on-surface mb-4">Moderation Queue</h3>
+<div class="space-y-4 flex-1">
+<div class="p-3 bg-surface-container rounded-lg border-l-4 border-error">
+<p class="text-xs font-bold text-on-surface">Abusive Chat Report</p>
+<p class="text-[10px] text-on-surface-variant mt-1">User: Maverick99 • 2m ago</p>
+<div class="flex gap-2 mt-3">
+<button class="text-[10px] font-bold text-primary hover:underline">Review</button>
+<button class="text-[10px] font-bold text-on-surface-variant hover:text-on-surface">Dismiss</button>
+</div>
+</div>
+<div class="p-3 bg-surface-container rounded-lg border-l-4 border-primary">
+<p class="text-xs font-bold text-on-surface">Disputed Prediction</p>
+<p class="text-[10px] text-on-surface-variant mt-1">Match #9021 • 15m ago</p>
+<div class="flex gap-2 mt-3">
+<button class="text-[10px] font-bold text-primary hover:underline">Resolve</button>
+<button class="text-[10px] font-bold text-on-surface-variant hover:text-on-surface">Ignore</button>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 bg-surface-container-highest rounded-lg text-xs font-bold hover:bg-surface-variant transition-colors">
+                            Go to Moderation Hub (14)
+                        </button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 bg-surface-container-highest/90 backdrop-blur-lg border-t border-outline-variant shadow-lg pb-safe">
+<a class="flex flex-col items-center justify-center text-primary" href="#">
+<span class="material-symbols-outlined scale-110" data-icon="home">home</span>
+<span class="font-label-caps text-[10px] uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span class="font-label-caps text-[10px] uppercase mt-1">Predict</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="emoji_events">emoji_events</span>
+<span class="font-label-caps text-[10px] uppercase mt-1">Ranks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-caps text-[10px] uppercase mt-1">Profile</span>
+</a>
+</nav>
+</main>
+</div>
+<script>
+        // Micro-interaction for live metrics
+        function updateLiveMetrics() {
+            const latencyElement = document.querySelector('.lg\\:grid-cols-4 .text-3xl:last-of-type');
+            if (latencyElement) {
+                const currentVal = parseInt(latencyElement.innerText);
+                const variance = Math.floor(Math.random() * 5) - 2;
+                latencyElement.innerText = (currentVal + variance) + 'ms';
+            }
+        }
+        setInterval(updateLiveMetrics, 3000);
+
+        // Sidebar link active states toggle (simulated)
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => {
+                    l.classList.remove('bg-primary-container', 'text-on-primary-container', 'font-bold', 'translate-x-1');
+                    l.classList.add('text-on-surface-variant', 'hover:bg-surface-variant/50');
+                });
+                link.classList.add('bg-primary-container', 'text-on-primary-container', 'font-bold', 'translate-x-1');
+                link.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant/50');
+            });
+        });
+    </script>
+</body></html>
