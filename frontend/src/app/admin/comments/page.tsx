@@ -1,18 +1,24 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { adminCommentsApi } from '@/api/admin/comments';
 import type { AdminComment, CommentStatus } from '@/api/admin/types';
 import { ApiError } from '@/api/client';
-import { Badge, Banner, Button, Card, Select } from '@/components/admin/ui';
+import { Button } from '@/components/admin/ui';
 import { formatDateTime, statusLabel } from '@/lib/format';
 
-const FILTERS: { value: CommentStatus | ''; label: string }[] = [
-  { value: '', label: 'Tất cả' },
-  { value: 'VISIBLE', label: 'Hiển thị' },
-  { value: 'HIDDEN', label: 'Đã ẩn' },
-  { value: 'DELETED', label: 'Đã xoá' },
+const TABS: { label: string; value: CommentStatus | '' }[] = [
+  { label: 'Tất cả', value: '' },
+  { label: 'Hiển thị', value: 'VISIBLE' },
+  { label: 'Đã ẩn', value: 'HIDDEN' },
+  { label: 'Đã xoá', value: 'DELETED' },
 ];
+
+function statusBadgeClass(status: CommentStatus): string {
+  if (status === 'VISIBLE') return 'bg-primary/10 text-primary border border-primary/20';
+  if (status === 'HIDDEN') return 'bg-secondary/10 text-secondary border border-secondary/20';
+  return 'bg-tertiary/10 text-tertiary border border-tertiary/20';
+}
 
 export default function AdminCommentsPage() {
   const [comments, setComments] = useState<AdminComment[]>([]);
@@ -32,6 +38,16 @@ export default function AdminCommentsPage() {
     void load();
   }, [load]);
 
+  const stats = useMemo(
+    () => ({
+      total: comments.length,
+      visible: comments.filter((c) => c.status === 'VISIBLE').length,
+      hidden: comments.filter((c) => c.status === 'HIDDEN').length,
+      deleted: comments.filter((c) => c.status === 'DELETED').length,
+    }),
+    [comments],
+  );
+
   async function setStatus(id: string, status: CommentStatus) {
     setError(null);
     try {
@@ -43,58 +59,110 @@ export default function AdminCommentsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">Kiểm duyệt bình luận</h1>
-      <Banner message={error} />
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div>
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
+            Kiểm duyệt bình luận
+          </h1>
+          <p className="font-body-lg text-body-lg text-on-surface-variant">
+            Theo dõi và xử lý bình luận của người dùng trên các trận đấu.
+          </p>
+        </div>
+      </div>
 
-      <Card
-        title={`Bình luận (${comments.length})`}
-        action={
-          <Select value={filter} onChange={(e) => setFilter(e.target.value as CommentStatus | '')} className="w-40">
-            {FILTERS.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </Select>
-        }
-      >
+      {/* Banner */}
+      {error && (
+        <div role="alert" className="mb-4 rounded-xl border border-tertiary/30 bg-tertiary/10 px-4 py-3 text-body-sm text-tertiary">
+          {error}
+        </div>
+      )}
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {[
+          { label: 'TỔNG BÌNH LUẬN', value: stats.total, icon: 'chat', color: 'text-primary', bg: 'bg-primary/10' },
+          { label: 'HIỂN THỊ', value: stats.visible, icon: 'visibility', color: 'text-secondary', bg: 'bg-secondary/10' },
+          { label: 'ĐÃ ẨN', value: stats.hidden, icon: 'visibility_off', color: 'text-tertiary', bg: 'bg-tertiary/10' },
+          { label: 'ĐÃ XOÁ', value: stats.deleted, icon: 'delete', color: 'text-on-surface-variant', bg: 'bg-surface-variant' },
+        ].map((card) => (
+          <div key={card.label} className="glass-panel p-5 rounded-xl">
+            <div className="flex justify-between items-start mb-4">
+              <div className={`p-2 ${card.bg} rounded-lg`}>
+                <span className={`material-symbols-outlined ${card.color}`}>{card.icon}</span>
+              </div>
+            </div>
+            <p className="font-label-caps text-label-caps text-on-surface-variant">{card.label}</p>
+            <h2 className={`font-headline-lg text-headline-lg-mobile ${card.color}`}>
+              {card.value.toLocaleString('vi-VN')}
+            </h2>
+          </div>
+        ))}
+      </div>
+
+      {/* Filters */}
+      <div className="glass-panel rounded-t-xl p-5 flex items-center gap-4 overflow-x-auto">
+        {TABS.map((tab) => (
+          <button
+            key={tab.label}
+            onClick={() => setFilter(tab.value)}
+            className={`px-4 py-2 rounded-full font-label-caps text-label-caps whitespace-nowrap transition-colors ${
+              filter === tab.value
+                ? 'bg-primary/20 text-primary border border-primary/30'
+                : 'hover:bg-surface-variant text-on-surface-variant'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* List */}
+      <div className="glass-panel rounded-b-xl border-t-0 divide-y divide-outline-variant/10">
         {comments.length === 0 ? (
-          <p className="text-sm text-ink-700">Không có bình luận.</p>
+          <p className="py-12 text-center text-on-surface-variant">Không có bình luận.</p>
         ) : (
-          <ul className="flex flex-col gap-2">
-            {comments.map((c) => (
-              <li key={c.id} className="rounded-lg border border-ink-100 p-3 text-sm">
-                <div className="mb-1 flex items-center justify-between">
-                  <span className="font-medium">{c.user?.displayName ?? c.userId.slice(0, 8)}</span>
-                  <span className="flex items-center gap-2 text-ink-700">
-                    {formatDateTime(c.createdAt)}
-                    <Badge tone={c.status === 'VISIBLE' ? 'green' : 'red'}>{statusLabel(c.status)}</Badge>
+          comments.map((c) => (
+            <div key={c.id} className="p-5 hover:bg-surface-container-highest/50 transition-colors">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary font-bold text-xs flex-shrink-0">
+                    {(c.user?.displayName ?? c.userId).slice(0, 2).toUpperCase()}
+                  </div>
+                  <p className="font-body-lg text-body-lg text-on-surface font-semibold">
+                    {c.user?.displayName ?? c.userId.slice(0, 8)}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-data-mono text-xs text-on-surface-variant">{formatDateTime(c.createdAt)}</span>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${statusBadgeClass(c.status)}`}>
+                    {statusLabel(c.status)}
                   </span>
                 </div>
-                <p className="text-ink-800">{c.content}</p>
-                <div className="mt-2 flex gap-2">
-                  {c.status !== 'VISIBLE' && (
-                    <Button variant="secondary" onClick={() => setStatus(c.id, 'VISIBLE')}>
-                      Hiện lại
-                    </Button>
-                  )}
-                  {c.status !== 'HIDDEN' && (
-                    <Button variant="secondary" onClick={() => setStatus(c.id, 'HIDDEN')}>
-                      Ẩn
-                    </Button>
-                  )}
-                  {c.status !== 'DELETED' && (
-                    <Button variant="danger" onClick={() => setStatus(c.id, 'DELETED')}>
-                      Xoá
-                    </Button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <p className="font-body-sm text-body-sm text-on-surface mb-3">{c.content}</p>
+              <div className="flex gap-2">
+                {c.status !== 'VISIBLE' && (
+                  <Button variant="secondary" onClick={() => setStatus(c.id, 'VISIBLE')}>
+                    Hiện lại
+                  </Button>
+                )}
+                {c.status !== 'HIDDEN' && (
+                  <Button variant="secondary" onClick={() => setStatus(c.id, 'HIDDEN')}>
+                    Ẩn
+                  </Button>
+                )}
+                {c.status !== 'DELETED' && (
+                  <Button variant="danger" onClick={() => setStatus(c.id, 'DELETED')}>
+                    Xoá
+                  </Button>
+                )}
+              </div>
+            </div>
+          ))
         )}
-      </Card>
+      </div>
     </div>
   );
 }

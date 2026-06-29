@@ -119,6 +119,22 @@ export default function AdminMatchDetailPage() {
     }
   }
 
+  async function applyDefaultCriteria() {
+    setError(null);
+    setNotice(null);
+    try {
+      const res = await adminCriteriaApi.applyDefaults(matchId);
+      setNotice(
+        res.created > 0
+          ? `Đã thêm ${res.created} tiêu chí mặc định.`
+          : 'Không có tiêu chí mặc định mới để thêm (đã trùng tên hoặc chưa có tiêu chí mặc định nào).',
+      );
+      await load();
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Áp dụng tiêu chí mặc định thất bại');
+    }
+  }
+
   async function setCriterionResult(id: string, resultTeam: TeamSide) {
     setError(null);
     try {
@@ -176,9 +192,9 @@ export default function AdminMatchDetailPage() {
 
   if (!match) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="max-w-7xl mx-auto flex flex-col gap-4">
         <Banner message={error} />
-        <p className="text-ink-700">Đang tải…</p>
+        <p className="text-body-sm text-on-surface-variant">Đang tải…</p>
       </div>
     );
   }
@@ -192,22 +208,24 @@ export default function AdminMatchDetailPage() {
   const canScore = allCriteriaResolved && match.status !== 'FINISHED' && match.status !== 'CANCELLED';
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/admin/matches" className="text-sm text-pitch-600 hover:underline">
-            ← Danh sách trận
-          </Link>
-          <h1 className="mt-1 text-2xl font-bold">
-            {home} vs {away}
-          </h1>
-          <p className="text-sm text-ink-700">
-            {formatDateTime(match.matchTime)} · Entry gold {formatGold(match.entryGold)} ·{' '}
-            <Badge tone={match.status === 'FINISHED' ? 'green' : match.status === 'CANCELLED' ? 'red' : 'neutral'}>
-              {statusLabel(match.status)}
-            </Badge>
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto flex flex-col gap-6">
+      <div>
+        <Link
+          href="/admin/matches"
+          className="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary"
+        >
+          <span className="material-symbols-outlined text-base">arrow_back</span>
+          Danh sách trận
+        </Link>
+        <h1 className="mt-2 font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
+          {home} vs {away}
+        </h1>
+        <p className="mt-1 text-body-sm text-on-surface-variant flex items-center gap-2">
+          {formatDateTime(match.matchTime)} · Entry gold {formatGold(match.entryGold)} ·{' '}
+          <Badge tone={match.status === 'FINISHED' ? 'green' : match.status === 'CANCELLED' ? 'red' : 'neutral'}>
+            {statusLabel(match.status)}
+          </Badge>
+        </p>
       </div>
 
       <Banner message={error} />
@@ -269,7 +287,16 @@ export default function AdminMatchDetailPage() {
         </Card>
       )}
 
-      <Card title="Tiêu chí dự đoán">
+      <Card
+        title="Tiêu chí dự đoán"
+        action={
+          editable && (
+            <Button variant="secondary" onClick={applyDefaultCriteria}>
+              Áp dụng tiêu chí mặc định
+            </Button>
+          )
+        }
+      >
         {editable && (
           <form onSubmit={addCriterion} className="mb-4 flex gap-2">
             <TextInput
@@ -282,11 +309,11 @@ export default function AdminMatchDetailPage() {
           </form>
         )}
         {match.criteria.length === 0 ? (
-          <p className="text-sm text-ink-700">Chưa có tiêu chí nào.</p>
+          <p className="text-sm text-on-surface-variant">Chưa có tiêu chí nào.</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {match.criteria.map((c) => (
-              <li key={c.id} className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink-100 px-3 py-2 text-sm${!c.isActive ? ' opacity-50' : ''}`}>
+              <li key={c.id} className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border border-outline-variant/20 bg-surface-container/50 px-3 py-2 text-sm text-on-surface${!c.isActive ? ' opacity-50' : ''}`}>
                 {editingCriterion?.id === c.id ? (
                   <div className="flex flex-1 flex-wrap items-center gap-2">
                     <TextInput
@@ -308,13 +335,13 @@ export default function AdminMatchDetailPage() {
                   <>
                     <span className="font-medium">
                       {c.name}
-                      {c.description && <span className="ml-2 text-ink-700 font-normal">— {c.description}</span>}
+                      {c.description && <span className="ml-2 text-on-surface-variant font-normal">— {c.description}</span>}
                       {!c.isActive && <> <Badge tone="neutral">Đã ẩn</Badge></>}
                     </span>
                     <div className="flex items-center gap-2">
                       {c.isActive && (
                         <>
-                          <span className="text-ink-700">Kết quả:</span>
+                          <span className="text-on-surface-variant">Kết quả:</span>
                           <Button
                             variant={c.resultTeam === 'HOME' ? 'primary' : 'secondary'}
                             onClick={() => setCriterionResult(c.id, 'HOME')}
@@ -359,7 +386,7 @@ export default function AdminMatchDetailPage() {
       </Card>
 
       <Card title="Cập nhật kết quả & tính điểm">
-        <p className="mb-3 text-sm text-ink-700">
+        <p className="mb-3 text-sm text-on-surface-variant">
           Đặt kết quả từng tiêu chí ở trên, rồi nhập tỷ số và bấm “Chốt kết quả” để hệ thống chấm điểm, chia
           gold và gửi thông báo (chạy một lần cho mỗi trận).
         </p>
@@ -385,19 +412,19 @@ export default function AdminMatchDetailPage() {
           </Button>
         </form>
         {unresolvedCriteria.length > 0 && match.status !== 'FINISHED' && match.status !== 'CANCELLED' && (
-          <div className="mt-3 rounded-lg border border-gold-500/30 bg-gold-500/10 p-3 text-sm text-gold-400">
+          <div className="mt-3 rounded-lg border border-secondary/30 bg-secondary/10 p-3 text-sm text-secondary">
             ⚠ Chưa có kết quả cho {unresolvedCriteria.length} tiêu chí:{' '}
             <strong>{unresolvedCriteria.map((c) => c.name).join(', ')}</strong>.
             Vui lòng đặt kết quả tất cả tiêu chí trước khi chốt.
           </div>
         )}
         {match.criteria.length === 0 && match.status !== 'FINISHED' && match.status !== 'CANCELLED' && (
-          <div className="mt-3 rounded-lg border border-gold-500/30 bg-gold-500/10 p-3 text-sm text-gold-400">
+          <div className="mt-3 rounded-lg border border-secondary/30 bg-secondary/10 p-3 text-sm text-secondary">
             ⚠ Trận chưa có tiêu chí nào. Vui lòng thêm tiêu chí trước khi chốt kết quả.
           </div>
         )}
         {summary && (
-          <div className="mt-3 rounded-lg bg-ink-50 p-3 text-sm text-ink-800">
+          <div className="mt-3 rounded-lg bg-surface-container p-3 text-sm text-on-surface">
             Pool: <strong>{formatGold(summary.pool)}</strong> gold · Người thắng: {summary.winnerCount} · Mỗi người{' '}
             <strong>{formatGold(summary.goldPerWinner)}</strong> gold ·{' '}
             {summary.leaderboardEligible ? 'Tính vào BXH' : 'Không tính BXH (< 2 người chơi)'}
@@ -407,33 +434,33 @@ export default function AdminMatchDetailPage() {
 
       <Card title="Người thắng & chia gold">
         {match.participations.length === 0 ? (
-          <p className="text-sm text-ink-700">Chưa có người tham gia hoặc trận chưa được chấm điểm.</p>
+          <p className="text-sm text-on-surface-variant">Chưa có người tham gia hoặc trận chưa được chấm điểm.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-xl border border-outline-variant/20">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-ink-100 text-left text-ink-700">
-                  <th className="py-2">Người chơi</th>
-                  <th>Điểm</th>
-                  <th>Gold nhận</th>
-                  <th>Kết quả</th>
+                <tr className="bg-surface-container-low border-b border-outline-variant/20">
+                  <th className="p-3 font-label-caps text-label-caps text-on-surface-variant uppercase">Người chơi</th>
+                  <th className="p-3 font-label-caps text-label-caps text-on-surface-variant uppercase">Điểm</th>
+                  <th className="p-3 font-label-caps text-label-caps text-on-surface-variant uppercase">Gold nhận</th>
+                  <th className="p-3 font-label-caps text-label-caps text-on-surface-variant uppercase">Kết quả</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-outline-variant/10">
                 {match.participations
                   .slice()
                   .sort((a, b) => b.score - a.score)
                   .map((p) => (
-                    <tr key={p.id} className="border-b border-ink-50">
-                      <td className="py-2 font-mono text-xs">{p.userId.slice(0, 8)}…</td>
-                      <td>{p.score}</td>
-                      <td>{formatGold(p.goldWon)}</td>
-                      <td>{p.isWinner ? <Badge tone="gold">Thắng</Badge> : <Badge>Thua</Badge>}</td>
+                    <tr key={p.id} className="hover:bg-surface-container-highest/50 transition-colors">
+                      <td className="p-3 font-data-mono text-xs text-on-surface-variant">{p.userId.slice(0, 8)}…</td>
+                      <td className="p-3 text-on-surface">{p.score}</td>
+                      <td className="p-3 font-data-mono text-data-mono text-primary">{formatGold(p.goldWon)}</td>
+                      <td className="p-3">{p.isWinner ? <Badge tone="gold">Thắng</Badge> : <Badge>Thua</Badge>}</td>
                     </tr>
                   ))}
               </tbody>
             </table>
-            <p className="mt-2 text-xs text-ink-700">{winners.length} người thắng.</p>
+            <p className="px-3 py-2 text-xs text-on-surface-variant">{winners.length} người thắng.</p>
           </div>
         )}
       </Card>

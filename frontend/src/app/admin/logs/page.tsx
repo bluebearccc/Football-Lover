@@ -46,9 +46,16 @@ export default function AdminLogsPage() {
   const totalPages = data ? Math.ceil(data.total / data.pageSize) : 0;
 
   return (
-    <div className="flex flex-col gap-widget-gap">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <h2 className="text-headline-lg font-headline-lg text-on-surface">Nhật ký hoạt động</h2>
+    <div className="max-w-7xl mx-auto flex flex-col gap-widget-gap">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-2">
+        <div>
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
+            Nhật ký hoạt động
+          </h1>
+          <p className="font-body-lg text-body-lg text-on-surface-variant">
+            Theo dõi các thao tác quản trị và sự kiện hệ thống.
+          </p>
+        </div>
         <div className="flex gap-3 items-center">
           <select
             value={actionFilter}
@@ -67,9 +74,13 @@ export default function AdminLogsPage() {
         </div>
       </div>
 
-      {error && <p className="text-error text-body-sm">{error}</p>}
+      {error && (
+        <div role="alert" className="rounded-xl border border-tertiary/30 bg-tertiary/10 px-4 py-3 text-body-sm text-tertiary">
+          {error}
+        </div>
+      )}
 
-      <div className="glass-card rounded-xl overflow-hidden">
+      <div className="glass-panel rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
