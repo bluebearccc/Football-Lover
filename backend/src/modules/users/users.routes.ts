@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { validateBody, validateQuery } from '../../middleware/validate';
 import { wrap } from '../../utils/asyncHandler';
+import { historyQuerySchema } from '../profile/profile.dto';
 import { usersController } from './users.controller';
 import { editUserSchema, listUsersQuerySchema, setRoleSchema, setStatusSchema } from './users.dto';
 
@@ -10,6 +11,9 @@ export const usersRoutes = Router();
 usersRoutes.get('/stats', wrap(usersController.getStats));
 usersRoutes.get('/', validateQuery(listUsersQuerySchema), wrap(usersController.list));
 usersRoutes.get('/:id', wrap(usersController.getDetail));
+// UC10 — Admin support view (read-only access to a user's profile/history).
+usersRoutes.get('/:id/profile', wrap(usersController.getProfile));
+usersRoutes.get('/:id/history', validateQuery(historyQuerySchema), wrap(usersController.getHistory));
 usersRoutes.patch('/:id', validateBody(editUserSchema), wrap(usersController.editUser));
 usersRoutes.patch('/:id/status', validateBody(setStatusSchema), wrap(usersController.setStatus));
 usersRoutes.patch('/:id/role', validateBody(setRoleSchema), wrap(usersController.setRole));

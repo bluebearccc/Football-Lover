@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import type { AdminUser } from '@/api/admin/types';
 import { formatDateTime } from '@/lib/format';
 
@@ -82,6 +83,13 @@ export function UserTable({ users, onBan, onUnban, onEdit, onResetPassword }: Us
               </td>
               <td className="p-5 text-right">
                 <div className="flex justify-end gap-2">
+                  <Link
+                    href={`/admin/users/${user.id}`}
+                    className="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-primary"
+                    title="Xem hồ sơ"
+                  >
+                    <span className="material-symbols-outlined text-xl">visibility</span>
+                  </Link>
                   <button
                     onClick={() => onEdit(user)}
                     className="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant hover:text-primary"

@@ -1,10 +1,10 @@
-<!-- SPECKIT START -->
+ <!-- SPECKIT START -->
 Dự án theo quy trình spec-driven. Nguồn sự thật là tài liệu trong
 `docs/Football-Lover/` (SRS, ER diagram, class diagram theo UC). Đọc spec liên quan
 TRƯỚC khi code; không tự bịa thông tin ngoài spec.
 
-**Active feature**: `012-manage-users` — Admin User Management: paginated user list with search/filters, ban/unban with mandatory reason, edit user (display name + role) via modal, admin-triggered password reset, user statistics overview (total, online, locked, accuracy). Enhances existing users module + redesigns frontend to match Stitch mockup.
-Plan: `specs/012-manage-users/plan.md` | Spec: `specs/012-manage-users/spec.md`
+**Active feature**: `013-user-profile` — User Profile and Prediction History (UC10): self-service `/profile` (account info, stats, 5-recent preview) and `/history` (full paginated history) are already built; this pass fixes `totalMatches` to count only FINISHED matches and adds the missing Admin read-only support view (frontend route + API client methods) reusing the existing backend `/admin/users/:id/profile|history` endpoints.
+Plan: `specs/013-user-profile/plan.md` | Spec: `specs/013-user-profile/spec.md`
 <!-- SPECKIT END -->
 
 # Football-Lover (GoalPredict Live) — Coding Guide

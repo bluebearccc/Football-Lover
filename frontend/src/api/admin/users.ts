@@ -1,5 +1,6 @@
 import { adminFetch } from './client';
 import type { AdminUser, Paginated, Role, UserStats, UserStatus } from './types';
+import type { HistoryResponse, ProfileResponse } from '@/api/profile';
 
 export const adminUsersApi = {
   list(params: { search?: string; role?: Role; status?: UserStatus; page?: number; pageSize?: number } = {}) {
@@ -29,5 +30,15 @@ export const adminUsersApi = {
   },
   getStats() {
     return adminFetch<UserStats>('/users/stats');
+  },
+  getProfile(id: string) {
+    return adminFetch<ProfileResponse>(`/users/${id}/profile`);
+  },
+  getHistory(id: string, params: { page?: number; pageSize?: number } = {}) {
+    const q = new URLSearchParams();
+    if (params.page) q.set('page', String(params.page));
+    if (params.pageSize) q.set('pageSize', String(params.pageSize));
+    const qs = q.toString();
+    return adminFetch<HistoryResponse>(`/users/${id}/history${qs ? `?${qs}` : ''}`);
   },
 };
