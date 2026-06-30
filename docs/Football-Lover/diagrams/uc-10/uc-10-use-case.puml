@@ -4,9 +4,11 @@ title UC10 - View Profile and Prediction History
 actor "Registered User" as User
 actor Admin
 rectangle "Football-Lover" {
-  User --> (UC10 View Own Profile)
-  User --> (View Own Prediction History)
-  Admin --> (View User History for Support)
-  (UC10 View Own Profile) ..> (Check ownership or Admin role) : include
+  User --> (View Own Profile)
+  User --> (View Own Match History)
+  Admin --> (View User Profile/History for Support)
+  (View Own Profile) ..> (Compute stats: matches, wins, accuracy, gold) : include
+  (View Own Match History) ..> (Paginate finished-match participations) : include
+  (View User Profile/History for Support) ..> (Require ADMIN role) : include
 }
 @enduml

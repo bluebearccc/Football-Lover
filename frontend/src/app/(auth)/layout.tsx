@@ -9,7 +9,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (session.getToken()) {
-      router.replace('/matches');
+      const user = session.getUser();
+      router.replace(user?.role === 'ADMIN' ? '/admin' : '/matches');
     }
   }, [router]);
 

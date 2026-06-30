@@ -32,6 +32,19 @@ export const criteriaRepository = {
     return prisma.predictionCriterion.update({ where: { id }, data });
   },
 
+  createMany(
+    matchId: string,
+    templates: { name: string; description: string | null }[],
+  ): Promise<Prisma.BatchPayload> {
+    return prisma.predictionCriterion.createMany({
+      data: templates.map((t) => ({
+        matchId,
+        name: t.name,
+        description: t.description,
+      })),
+    });
+  },
+
   async hasPredictions(id: string): Promise<boolean> {
     const count = await prisma.prediction.count({ where: { criterionId: id } });
     return count > 0;

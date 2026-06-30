@@ -78,4 +78,7 @@ export const adminCriteriaApi = {
   reactivate(id: string) {
     return adminFetch<Criterion>(`/criteria/${id}/reactivate`, { method: 'POST' });
   },
+  applyDefaults(matchId: string) {
+    return adminFetch<{ created: number }>(`/criteria/match/${matchId}/apply-defaults`, { method: 'POST' });
+  },
 };

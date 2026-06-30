@@ -8,6 +8,7 @@ import { createCriterionSchema, updateCriterionSchema } from './criteria.dto';
 export const criteriaRoutes = Router();
 
 criteriaRoutes.get('/match/:matchId', wrap(criteriaController.listByMatch));
+criteriaRoutes.post('/match/:matchId/apply-defaults', wrap(criteriaController.applyDefaults));
 criteriaRoutes.post(
   '/match/:matchId',
   validateBody(createCriterionSchema),

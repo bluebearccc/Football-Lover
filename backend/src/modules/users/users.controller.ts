@@ -1,6 +1,8 @@
 import type { Request, Response } from 'express';
 import { ApiError } from '../../utils/ApiError';
 import { adminLogService } from '../admin-log/admin-log.service';
+import { profileService } from '../profile/profile.service';
+import type { HistoryQuery } from '../profile/profile.dto';
 import { usersService } from './users.service';
 import type { EditUserInput, ListUsersQuery, SetRoleInput, SetStatusInput } from './users.dto';
 
@@ -85,5 +87,16 @@ export const usersController = {
   async getStats(req: Request, res: Response): Promise<void> {
     const stats = await usersService.getStats();
     res.status(200).json(stats);
+  },
+
+  // UC10 — Admin support view.
+  async getProfile(req: Request, res: Response): Promise<void> {
+    const result = await profileService.getMyProfile(req.params.id);
+    res.status(200).json(result);
+  },
+
+  async getHistory(req: Request, res: Response): Promise<void> {
+    const result = await profileService.getMyHistory(req.params.id, req.query as unknown as HistoryQuery);
+    res.status(200).json(result);
   },
 };

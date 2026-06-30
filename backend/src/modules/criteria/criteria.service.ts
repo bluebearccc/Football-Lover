@@ -1,5 +1,6 @@
 import { MatchStatus, type Match, type PredictionCriterion } from '@prisma/client';
 import { ApiError } from '../../utils/ApiError';
+import { criterionTemplateRepository } from '../criterion-templates/criterion-templates.repository';
 import { criteriaRepository } from './criteria.repository';
 import type { CreateCriterionInput, UpdateCriterionInput } from './criteria.dto';
 
@@ -75,5 +76,20 @@ export const criteriaService = {
     const match = await ensureMatch(criterion.matchId);
     assertEditable(match);
     return criteriaRepository.update(id, { isActive: true });
+  },
+
+  /** Copies every active CriterionTemplate into the match, skipping names already present. */
+  async applyDefaults(matchId: string): Promise<{ created: number }> {
+    const match = await ensureMatch(matchId);
+    assertEditable(match);
+    const [templates, existing] = await Promise.all([
+      criterionTemplateRepository.findActive(),
+      criteriaRepository.findByMatch(matchId),
+    ]);
+    const existingNames = new Set(existing.map((c) => c.name.trim().toLowerCase()));
+    const toCreate = templates.filter((t) => !existingNames.has(t.name.trim().toLowerCase()));
+    if (toCreate.length === 0) return { created: 0 };
+    await criteriaRepository.createMany(matchId, toCreate);
+    return { created: toCreate.length };
   },
 };

@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { adminTeamsApi } from '@/api/admin/teams';
 import type { TeamWithPlayers } from '@/api/admin/types';
 import { ApiError } from '@/api/client';
-import { Badge, Banner, Card } from '@/components/admin/ui';
 import { PlayerRoster } from '@/components/admin/teams/PlayerRoster';
 import { DEFAULT_TEAM_LOGO } from '@/lib/format';
 
@@ -27,9 +26,11 @@ export default function AdminTeamDetailPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col gap-4">
-        <Banner message={error} />
-        <Link href="/admin/teams" className="text-sm text-pitch-500 hover:underline">
+      <div className="max-w-7xl mx-auto flex flex-col gap-4">
+        <div role="alert" className="rounded-xl border border-tertiary/30 bg-tertiary/10 px-4 py-3 text-body-sm text-tertiary">
+          {error}
+        </div>
+        <Link href="/admin/teams" className="text-sm text-primary hover:underline">
           ← Quay lại danh sách đội
         </Link>
       </div>
@@ -37,40 +38,50 @@ export default function AdminTeamDetailPage() {
   }
 
   if (!team) {
-    return <p className="text-sm text-ink-700">Đang tải…</p>;
+    return <p className="max-w-7xl mx-auto text-body-sm text-on-surface-variant">Đang tải…</p>;
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Link href="/admin/teams" className="text-sm text-pitch-500 hover:underline">
-        ← Quay lại danh sách đội
+    <div className="max-w-7xl mx-auto">
+      <Link
+        href="/admin/teams"
+        className="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary mb-6"
+      >
+        <span className="material-symbols-outlined text-base">arrow_back</span>
+        Quay lại danh sách đội
       </Link>
 
-      <Card>
-        <div className="flex items-center gap-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={team.logoUrl ?? DEFAULT_TEAM_LOGO}
-            alt={team.name}
-            className="h-16 w-16 rounded-xl object-cover"
-          />
-          <div>
-            <h1 className="text-xl font-bold text-ink-900">{team.name}</h1>
-            {team.shortName && (
-              <p className="text-sm text-ink-600">{team.shortName}</p>
+      <div className="glass-panel rounded-xl p-5 mb-6 flex items-center gap-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={team.logoUrl ?? DEFAULT_TEAM_LOGO}
+          alt={team.name}
+          className="h-16 w-16 rounded-xl object-cover border border-outline-variant/30"
+        />
+        <div>
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">{team.name}</h1>
+          {team.shortName && <p className="font-body-sm text-body-sm text-on-surface-variant">{team.shortName}</p>}
+          <div className="mt-2">
+            {team.isActive ? (
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary mr-1.5 animate-pulse" />
+                Hoạt động
+              </span>
+            ) : (
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-tertiary/10 text-tertiary border border-tertiary/20">
+                Ngừng hoạt động
+              </span>
             )}
-            <div className="mt-1">
-              <Badge tone={team.isActive ? 'green' : 'neutral'}>
-                {team.isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
-              </Badge>
-            </div>
           </div>
         </div>
-      </Card>
+      </div>
 
-      <Card title={`Cầu thủ (${team.players.length})`}>
+      <div className="glass-panel rounded-xl p-5">
+        <h2 className="font-headline-md text-headline-md text-on-surface mb-4">
+          Cầu thủ ({team.players.length})
+        </h2>
         <PlayerRoster players={team.players} />
-      </Card>
+      </div>
     </div>
   );
 }

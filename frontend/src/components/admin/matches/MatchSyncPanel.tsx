@@ -70,19 +70,19 @@ export function MatchSyncPanel({ onSyncComplete }: MatchSyncPanelProps) {
       <Banner message={error} />
 
       {result && (
-        <div className="mt-3 rounded-lg border border-pitch-200 bg-pitch-50 p-3 text-sm text-pitch-800">
-          <p className="mb-2 font-semibold">{result.note}</p>
+        <div className="mt-3 rounded-xl border border-primary/30 bg-primary/10 p-3 text-sm text-on-surface">
+          <p className="mb-2 font-semibold text-primary">{result.note}</p>
           <div className="grid grid-cols-3 gap-2">
             <div>
-              <span className="text-ink-600">Trận tạo mới:</span>{' '}
+              <span className="text-on-surface-variant">Trận tạo mới:</span>{' '}
               <strong>{result.matches.created}</strong>
             </div>
             <div>
-              <span className="text-ink-600">Trận cập nhật:</span>{' '}
+              <span className="text-on-surface-variant">Trận cập nhật:</span>{' '}
               <strong>{result.matches.updated}</strong>
             </div>
             <div>
-              <span className="text-ink-600">Trận không đổi:</span>{' '}
+              <span className="text-on-surface-variant">Trận không đổi:</span>{' '}
               <strong>{result.matches.unchanged}</strong>
             </div>
           </div>

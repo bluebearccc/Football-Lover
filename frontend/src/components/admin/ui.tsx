@@ -5,10 +5,11 @@ import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAt
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-pitch-500 text-white hover:bg-pitch-600',
-  secondary: 'border border-ink-100 bg-white text-ink-800 hover:bg-ink-50',
-  danger: 'bg-red-600 text-white hover:bg-red-700',
-  ghost: 'text-ink-700 hover:bg-ink-50',
+  primary: 'bg-primary text-on-primary hover:opacity-90',
+  secondary:
+    'border border-outline-variant/30 bg-surface-container text-on-surface hover:bg-surface-variant',
+  danger: 'bg-tertiary/90 text-on-tertiary hover:bg-tertiary',
+  ghost: 'text-on-surface-variant hover:bg-surface-variant',
 };
 
 export function Button({
@@ -29,20 +30,20 @@ export function Button({
 
 export function Badge({ children, tone = 'neutral' }: { children: ReactNode; tone?: 'neutral' | 'green' | 'gold' | 'red' }) {
   const tones = {
-    neutral: 'bg-ink-100 text-ink-700',
-    green: 'bg-pitch-100 text-pitch-700',
-    gold: 'bg-gold-100 text-gold-700',
-    red: 'bg-red-100 text-red-700',
+    neutral: 'bg-surface-variant text-on-surface-variant',
+    green: 'bg-primary/10 text-primary border border-primary/20',
+    gold: 'bg-secondary/10 text-secondary border border-secondary/20',
+    red: 'bg-tertiary/10 text-tertiary border border-tertiary/20',
   } as const;
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${tones[tone]}`}>{children}</span>;
+  return <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${tones[tone]}`}>{children}</span>;
 }
 
 export function Card({ title, children, action }: { title?: string; children: ReactNode; action?: ReactNode }) {
   return (
-    <section className="rounded-2xl border border-ink-100 bg-white p-5 shadow-sm">
+    <section className="glass-panel rounded-xl p-5">
       {(title || action) && (
-        <div className="mb-4 flex items-center justify-between">
-          {title && <h2 className="text-lg font-semibold text-ink-900">{title}</h2>}
+        <div className="mb-4 flex items-center justify-between gap-3">
+          {title && <h2 className="font-headline-md text-headline-md text-on-surface">{title}</h2>}
           {action}
         </div>
       )}
@@ -54,9 +55,9 @@ export function Card({ title, children, action }: { title?: string; children: Re
 export function TextInput({ label, className = '', ...props }: { label?: string } & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="flex flex-col gap-1 text-sm">
-      {label && <span className="font-medium text-ink-800">{label}</span>}
+      {label && <span className="font-label-caps text-label-caps text-on-surface-variant">{label}</span>}
       <input
-        className={`rounded-lg border border-ink-100 bg-white px-3 py-2 text-ink-900 outline-none transition focus:border-pitch-400 focus:ring-2 focus:ring-pitch-200 ${className}`}
+        className={`rounded-lg border border-outline-variant/30 bg-surface-container px-3 py-2 text-on-surface outline-none transition focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50 ${className}`}
         {...props}
       />
     </label>
@@ -66,9 +67,9 @@ export function TextInput({ label, className = '', ...props }: { label?: string 
 export function Select({ label, children, className = '', ...props }: { label?: string } & SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <label className="flex flex-col gap-1 text-sm">
-      {label && <span className="font-medium text-ink-800">{label}</span>}
+      {label && <span className="font-label-caps text-label-caps text-on-surface-variant">{label}</span>}
       <select
-        className={`rounded-lg border border-ink-100 bg-white px-3 py-2 text-ink-900 outline-none transition focus:border-pitch-400 focus:ring-2 focus:ring-pitch-200 ${className}`}
+        className={`rounded-lg border border-outline-variant/30 bg-surface-container px-3 py-2 text-on-surface outline-none transition focus:border-primary focus:ring-1 focus:ring-primary ${className}`}
         {...props}
       >
         {children}
@@ -79,9 +80,12 @@ export function Select({ label, children, className = '', ...props }: { label?: 
 
 export function Banner({ message, tone = 'error' }: { message?: string | null; tone?: 'error' | 'success' }) {
   if (!message) return null;
-  const cls = tone === 'success' ? 'border-pitch-200 bg-pitch-50 text-pitch-700' : 'border-red-200 bg-red-50 text-red-700';
+  const cls =
+    tone === 'success'
+      ? 'border-primary/30 bg-primary/10 text-primary'
+      : 'border-tertiary/30 bg-tertiary/10 text-tertiary';
   return (
-    <p role="alert" className={`rounded-md border px-3 py-2 text-sm ${cls}`}>
+    <p role="alert" className={`rounded-xl border px-4 py-3 text-body-sm ${cls}`}>
       {message}
     </p>
   );

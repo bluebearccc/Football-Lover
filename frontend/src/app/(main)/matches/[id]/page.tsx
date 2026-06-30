@@ -12,6 +12,7 @@ import CriteriaList from '@/components/matches/CriteriaList';
 import StatsPanel from '@/components/matches/StatsPanel';
 import CommentSection from '@/components/matches/CommentSection';
 import PredictionsList from '@/components/matches/PredictionsList';
+import PredictionForm from '@/components/matches/PredictionForm';
 
 type Tab = 'overview' | 'stats' | 'predictions' | 'comments';
 
@@ -264,9 +265,14 @@ export default function MatchDetailPage() {
                 )}
               </div>
               {canPredict ? (
-                <p className="text-on-surface-variant font-body-sm text-body-sm">
-                  Chọn đội cho từng tiêu chí trước khi trận đấu bắt đầu.
-                </p>
+                <PredictionForm
+                  matchId={match.id}
+                  criteria={match.criteria}
+                  homeTeam={match.homeTeam}
+                  awayTeam={match.awayTeam}
+                  existingPredictions={match.predictions}
+                  onPredictionSubmitted={loadMatch}
+                />
               ) : (
                 <p className="text-on-surface-variant font-body-sm text-body-sm">
                   {match.status === 'LIVE' || match.status === 'FINISHED'

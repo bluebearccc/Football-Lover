@@ -1,13 +1,20 @@
 @startuml
 title UC10 - Backend Classes
 skinparam classAttributeIconSize 0
-class ProfileController { +getOwnProfile(): ProfileDto +getUserHistory(id): ProfileDto }
-class ProfileService { +getProfile(userId, viewer): ProfileDto }
-class UserRepository { +findById(id): User }
-class PredictionRepository { +findByUser(userId): List<Prediction> }
-class AuthorizationService { +canViewProfile(viewer,target): boolean }
+class ProfileController { +getMe(req): ProfileDto +getHistory(req): HistoryPageDto }
+class ProfileService { +getMyProfile(userId): ProfileDto +getMyHistory(userId, query): HistoryPageDto }
+class ProfileRepository { +findUser(userId): User +getStats(userId): Stats +listHistory(userId, skip, take): {items,total} }
+class LeaderboardRepository { +findUserRank(userId, month, year): RankRow }
+class UsersController { +getProfile(req): ProfileDto +getHistory(req): HistoryPageDto }
+note right of UsersController
+  Admin support view, mounted under
+  /admin/users/:id/profile|history
+  (requireRole('ADMIN')). Delegates to
+  the same ProfileService — no separate
+  data shape for Admin vs self-service.
+end note
 ProfileController --> ProfileService
-ProfileService --> UserRepository
-ProfileService --> PredictionRepository
-ProfileService --> AuthorizationService
+ProfileService --> ProfileRepository
+ProfileService --> LeaderboardRepository : current-month rank
+UsersController --> ProfileService
 @enduml

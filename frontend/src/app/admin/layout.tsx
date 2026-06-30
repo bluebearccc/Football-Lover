@@ -10,15 +10,26 @@ const NAV = [
   { href: '/admin/users', label: 'User Manager', icon: 'group', exact: false },
   { href: '/admin/matches', label: 'Match Center', icon: 'sports_soccer', exact: false },
   { href: '/admin/teams', label: 'Teams', icon: 'shield', exact: false },
-  { href: '/admin/matches', label: 'Point Rules', icon: 'rule', exact: false },
+  { href: '/admin/criteria-templates', label: 'Point Rules', icon: 'rule', exact: false },
   { href: '/admin/comments', label: 'Comments', icon: 'chat', exact: false },
   { href: '/admin/logs', label: 'Activity Logs', icon: 'history', exact: false },
-  { href: '/admin', label: 'Analytics', icon: 'analytics', exact: false },
 ];
+
+function findActiveNavItem(pathname: string): (typeof NAV)[number] | null {
+  let active: (typeof NAV)[number] | null = null;
+  for (const item of NAV) {
+    const isMatch = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+    if (isMatch && (!active || item.href.length > active.href.length)) {
+      active = item;
+    }
+  }
+  return active;
+}
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const activeNavItem = findActiveNavItem(pathname);
 
   function logout() {
     session.clear();
@@ -60,13 +71,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           {/* Navigation */}
           <nav className="flex-1 flex flex-col gap-1 mt-2 overflow-y-auto">
-            {NAV.map((item) => {
-              const active = item.exact
-                ? pathname === item.href
-                : pathname.startsWith(item.href);
+            {NAV.map((item, index) => {
+              const active = item === activeNavItem;
               return (
                 <Link
-                  key={item.href}
+                  key={`${item.href}-${index}`}
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     active
@@ -80,15 +89,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               );
             })}
           </nav>
-
-          {/* New Match CTA */}
-          <Link
-            href="/admin/matches"
-            className="bg-primary hover:bg-primary-fixed-dim text-on-primary font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all"
-          >
-            <span className="material-symbols-outlined text-sm">add</span>
-            <span className="text-label-caps">New Match</span>
-          </Link>
 
           {/* Settings & Logout */}
           <div className="border-t border-outline-variant pt-3 flex flex-col gap-1">
@@ -141,13 +141,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Mobile bottom nav */}
         <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-surface-container-highest/90 backdrop-blur-lg border-t border-outline-variant">
-          {NAV.slice(0, 4).map((item) => {
-            const active = item.exact
-              ? pathname === item.href
-              : pathname.startsWith(item.href);
+          {NAV.slice(0, 4).map((item, index) => {
+            const active = item === activeNavItem;
             return (
               <Link
-                key={item.href}
+                key={`${item.href}-${index}`}
                 href={item.href}
                 className={`flex flex-col items-center justify-center gap-0.5 ${
                   active ? 'text-primary' : 'text-on-surface-variant'

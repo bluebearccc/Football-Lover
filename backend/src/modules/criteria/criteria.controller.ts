@@ -45,4 +45,17 @@ export const criteriaController = {
     const criterion = await criteriaService.reactivate(req.params.id);
     res.status(200).json(criterion);
   },
+
+  async applyDefaults(req: Request, res: Response): Promise<void> {
+    const result = await criteriaService.applyDefaults(req.params.matchId);
+    if (result.created > 0) {
+      await adminLogService.logAction(req.user!.id, {
+        action: 'CRITERIA_UPDATE',
+        description: `Đã áp dụng ${result.created} tiêu chí mặc định cho trận`,
+        entityType: 'Match',
+        entityId: req.params.matchId,
+      });
+    }
+    res.status(200).json(result);
+  },
 };
