@@ -5,6 +5,7 @@ import { publicMatchesRoutes } from '../modules/public-matches/public-matches.ro
 import { leaderboardRoutes } from '../modules/leaderboard/leaderboard.routes';
 import { notificationsRoutes } from '../modules/notifications/notifications.routes';
 import { chatbotRoutes } from '../modules/chatbot/chatbot.routes';
+import { predictionsRoutes } from '../modules/predictions/predictions.routes';
 import { profileRoutes } from '../modules/profile/profile.routes';
 import { adminRoutes } from './admin.routes';
 
@@ -18,6 +19,7 @@ router.use('/matches', publicMatchesRoutes);
 router.use('/leaderboard', leaderboardRoutes);
 router.use('/notifications', notificationsRoutes);
 router.use('/chatbot', chatbotRoutes);
+router.use('/predictions', predictionsRoutes);
 router.use('/profile', profileRoutes);
 // Admin surface (UC06/07/12/13 + manage users + moderation + dashboard).
 router.use('/admin', adminRoutes);

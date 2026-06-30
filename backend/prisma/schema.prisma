@@ -180,6 +180,18 @@ model PredictionCriterion {
   @@map("prediction_criteria")
 }
 
+/// Reusable criterion presets admin can apply to a SCHEDULED match in one click
+/// instead of retyping the same criteria per match.
+model CriterionTemplate {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("criterion_templates")
+}
+
 // ─────────────────────────────────────────────────────────────
 // Predictions & per-match participation
 // ─────────────────────────────────────────────────────────────

@@ -336,9 +336,11 @@ This is a new system built from scratch. There is no legacy replacement or migra
 - **AC-09-03:** Given no statistics exist, When actor opens statistics, Then no-data message is shown.
 
 ### UC10 — View Profile and Prediction History
-- **AC-10-01:** Given user is logged in, When opening own profile, Then own profile and prediction history are shown.
-- **AC-10-02:** Given session expired, When user opens profile, Then system redirects to login.
-- **AC-10-03:** Given user attempts to view another profile without permission, When request is made, Then access is denied.
+- **AC-10-01:** Given user is logged in, When opening own profile (`/profile`), Then display name, email, join date, all-time points, current-month rank, and stats (matches played, matches won, accuracy, total gold won) are shown.
+- **AC-10-02:** Given session expired, When user opens `/profile` or `/history`, Then system redirects to login.
+- **AC-10-03:** Given a non-Admin user, When the user requests another user's profile/history, Then the request is denied (self-service endpoints only accept the authenticated caller's own id; there is no client-facing route to pass another user's id).
+- **AC-10-04:** Given an Admin is authenticated, When the Admin opens a user's profile/history from the admin user-management screen for support, Then the same profile/stats/history data is returned for that target user (read-only).
+- **AC-10-05:** Given the user has no finished-match participations yet, When opening `/profile` or `/history`, Then an empty-state message is shown instead of an error.
 
 ### UC11 — Use Chatbot
 - **AC-11-01:** Given user is logged in, When asking about match/stat/rules/own history, Then chatbot returns a read-only answer.
@@ -449,6 +451,9 @@ This is a new system built from scratch. There is no legacy replacement or migra
 ### FR-10 Profile/History
 - Registered users shall view own profile and prediction history.
 - Admin can view user history for support/moderation when authorized.
+- Profile screen (`/profile`) shows: account info (display name, email, join date), all-time points (tiebreak counter), current calendar-month leaderboard rank, stats (total matches participated, total matches won, prediction accuracy %, total gold won across finished matches), and the 5 most recent finished-match results.
+- History screen (`/history`) shows the full, paginated list of finished matches the user participated in (teams, final score, number of correct criteria, gold won). Only matches that have been scored (status `FINISHED`) appear — `MatchParticipation` rows are created exclusively at scoring time.
+- Admin support view reuses the same profile/stats/history data for a target user, exposed under the admin user-management surface (`ADMIN` role required); it does not create a separate data shape.
 
 ### FR-11 Chatbot
 - Only authenticated users can use chatbot.

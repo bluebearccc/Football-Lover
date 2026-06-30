@@ -65,6 +65,14 @@ export interface Criterion {
   isActive: boolean;
 }
 
+export interface CriterionTemplate {
+  id: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
 export interface ScoringSummary {
   scored: boolean;
   reason?: string;

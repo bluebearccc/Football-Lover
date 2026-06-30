@@ -1,16 +1,43 @@
 @startuml
-title UC10 - View Profile History Sequence
+title UC10 - View Profile / History Sequence
 actor User
-participant "Web UI" as UI
-participant "Profile API" as API
-participant "Profile Service" as Svc
+actor Admin
+participant "Web UI\n(ProfilePage / HistoryPage)" as UI
+participant "Profile API\n(/profile/*)" as API
+participant "Admin Users API\n(/admin/users/:id/*)" as AdminAPI
+participant "ProfileService" as Svc
+participant "ProfileRepository" as Repo
+participant "LeaderboardRepository" as LbRepo
 database "DB" as DB
-User -> UI : Open profile/history
-UI -> API : GET /me/profile
-API -> Svc : getOwnProfile(userId)
-Svc -> DB : load user and predictions
-DB --> Svc : profile and history
-Svc --> API : ProfileDto
-API --> UI : 200 OK / 404
-UI --> User : Display profile or message
+
+User -> UI : Open /profile
+UI -> API : GET /profile/me (Bearer token)
+API -> Svc : getMyProfile(userId)
+Svc -> Repo : findUser(userId) + getStats(userId)
+Svc -> LbRepo : findUserRank(userId, month, year)
+Repo -> DB : query User, MatchParticipation, Prediction
+LbRepo -> DB : query monthly wins/accuracy/streak
+DB --> Repo : rows
+DB --> LbRepo : rank row
+Repo --> Svc : user + stats
+LbRepo --> Svc : monthlyRank | null
+Svc --> API : ProfileResponse
+API --> UI : 200 OK
+
+User -> UI : Open /history (page N)
+UI -> API : GET /profile/history?page=N
+API -> Svc : getMyHistory(userId, query)
+Svc -> Repo : listHistory(userId, skip, take)
+Repo -> DB : query MatchParticipation + Match + Team
+DB --> Repo : rows + total
+Repo --> Svc : items + total
+Svc --> API : HistoryResponse
+API --> UI : 200 OK
+
+Admin -> UI : Open user detail (support)
+UI -> AdminAPI : GET /admin/users/:id/profile | /history
+AdminAPI -> Svc : getMyProfile(id) | getMyHistory(id, query)
+note right of AdminAPI : requireRole('ADMIN') guards this route
+Svc --> AdminAPI : same response shape as self-service
+AdminAPI --> UI : 200 OK
 @enduml

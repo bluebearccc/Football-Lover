@@ -1,11 +1,16 @@
 @startuml
 title UC10 - Frontend Classes
 skinparam classAttributeIconSize 0
-class ProfilePage { +loadProfile(): void +render(): JSX }
-class ProfileSummary { displayName totalPoints status }
-class PredictionHistoryTable { predictions +render(): JSX }
-class ProfileApiClient { +getOwnProfile(): Promise<Profile> }
-ProfilePage --> ProfileSummary
-ProfilePage --> PredictionHistoryTable
+class ProfilePage { +loadData(): void +render(): JSX }
+class HistoryPage { +loadHistory(page): void +render(): JSX }
+class ProfileStatsCard { stats: ProfileStats +render(): JSX }
+class MatchHistoryList { items: HistoryEntry[] +render(): JSX }
+class Pagination { page pageSize total +onPageChange(p): void }
+class ProfileApiClient { +getMe(): Promise<ProfileResponse> +getHistory(params): Promise<HistoryResponse> }
+ProfilePage --> ProfileStatsCard
+ProfilePage --> MatchHistoryList : 5 most recent
 ProfilePage --> ProfileApiClient
+HistoryPage --> MatchHistoryList : full paginated list
+HistoryPage --> Pagination
+HistoryPage --> ProfileApiClient
 @enduml

@@ -35,7 +35,7 @@ export function LoginForm() {
     try {
       const res = await authApi.login({ email, password });
       session.save(res.token, res.user);
-      router.push('/matches');
+      router.push(res.user.role === 'ADMIN' ? '/admin' : '/matches');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Đăng nhập thất bại, vui lòng thử lại.');
     } finally {

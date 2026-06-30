@@ -1,13 +1,17 @@
 @startuml
-title UC10 - Profile History Screen Flow
+title UC10 - Profile / History Screen Flow
 start
-:Open profile page;
+:Open /profile or /history;
 if (Logged in?) then (yes)
-  :Load profile and prediction history;
-  if (Profile found?) then (yes)
-    :Display user info, points and history;
+  if (/profile?) then (yes)
+    :Load own profile (info, stats, monthly rank) + 5 most recent history entries;
+  else (/history)
+    :Load paginated full match history;
+  endif
+  if (Has finished-match participations?) then (yes)
+    :Display data;
   else (no)
-    :Show profile not found;
+    :Show empty-state message;
   endif
 else (no)
   :Redirect to login;

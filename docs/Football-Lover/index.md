@@ -53,3 +53,9 @@ Each use case folder contains:
   Team/Player/Notification entities, password reset via email, api-football sync, local CLI
   proxy chatbot; frontend → Next.js. UC13–UC15 diagrams added; UC05/UC06 class+sequence+state
   diagrams updated for gold scoring, payout, and notifications.
+- **2026-06-29:** UC10 implemented — `backend/src/modules/profile/` (self-service
+  `GET /profile/me`, `GET /profile/history`) plus an Admin support view reusing the same
+  service under `GET /admin/users/:id/profile|history` (ADMIN-guarded). Frontend split into
+  two pages, `/profile` (overview + 5 most recent results) and `/history` (full paginated
+  list), per `frontend/src/app/(main)/profile/` and `.../history/`. UC10 diagrams and SRS
+  AC-10-04/05 updated to match.
